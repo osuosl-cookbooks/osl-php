@@ -1,0 +1,6 @@
+; configuration for php APC module 
+; Managed by Chef in osl-php::apc. Do not modify by hand.
+extension=apc.so
+<% @params.sort_by { |key, val| key }.each do |directive, value| -%>
+<%= "#{directive}=\"#{value}\"" %>
+<% end -%>
