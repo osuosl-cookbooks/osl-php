@@ -40,5 +40,5 @@ template "/etc/php.d/APC.ini" do
     owner "root"
     group "root"
     mode "0644"
-    variables(:params => node['osl-php']['apc'])
+    variables(:params => node['php']['apc'])
 end
