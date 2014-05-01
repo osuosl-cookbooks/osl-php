@@ -1,0 +1,25 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_solo
+
+platforms:
+  - name: ubuntu-12.04
+  - name: centos-6.5
+
+suites:
+  - name: default
+    run_list:
+      - recipe[osl-php::default]
+    attributes:
+  - name: apc
+    run_list:
+        - recipe[build-essential]
+        - recipe[osl-php::default]
+        - recipe[osl-php::apc]
+    attributes:
+        osl-php:
+            apc:
+                shm_size: 128M
