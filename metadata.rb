@@ -1,8 +1,9 @@
 name             'osl-php'
-maintainer       ''
-maintainer_email ''
-license          ''
+maintainer       'Anthony Miller'
+maintainer_email 'armiller@osuosl.org'
+license          'Apache 2.0'
 description      'Installs/Configures osl-php'
 long_description 'Installs/Configures osl-php'
 version          '0.1.0'
-
+depends          'php'
+depends          'build-essential'
