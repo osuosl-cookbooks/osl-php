@@ -7,6 +7,15 @@ provisioner:
 
 platforms:
   - name: ubuntu-12.04
+    attributes:
+      osl-php:
+       packages:
+         - apc:
+             php-apc: true
+         - php-fpm
+         - php-gd
+    run_list:
+      - recipe[apt]
   - name: centos-6.5
 
 suites:
