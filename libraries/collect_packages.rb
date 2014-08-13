@@ -16,29 +16,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-def is_hashy(hash)
-  return true if hash.class == Hash
-  return true if hash.class.ancestors.include?(Hash)
-  return true if hash.methods.include?(:keys) and hash.methods.include?(:values) and hash.methods.include?(:[])
-  return false
-end
-
-def collect_packages(mash)
-  return [[mash,true]] if mash.class == String
-  package_tuples = []
-  unless is_hashy(mash) or mash.class == Array
-    fail "collect_packages was passed #{mash} which is not hash-like. Please make sure it supports .keys, .values, and .[]"
-  end
-  mash.each do |k,v|
-    if is_hashy(v)
-      package_tuples += collect_packages(v)
-    elsif k.class == String and v.class == String
-      package_tuples << [k,v]
-    elsif v.class == Array
-      v.each {|p| package_tuples += collect_packages(p) }
-    else
-      fail "#{mash} contains a value that is not a String, Hash-like, or Array."
+def collect_packages(obj)
+  arr = []
+  if obj.class.ancestors.include?(Enumerable)
+      obj.each do |iter|
+      if iter.class.ancestors.include?(Enumerable)
+        if iter.all? {|sub_iter| sub_iter.class.ancestors.include?(Enumerable)}
+          iter.each {|sub_iter| arr += collect_packages(sub_iter)}
+        elsif iter.any?{|sub_iter| sub_iter.class.ancestors.include?(Enumerable)}
+          iter.each {|sub_iter| arr += collect_packages(sub_iter) if sub_iter.class.ancestors.include?(Enumerable)}
+        else
+          arr << iter
+        end
+      else
+        arr << [iter]
+      end
     end
+    return arr
+  else
+    fail "Sorry, collect_packages only accepts Enumerable objects\
+      that contains String objects, and #{obj} is not a String!" unless obj.class == String
+    [[obj,true]]
   end
-  package_tuples
 end
