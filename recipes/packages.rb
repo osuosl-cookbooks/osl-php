@@ -16,9 +16,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-collect_packages(node['osl-php']['packages']).each do |tuple|
-  package tuple.first do
-    only_if { tuple.last }
-    action :install
-  end
-end
+packages = collect_packages(node['osl-php']['packages']).each { |p| package p }

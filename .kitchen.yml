@@ -10,11 +10,12 @@ platforms:
     attributes:
       osl-php:
        packages:
-           apc:
-             php-apc: false
-           allthepackages:
+           - apc:
+               php-apc: false
+           - allthepackages:
              - php5-fpm
              - php5-gd
+           - vim
     run_list:
       - recipe[apt]
   - name: centos-6.5

@@ -16,26 +16,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-def collect_packages(obj)
-  arr = []
-  if obj.class.ancestors.include?(Enumerable)
-      obj.each do |iter|
-      if iter.class.ancestors.include?(Enumerable)
-        if iter.all? {|sub_iter| sub_iter.class.ancestors.include?(Enumerable)}
-          iter.each {|sub_iter| arr += collect_packages(sub_iter)}
-        elsif iter.any?{|sub_iter| sub_iter.class.ancestors.include?(Enumerable)}
-          iter.each {|sub_iter| arr += collect_packages(sub_iter) if sub_iter.class.ancestors.include?(Enumerable)}
-        else
-          arr << iter
-        end
+def iterate(iter)
+  return iter.class.included_modules.include?(Enumerable) ? collect_packages(iter) : iter
+end
+
+def collect_packages(en)
+  return en unless en.class.included_modules.include?(Enumerable)
+  # values contains all values from hashes +  each entry from non-hashy enums
+  values = []
+  # Partition enums into hashy and non-hashy (potentially non-)enums
+  if en.class.ancestors.include?(Hash)
+    parted_ens = [[en],[]]
+  else
+    parted_ens = en.partition { |iter| iter.class.ancestors.include?(Hash) }
+  end
+  # We only want to include hash keys if they have a true value and the values are not enumerable
+  parted_ens[0].each do |iter|
+    iter.each_pair do |k,v|
+      if v.class.included_modules.include?(Enumerable)
+        values << collect_packages(v)
       else
-        arr << [iter]
+        values << iterate(k) if v
       end
     end
-    return arr
-  else
-    fail "Sorry, collect_packages only accepts Enumerable objects\
-      that contains String objects, and #{obj} is not a String!" unless obj.class == String
-    [[obj,true]]
   end
+  # Iterate over non-hashy enums and non-enums
+  parted_ens[1].each { |iter| values << iterate(iter) }
+  return values.flatten
 end
