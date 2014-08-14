@@ -16,31 +16,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+def enum?(e)
+  return e.class.included_modules.include?(Enumerable)
+end
+
+def hashy?(h)
+  return h.class.ancestors.include?(Hash)
+end
+
 def iterate(iter)
-  return iter.class.included_modules.include?(Enumerable) ? collect_packages(iter) : iter
+  return enum?(iter) ? collect_packages(iter) : iter
 end
 
 def collect_packages(en)
-  return en unless en.class.included_modules.include?(Enumerable)
+  return en unless enum?(en)
   # values contains all values from hashes +  each entry from non-hashy enums
   values = []
   # Partition enums into hashy and non-hashy (potentially non-)enums
-  if en.class.ancestors.include?(Hash)
-    parted_ens = [[en],[]]
-  else
-    parted_ens = en.partition { |iter| iter.class.ancestors.include?(Hash) }
-  end
+  parted_ens = hashy?(en) ? [[en],[]] : en.partition { |iter| hashy?(iter) }
   # We only want to include hash keys if they have a true value and the values are not enumerable
-  parted_ens[0].each do |iter|
-    iter.each_pair do |k,v|
-      if v.class.included_modules.include?(Enumerable)
-        values << collect_packages(v)
-      else
-        values << iterate(k) if v
-      end
-    end
-  end
+  parted_ens[0].each { |iter| iter.each_pair { |k,v| values << (enum?(v) ? collect_packages(v) : iterate(k) if v) }}
   # Iterate over non-hashy enums and non-enums
   parted_ens[1].each { |iter| values << iterate(iter) }
-  return values.flatten
+  return values.flatten.compact
 end
