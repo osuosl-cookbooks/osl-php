@@ -4,7 +4,7 @@ driver_config:
   openstack_api_key: <%= ENV['OS_PASSWORD'] %>
   openstack_auth_url: <%= "#{ENV['OS_AUTH_URL']}/tokens" %>
   key_name: <%= ENV['OS_SSH_KEYPAIR'] %>
-  private_key_path: <%= ENV['OS_PRIVATE_SSH_KEY'] %>
+  private_key_path: <%= ENV['OS_PRIVATE_KEY_PATH'] %>
   public_key_path: <%= ENV['OS_PUBLIC_SSH_KEY'] %>
   openstack_tenant: <%= ENV['OS_TENANT'] %>
   floating_ip: <%= ENV['OS_FLOATING_IP'] %>
@@ -28,27 +28,27 @@ platforms:
   driver_config:
     username: centos
     image_ref: "CentOS 6.5"
-    attributes:
-      osl-php:
-       packages:
-         apc:
-             php-apc: false
-         moar_packages:
-           - php-fpm
-           - php-gd
+  attributes:
+    osl-php:
+     packages:
+       apc:
+           php-apc: false
+       moar_packages:
+         - php-fpm
+         - php-gd
 - name: ubuntu-12.04
   driver_plugin: openstack
   driver_config:
     username: ubuntu
     image_ref: "Ubuntu 12.04"
-    attributes:
-      osl-php:
-       packages:
-           apc:
-             php-apc: false
-           allthepackages:
-             - php5-fpm
-             - php5-gd
+  attributes:
+    osl-php:
+     packages:
+         apc:
+           php-apc: false
+         allthepackages:
+           - php5-fpm
+           - php5-gd
 
 suites:
   - name: default
