@@ -1,0 +1,68 @@
+---
+driver_config:
+  openstack_username: <%= ENV['OS_USERNAME'] %>
+  openstack_api_key: <%= ENV['OS_PASSWORD'] %>
+  openstack_auth_url: <%= "#{ENV['OS_AUTH_URL']}/tokens" %>
+  key_name: <%= ENV['OS_SSH_KEYPAIR'] %>
+  private_key_path: <%= ENV['OS_PRIVATE_SSH_KEY'] %>
+  public_key_path: <%= ENV['OS_PUBLIC_SSH_KEY'] %>
+  openstack_tenant: <%= ENV['OS_TENANT'] %>
+  floating_ip: <%= ENV['OS_FLOATING_IP'] %>
+  flavor_ref: <%= ENV['OS_FLAVOR_REF'] %>
+
+provisioner:
+  name: chef_solo
+  attributes:
+    authorization:
+      sudo:
+        users:
+          - vagrant
+          - centos
+          - ubuntu
+    omnibus_updater:
+      disabled: true
+
+platforms:
+- name: centos-6.5
+  driver_plugin: openstack
+  driver_config:
+    username: centos
+    image_ref: "CentOS 6.5"
+  attributes:
+    osl-php:
+     packages:
+       apc:
+           php-apc: false
+       moar_packages:
+         - php-fpm
+         - php-gd
+- name: ubuntu-12.04
+  driver_plugin: openstack
+  driver_config:
+    username: ubuntu
+    image_ref: "Ubuntu 12.04"
+  attributes:
+    osl-php:
+     packages:
+         apc:
+           php-apc: false
+         allthepackages:
+           - php5-fpm
+           - php5-gd
+
+suites:
+  - name: default
+    run_list:
+      - recipe[osl-php::default]
+    attributes:
+  - name: apc
+    run_list:
+        - recipe[build-essential]
+        - recipe[osl-php::default]
+        - recipe[osl-php::apc]
+    attributes:
+        osl-php:
+            packages:
+                php-apc: true
+            apc:
+                shm_size: 128M

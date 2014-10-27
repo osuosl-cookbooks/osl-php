@@ -1,8 +1,8 @@
 #
 # Cookbook Name:: osl-php
-# Recipe:: default
+# Recipe:: packages
 #
-# Copyright 2013, Oregon State University
+# Copyright 2014, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,7 +15,5 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
-include_recipe "php::default"
-include_recipe "osl-php::packages"
+packages = collect_packages(node['osl-php']['packages']).each { |p| package p }

@@ -7,7 +7,26 @@ provisioner:
 
 platforms:
   - name: ubuntu-12.04
+    attributes:
+      osl-php:
+       packages:
+           - apc:
+               php-apc: false
+           - allthepackages:
+             - php5-fpm
+             - php5-gd
+           - vim
+    run_list:
+      - recipe[apt]
   - name: centos-6.5
+    attributes:
+      osl-php:
+       packages:
+         apc:
+             php-apc: false
+         moar_packages:
+           - php-fpm
+           - php-gd
 
 suites:
   - name: default
@@ -21,5 +40,7 @@ suites:
         - recipe[osl-php::apc]
     attributes:
         osl-php:
+            packages:
+                php-apc: true
             apc:
                 shm_size: 128M
