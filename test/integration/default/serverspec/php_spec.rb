@@ -1,7 +1,6 @@
 require 'serverspec'
 
-include Serverspec::Helper::DetectOS
-include Serverspec::Helper::Exec
+set :backend, :exec
 
 case os[:family].downcase
 when 'redhat', 'fedora', 'centos'
