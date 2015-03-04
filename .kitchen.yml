@@ -18,7 +18,7 @@ platforms:
            - vim
     run_list:
       - recipe[apt]
-  - name: centos-6.5
+  - name: centos-6.6
     attributes:
       osl-php:
        packages:
