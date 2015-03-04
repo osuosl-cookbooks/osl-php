@@ -18,7 +18,7 @@ platforms:
            - vim
     run_list:
       - recipe[apt]
-  - name: centos-6.5
+  - name: centos-6.6
     attributes:
       osl-php:
        packages:
@@ -44,3 +44,13 @@ suites:
                 php-apc: true
             apc:
                 shm_size: 128M
+  - name: opcache
+    run_list:
+        - recipe[osl-php::default]
+        - recipe[osl-php::opcache]
+    attributes:
+      php:
+        opcache:
+          opcache.interned_strings_buffer: 20M
+          opcache.max_accelerated_files: 10000
+          opcache.memory_consumption: 200M

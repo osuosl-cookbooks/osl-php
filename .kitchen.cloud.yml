@@ -6,8 +6,9 @@ driver_config:
   key_name: <%= ENV['OS_SSH_KEYPAIR'] %>
   private_key_path: <%= ENV['OS_PRIVATE_SSH_KEY'] %>
   public_key_path: <%= ENV['OS_PUBLIC_SSH_KEY'] %>
-  openstack_tenant: <%= ENV['OS_TENANT'] %>
+  openstack_tenant: <%= ENV['OS_TENANT_NAME'] %>
   floating_ip: <%= ENV['OS_FLOATING_IP'] %>
+  floating_ip_pool: <%= ENV['OS_FLOATING_IP_POOL'] %>
   flavor_ref: <%= ENV['OS_FLAVOR_REF'] %>
 
 provisioner:
@@ -23,11 +24,11 @@ provisioner:
       disabled: true
 
 platforms:
-- name: centos-6.5
+- name: centos-6.6
   driver_plugin: openstack
   driver_config:
     username: centos
-    image_ref: "CentOS 6.5"
+    image_ref: "CentOS 6.6"
   attributes:
     osl-php:
      packages:
@@ -66,3 +67,13 @@ suites:
                 php-apc: true
             apc:
                 shm_size: 128M
+  - name: opcache
+    run_list:
+        - recipe[osl-php::default]
+        - recipe[osl-php::opcache]
+    attributes:
+      php:
+        opcache:
+          opcache.interned_strings_buffer: 20M
+          opcache.max_accelerated_files: 10000
+          opcache.memory_consumption: 200M

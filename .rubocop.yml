@@ -1,0 +1,9 @@
+AllCops:
+  Include:
+    - '**/Berksfile'
+    - '**/Cheffile'
+  Exclude:
+    - 'metadata.rb'
+
+Metrics/AbcSize:
+  Max: 9001

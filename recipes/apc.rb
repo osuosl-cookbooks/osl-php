@@ -17,11 +17,11 @@
 # limitations under the License.
 #
 
-include_recipe "build-essential"
+include_recipe 'build-essential'
 
 case node['platform_family']
 when 'rhel', 'fedora'
-  %w{ httpd-devel pcre pcre-devel }.each do |pkg|
+  %w(httpd-devel pcre pcre-devel).each do |pkg|
     package pkg do
       action :install
     end
@@ -35,10 +35,10 @@ when 'debian'
   end
 end
 
-template "/etc/php.d/APC.ini" do
-    source "apc.ini.erb"
-    owner "root"
-    group "root"
-    mode "0644"
-    variables(:params => node['php']['apc'])
+template '/etc/php.d/APC.ini' do
+  source 'apc.ini.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+  variables(params: node['php']['apc'])
 end

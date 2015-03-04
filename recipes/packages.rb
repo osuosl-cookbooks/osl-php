@@ -16,4 +16,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-packages = collect_packages(node['osl-php']['packages']).each { |p| package p }
+collect_packages(node['osl-php']['packages']).each { |p| package p }
