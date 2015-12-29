@@ -8,5 +8,5 @@ version          '0.1.2'
 depends          'php'
 depends          'build-essential'
 
-supports         'centos', '~> 6'
+supports         'centos', '~> 6.0'
 supports         'ubuntu', '12.04'
