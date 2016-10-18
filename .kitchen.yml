@@ -26,3 +26,6 @@ suites:
       osl-php:
         apc:
           shm_size: 128M
+  - name: composer
+    run_list:
+    - recipe[osl-php::composer]
