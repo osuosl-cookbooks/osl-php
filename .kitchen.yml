@@ -4,6 +4,13 @@ provisioner:
   attributes:
     omnibus_updater:
       disabled: true
+    osl-php:
+      packages:
+        apc:
+          php-apc: false
+        moar_packages:
+          - php-fpm
+          - php-gd
 
 suites:
   - name: default
