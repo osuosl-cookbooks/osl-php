@@ -24,7 +24,5 @@ suites:
       - recipe[osl-php::apc]
     attributes:
       osl-php:
-        packages:
-          php-apc: true
         apc:
           shm_size: 128M
