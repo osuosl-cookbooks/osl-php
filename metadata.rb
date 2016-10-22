@@ -7,3 +7,6 @@ long_description 'Installs/Configures osl-php'
 version          '0.1.2'
 depends          'php'
 depends          'build-essential'
+
+supports         'centos', '~> 6.0'
+supports         'centos', '~> 7.0'

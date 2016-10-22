@@ -1,32 +1,16 @@
 ---
-driver:
-  name: vagrant
-
 provisioner:
   name: chef_solo
-
-platforms:
-  - name: ubuntu-12.04
-    attributes:
-      osl-php:
-       packages:
-           - apc:
-               php-apc: false
-           - allthepackages:
-             - php5-fpm
-             - php5-gd
-           - vim
-    run_list:
-      - recipe[apt]
-  - name: centos-6.6
-    attributes:
-      osl-php:
-       packages:
-         apc:
-             php-apc: false
-         moar_packages:
-           - php-fpm
-           - php-gd
+  attributes:
+    omnibus_updater:
+      disabled: true
+    osl-php:
+      packages:
+        apc:
+          php-apc: false
+        moar_packages:
+          - php-fpm
+          - php-gd
 
 suites:
   - name: default
@@ -35,22 +19,10 @@ suites:
     attributes:
   - name: apc
     run_list:
-        - recipe[build-essential]
-        - recipe[osl-php::default]
-        - recipe[osl-php::apc]
+      - recipe[build-essential]
+      - recipe[osl-php::default]
+      - recipe[osl-php::apc]
     attributes:
-        osl-php:
-            packages:
-                php-apc: true
-            apc:
-                shm_size: 128M
-  - name: opcache
-    run_list:
-        - recipe[osl-php::default]
-        - recipe[osl-php::opcache]
-    attributes:
-      php:
-        opcache:
-          opcache.interned_strings_buffer: 20M
-          opcache.max_accelerated_files: 10000
-          opcache.memory_consumption: 200M
+      osl-php:
+        apc:
+          shm_size: 128M
