@@ -5,7 +5,7 @@ set :backend, :exec
 case os[:family].downcase
 when 'redhat', 'fedora', 'centos'
   installed_packages = %w(php-fpm php-gd)
-  not_installed_packages =  %w(php-apc)
+  not_installed_packages = %w(php-apc)
 when 'debian', 'ubuntu'
   installed_packages = %w(php5-fpm php5-gd)
   not_installed_packages = %w()
