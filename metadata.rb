@@ -10,6 +10,7 @@ version          '0.1.3'
 
 supports         'centos', '~> 6.0'
 supports         'centos', '~> 7.0'
+supports         'debian'
 
 depends          'build-essential'
 depends          'composer'

@@ -16,7 +16,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 include_recipe 'build-essential'
 
 case node['platform_family']
@@ -35,10 +34,12 @@ when 'debian'
   end
 end
 
+directory '/etc/php.d'
+
 template '/etc/php.d/APC.ini' do
   source 'apc.ini.erb'
   owner 'root'
   group 'root'
   mode '0644'
-  variables(params: node['php']['apc'])
+  variables(params: node['osl-php']['apc'])
 end

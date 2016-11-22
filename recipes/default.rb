@@ -17,5 +17,4 @@
 # limitations under the License.
 #
 
-include_recipe 'osl-php::packages'
 include_recipe 'php::default'

@@ -13,6 +13,11 @@ CENTOS_6_OPTS = {
   version: '6.7'
 }.freeze
 
+DEBIAN_8_OPTS = {
+  platform: 'debian',
+  version: '8.4'
+}.freeze
+
 RSpec.configure do |config|
   config.log_level = :fatal
 end
