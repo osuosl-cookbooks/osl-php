@@ -1,7 +1,7 @@
 require_relative 'spec_helper'
 
 describe 'osl-php::default' do
-  [CENTOS_7_OPTS, CENTOS_6_OPTS, DEBIAN_8_OPTS].each do |pltfrm|
+  [CENTOS_7_OPTS, CENTOS_6_OPTS].each do |pltfrm|
     context "on #{pltfrm[:platform]} #{pltfrm[:version]}" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)

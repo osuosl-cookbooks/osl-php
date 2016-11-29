@@ -2,14 +2,8 @@ require 'serverspec'
 
 set :backend, :exec
 
-if os[:family] == 'redhat'
-  %w(httpd-devel pcre pcre-devel).each do |pkg|
-    describe package pkg do
-      it { should be_installed }
-    end
-  end
-elsif os[:family] == 'debian'
-  describe package 'php-apc' do
+%w(httpd-devel pcre pcre-devel).each do |pkg|
+  describe package pkg do
     it { should be_installed }
   end
 end

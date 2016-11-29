@@ -18,20 +18,14 @@
 #
 include_recipe 'build-essential'
 
-case node['platform_family']
-when 'rhel', 'fedora'
-  %w(httpd-devel pcre pcre-devel).each do |pkg|
-    package pkg do
-      action :install
-    end
-  end
-  php_pear 'APC' do
+%w(httpd-devel pcre pcre-devel).each do |pkg|
+  package pkg do
     action :install
   end
-when 'debian'
-  package 'php-apc' do
-    action :install
-  end
+end
+
+php_pear 'APC' do
+  action :install
 end
 
 directory '/etc/php.d'

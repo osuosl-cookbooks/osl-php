@@ -1,7 +1,7 @@
 require_relative 'spec_helper'
 
 describe 'osl-php::apc' do
-  [CENTOS_7_OPTS, CENTOS_6_OPTS, DEBIAN_8_OPTS].each do |pltfrm|
+  [CENTOS_7_OPTS, CENTOS_6_OPTS].each do |pltfrm|
     context "on #{pltfrm[:platform]} #{pltfrm[:version]}" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
@@ -18,20 +18,13 @@ describe 'osl-php::apc' do
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end
-      case pltfrm
-      when DEBIAN_8_OPTS
+      %w(httpd-devel pcre pcre-devel).each do |pkg|
         it do
-          expect(chef_run).to install_package('php-apc')
+          expect(chef_run).to install_package(pkg)
         end
-      else
-        %w(httpd-devel pcre pcre-devel).each do |pkg|
-          it do
-            expect(chef_run).to install_package(pkg)
-          end
-        end
-        it do
-          expect(chef_run). to install_php_pear('APC')
-        end
+      end
+      it do
+        expect(chef_run). to install_php_pear('APC')
       end
       it do
         expect(chef_run).to include_recipe('build-essential')
