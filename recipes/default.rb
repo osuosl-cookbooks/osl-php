@@ -18,3 +18,4 @@
 #
 
 include_recipe 'php::default'
+include_recipe 'osl-php::packages'
