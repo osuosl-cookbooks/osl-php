@@ -6,26 +6,24 @@ provisioner:
       disabled: true
     osl-php:
       packages:
-        apc:
-          php-apc: false
-        moar_packages:
-          - php-fpm
-          - php-gd
+          - 'php-fpm'
+          - 'php-gd'
 
 suites:
   - name: default
     run_list:
       - recipe[osl-php::default]
-    attributes:
   - name: apc
     run_list:
-      - recipe[build-essential]
       - recipe[osl-php::default]
       - recipe[osl-php::apc]
     attributes:
       osl-php:
         apc:
-          shm_size: 128M
+          shm_size: '128M'
   - name: composer
     run_list:
     - recipe[osl-php::composer]
+  - name: packages
+    run_list:
+    - recipe[osl-php::packages]

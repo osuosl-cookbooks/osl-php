@@ -1,0 +1,1 @@
+default['osl-php']['packages'] = []

@@ -7,7 +7,3 @@ AllCops:
 
 Metrics/AbcSize:
   Max: 9001
-
-Style/IfUnlessModifierOfIfUnless:
-  Exclude:
-    - 'libraries/collect_packages.rb'

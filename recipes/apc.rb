@@ -16,29 +16,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 include_recipe 'build-essential'
 
-case node['platform_family']
-when 'rhel', 'fedora'
-  %w(httpd-devel pcre pcre-devel).each do |pkg|
-    package pkg do
-      action :install
-    end
-  end
-  php_pear 'APC' do
-    action :install
-  end
-when 'debian'
-  package 'php-apc' do
+%w(httpd-devel pcre pcre-devel).each do |pkg|
+  package pkg do
     action :install
   end
 end
+
+php_pear 'APC' do
+  action :install
+end
+
+directory '/etc/php.d'
 
 template '/etc/php.d/APC.ini' do
   source 'apc.ini.erb'
   owner 'root'
   group 'root'
   mode '0644'
-  variables(params: node['php']['apc'])
+  variables(params: node['osl-php']['apc'])
 end
