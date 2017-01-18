@@ -9,8 +9,10 @@ describe 'osl-php::default' do
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end
-      it do
-        expect(chef_run).to include_recipe('php::default')
+      %w(osl-php::packages php::default).each do |r|
+        it do
+          expect(chef_run).to include_recipe(r)
+        end
       end
     end
   end
