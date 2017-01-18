@@ -10,8 +10,13 @@ describe 'osl-php::composer' do
         stub_command("php -m | grep 'Phar'").and_return(false)
         expect { chef_run }.to_not raise_error
       end
-      it 'Includes composer default recipe' do
-        expect(chef_run).to include_recipe('composer::default')
+      it do
+        expect(chef_run.node['composer']['url']).to eq('https://getcomposer.org/download/1.2.1/composer.phar')
+      end
+      %w(php::default composer::default).each do |r|
+        it do
+          expect(chef_run).to include_recipe(r)
+        end
       end
     end
   end
