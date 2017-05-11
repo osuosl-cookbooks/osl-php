@@ -19,3 +19,5 @@
 node['osl-php']['packages'].each do |p|
   package p
 end
+
+include_recipe 'php::ini'
