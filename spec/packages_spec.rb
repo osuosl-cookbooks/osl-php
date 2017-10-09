@@ -11,10 +11,8 @@ describe 'osl-php::packages' do
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end
-      %w(php-fpm php-gd).each do |pkg|
-        it do
-          expect(chef_run).to install_package(pkg)
-        end
+      it do
+        expect(chef_run).to install_package(%w(php-fpm php-gd))
       end
     end
   end

@@ -13,4 +13,4 @@ supports         'centos', '~> 7.0'
 
 depends          'build-essential'
 depends          'composer'
-depends          'php', '~> 1.2.6'
+depends          'php', '~> 4.5.0'
