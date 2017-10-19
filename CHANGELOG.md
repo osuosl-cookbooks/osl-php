@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+1.0.0 (2017-10-19)
+------------------
+- Use php cookbook version 4.5.0.
+
 0.2.1 (2017-09-19)
 ------------------
 - Lock upstream cookbook to what we have in production
