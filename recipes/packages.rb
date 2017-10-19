@@ -16,8 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-node['osl-php']['packages'].each do |p|
-  package p
+if node['osl-php']['packages'].any?
+  node.normal['php']['packages'] = node['osl-php']['packages']
 end
 
 include_recipe 'php::package'

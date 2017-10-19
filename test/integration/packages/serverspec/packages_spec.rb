@@ -2,10 +2,12 @@ require 'serverspec'
 
 set :backend, :exec
 
-describe package('php-fpm') do
-  it { should be_installed }
-end
-
-describe package('php-gd') do
-  it { should be_installed }
+%w(php
+   php-devel
+   php-fpm
+   php-gd
+   php-pear).each do |pkg|
+  describe package(pkg) do
+    it { should be_installed }
+  end
 end
