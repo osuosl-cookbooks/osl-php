@@ -15,9 +15,35 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+include_recipe 'yum-ius' if node['osl-php']['use_ius']
 
-if node['osl-php']['packages'].any?
-  node.normal['php']['packages'] = node['osl-php']['packages']
+version = node['php']['version']
+
+# Get package prefix from version (e.g. "php71u" or "php")
+prefix = if node['osl-php']['use_ius']
+           'php' + version.split('.')[0, 2].join + 'u'
+         else
+           'php'
+         end
+
+packages = []
+packages += node['osl-php']['packages']
+
+# Prepend PHP package prefix to short packages (e.g. "php71u-memcached")
+if node['osl-php']['php_packages'].any?
+  packages += node['osl-php']['php_packages'].map { |pkg| prefix + '-' + pkg }
+end
+
+# If any of our attributes are set, modify upstream packages attribute
+if packages.any? || node['osl-php']['use_ius']
+  packages <<= prefix # Prefix is also the name of the main PHP package
+
+  # Include pear package (pear1u for PHP 7.1+)
+  package 'pear' do
+    package_name version.to_f >= 7.1 ? 'pear1u' : prefix + '-pear'
+  end
+
+  node.default['php']['packages'] = packages
 end
 
 include_recipe 'php::package'

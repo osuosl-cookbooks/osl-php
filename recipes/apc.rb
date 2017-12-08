@@ -16,6 +16,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+ruby_block 'raise_use_ius_exception' do
+  block do
+    raise 'APC is not compatible with PHP from IUS Community repos. ' \
+          'Try setting node[\'osl-php\'][\'use_ius\'] to false.'
+  end
+  only_if { node['osl-php']['use_ius'] }
+end
+
 include_recipe 'build-essential'
 
 %w(httpd-devel pcre pcre-devel).each do |pkg|
