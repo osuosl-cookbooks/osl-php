@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+2.0.0 (2018-01-04)
+------------------
+- Normalize node['osl-php']['packages'] to be agnostic to PHP versions
+
 1.0.0 (2017-10-19)
 ------------------
 - Use php cookbook version 4.5.0.
