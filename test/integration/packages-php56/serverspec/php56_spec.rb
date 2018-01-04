@@ -2,11 +2,11 @@ require 'serverspec'
 
 set :backend, :exec
 
-%w(php
-   php-devel
-   php-fpm
-   php-gd
-   php-pear).each do |pkg|
+%w(php56u
+   php56u-devel
+   php56u-fpm
+   php56u-gd
+   php56u-pear).each do |pkg|
   describe package(pkg) do
     it { should be_installed }
   end

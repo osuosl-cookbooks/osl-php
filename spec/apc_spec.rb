@@ -43,6 +43,16 @@ describe 'osl-php::apc' do
           }
         )
       end
+      context 'node[\'osl-php\'][\'use_ius\'] set to true' do
+        cached(:chef_run) do
+          ChefSpec::SoloRunner.new(pltfrm) do |node|
+            node.set['osl-php']['use_ius'] = true
+          end.converge(described_recipe)
+        end
+        it do
+          expect(chef_run).to run_ruby_block('raise_use_ius_exception')
+        end
+      end
     end
   end
 end
