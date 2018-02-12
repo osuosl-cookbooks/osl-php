@@ -41,6 +41,7 @@ if packages.any? || node['osl-php']['use_ius']
   # Include pear package (pear1u for PHP 7.1+)
   package 'pear' do
     package_name version.to_f >= 7.1 ? 'pear1u' : prefix + '-pear'
+    options '--exclude php72u\*' if version.to_f == 7.1
   end
 
   node.default['php']['packages'] = packages
