@@ -15,7 +15,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-include_recipe 'yum-ius' if node['osl-php']['use_ius']
+if node['osl-php']['use_ius']
+  include_recipe 'yum-ius'
+
+  if node['php']['version'].to_f == 7.1
+    node['yum'].each_key do |repo|
+      next unless node['yum'][repo]['managed']
+      r = resources(yum_repository: repo)
+      r.exclude = [r.exclude, 'php72*'].reject(&:nil?).join(' ')
+    end
+  end
+end
 
 version = node['php']['version']
 
@@ -41,7 +51,6 @@ if packages.any? || node['osl-php']['use_ius']
   # Include pear package (pear1u for PHP 7.1+)
   package 'pear' do
     package_name version.to_f >= 7.1 ? 'pear1u' : prefix + '-pear'
-    options '--exclude php72u\*' if version.to_f == 7.1
   end
 
   node.default['php']['packages'] = packages
