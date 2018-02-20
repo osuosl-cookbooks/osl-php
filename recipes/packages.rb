@@ -19,11 +19,8 @@ if node['osl-php']['use_ius']
   include_recipe 'yum-ius'
 
   if node['php']['version'].to_f == 7.1
-    node['yum'].each_key do |repo|
-      next unless node['yum'][repo]['managed']
-      r = resources(yum_repository: repo)
-      r.exclude = [r.exclude, 'php72*'].reject(&:nil?).join(' ')
-    end
+    r = resources(yum_repository: 'ius')
+    r.exclude = [r.exclude, 'php72*'].reject(&:nil?).join(' ')
   end
 end
 
