@@ -52,3 +52,13 @@ suites:
         use_ius: true
       php:
         version: '7.1'
+  - name: packages-php72
+    run_list:
+    - recipe[osl-php::packages]
+    attributes:
+      osl-php:
+        use_ius: true
+      php:
+        version: '7.2'
+    excludes:
+      - centos-6.9

@@ -15,7 +15,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-include_recipe 'yum-ius' if node['osl-php']['use_ius']
+if node['osl-php']['use_ius']
+  include_recipe 'yum-ius'
+
+  if node['php']['version'].to_f == 7.1
+    r = resources(yum_repository: 'ius')
+    r.exclude = [r.exclude, 'php72*'].reject(&:nil?).join(' ')
+  end
+end
 
 version = node['php']['version']
 
