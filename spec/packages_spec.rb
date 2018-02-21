@@ -43,9 +43,13 @@ describe 'osl-php::packages' do
             it do
               expect(chef_run).to install_package('pear')
             end
-            if version == '7.1'
-              it do
+            it do
+              if version == '7.1'
                 expect(chef_run).to create_yum_repository('ius').with(
+                  exclude: 'php72*'
+                )
+              else
+                expect(chef_run).to_not create_yum_repository('ius').with(
                   exclude: 'php72*'
                 )
               end
@@ -71,9 +75,13 @@ describe 'osl-php::packages' do
             it do
               expect(chef_run).to install_package('pear')
             end
-            if version == '7.1'
-              it do
+            it do
+              if version == '7.1'
                 expect(chef_run).to create_yum_repository('ius').with(
+                  exclude: 'php72*'
+                )
+              else
+                expect(chef_run).to_not create_yum_repository('ius').with(
                   exclude: 'php72*'
                 )
               end
