@@ -61,4 +61,4 @@ suites:
       php:
         version: '7.2'
     excludes:
-      - centos-6.9
+      - centos-6
