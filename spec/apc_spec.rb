@@ -39,7 +39,7 @@ describe 'osl-php::apc' do
           group: 'root',
           mode: '0644',
           variables: {
-            params: chef_run.node['osl-php']['apc']
+            params: chef_run.node['osl-php']['apc'],
           }
         )
       end
