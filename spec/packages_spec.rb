@@ -6,7 +6,7 @@ describe 'osl-php::packages' do
       context 'using packages with non-versioned prefixes' do
         cached(:chef_run) do
           ChefSpec::SoloRunner.new(pltfrm) do |node|
-            node.set['osl-php']['php_packages'] = %w(devel cli)
+            node.normal['osl-php']['php_packages'] = %w(devel cli)
           end.converge(described_recipe)
         end
         it 'converges successfully' do
@@ -27,9 +27,9 @@ describe 'osl-php::packages' do
           context 'using packages with versioned prefixes' do
             cached(:chef_run) do
               ChefSpec::SoloRunner.new(pltfrm) do |node|
-                node.set['php']['version'] = version
-                node.set['osl-php']['use_ius'] = true
-                node.set['osl-php']['php_packages'] = %w(devel cli)
+                node.normal['php']['version'] = version
+                node.normal['osl-php']['use_ius'] = true
+                node.normal['osl-php']['php_packages'] = %w(devel cli)
               end.converge(described_recipe)
             end
             it 'converges successfully' do
@@ -58,9 +58,9 @@ describe 'osl-php::packages' do
           context 'old method for backwards compatability' do
             cached(:chef_run) do
               ChefSpec::SoloRunner.new(pltfrm) do |node|
-                node.set['php']['version'] = version
-                node.set['osl-php']['use_ius'] = true
-                node.set['osl-php']['packages'] =
+                node.normal['php']['version'] = version
+                node.normal['osl-php']['use_ius'] = true
+                node.normal['osl-php']['packages'] =
                   %w(devel cli).map { |p| "#{prefix}-#{p}" }
               end.converge(described_recipe)
             end
