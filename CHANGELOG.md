@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+3.0.0 (2018-07-17)
+------------------
+- Chef 13 compatibility fixes
+
 2.0.1 (2018-02-21)
 ------------------
 - Fix issue with pear and php72u
