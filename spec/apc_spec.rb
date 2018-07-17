@@ -7,13 +7,13 @@ describe 'osl-php::apc' do
         ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
       end
       before do
-        chef_run.node.set['osl-php']['apc']['shm_size'] = '64M'
-        chef_run.node.set['osl-php']['apc']['enable_cli'] = 0
-        chef_run.node.set['osl-php']['apc']['ttl'] = 3600
-        chef_run.node.set['osl-php']['apc']['user_ttl'] = 7200
-        chef_run.node.set['osl-php']['apc']['gc_ttl'] = 3600
-        chef_run.node.set['osl-php']['apc']['max_file_size'] = '1M'
-        chef_run.node.set['osl-php']['apc']['stat'] = 1
+        chef_run.node.normal['osl-php']['apc']['shm_size'] = '64M'
+        chef_run.node.normal['osl-php']['apc']['enable_cli'] = 0
+        chef_run.node.normal['osl-php']['apc']['ttl'] = 3600
+        chef_run.node.normal['osl-php']['apc']['user_ttl'] = 7200
+        chef_run.node.normal['osl-php']['apc']['gc_ttl'] = 3600
+        chef_run.node.normal['osl-php']['apc']['max_file_size'] = '1M'
+        chef_run.node.normal['osl-php']['apc']['stat'] = 1
       end
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
@@ -39,14 +39,14 @@ describe 'osl-php::apc' do
           group: 'root',
           mode: '0644',
           variables: {
-            params: chef_run.node['osl-php']['apc']
+            params: chef_run.node['osl-php']['apc'],
           }
         )
       end
       context 'node[\'osl-php\'][\'use_ius\'] set to true' do
         cached(:chef_run) do
           ChefSpec::SoloRunner.new(pltfrm) do |node|
-            node.set['osl-php']['use_ius'] = true
+            node.normal['osl-php']['use_ius'] = true
           end.converge(described_recipe)
         end
         it do
