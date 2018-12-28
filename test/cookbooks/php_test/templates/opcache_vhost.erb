@@ -1,0 +1,7 @@
+<VirtualHost *:80>
+  ServerName localhost
+  DocumentRoot /var/www/localhost
+  <Directory /var/www>
+    Require all granted
+  </Directory>
+</VirtualHost>

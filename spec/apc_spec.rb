@@ -30,16 +30,16 @@ describe 'osl-php::apc' do
         expect(chef_run).to include_recipe('build-essential')
       end
       it do
-        expect(chef_run).to create_directory('/etc/php.d')
-      end
-      it do
-        expect(chef_run).to create_template('/etc/php.d/APC.ini').with(
-          source: 'apc.ini.erb',
-          owner: 'root',
-          group: 'root',
-          mode: '0644',
-          variables: {
-            params: chef_run.node['osl-php']['apc'],
+        expect(chef_run).to add_php_ini('APC').with(
+          options: {
+            'extension' => 'apc.so',
+            'shm_size' => '64M',
+            'enable_cli' => 0,
+            'ttl' => 3600,
+            'user_ttl' => 7200,
+            'gc_ttl' => 3600,
+            'max_file_size' => '1M',
+            'stat' => 1,
           }
         )
       end

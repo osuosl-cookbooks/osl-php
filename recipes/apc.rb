@@ -37,12 +37,6 @@ php_pear 'APC' do
   action :install
 end
 
-directory '/etc/php.d'
-
-template '/etc/php.d/APC.ini' do
-  source 'apc.ini.erb'
-  owner 'root'
-  group 'root'
-  mode '0644'
-  variables(params: node['osl-php']['apc'])
+php_ini 'APC' do
+  options node['osl-php']['apc']
 end

@@ -20,3 +20,7 @@ end
     it { should_not exist }
   end
 end
+
+describe package 'php-opcache' do
+  it { should_not be_installed }
+end

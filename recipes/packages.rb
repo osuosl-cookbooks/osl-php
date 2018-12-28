@@ -47,7 +47,7 @@ prefix = if node['osl-php']['use_ius']
          end
 
 packages = []
-packages += node['osl-php']['packages']
+packages += node['osl-php']['packages'].flatten
 
 # Prepend PHP package prefix to short packages (e.g. "php71u-memcached")
 if node['osl-php']['php_packages'].any?

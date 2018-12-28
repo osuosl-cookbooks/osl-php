@@ -10,5 +10,6 @@ long_description 'Installs/Configures php_ini-test'
 version          '0.1.0'
 
 depends          'osl-php'
+depends          'apache2', '< 6.0'
 
 supports         'centos', '~> 7.0'
