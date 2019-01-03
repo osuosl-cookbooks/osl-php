@@ -61,6 +61,7 @@ This resource is used to create ini files for php configuration.
 
 #### Actions
 * `:create` - Default action. Creates an ini file at the location specified by the name property with the configuration passed to the options property, while applying other properties.
+* `:remove` - Removes an ini file at the location specified by the name property.
 
 #### Attributes
 

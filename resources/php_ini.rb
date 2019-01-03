@@ -1,16 +1,26 @@
 resource_name :php_ini
 
-default_action :create
+default_action :add
 
 property :mode, String, default: '0644'
 property :options, Hash, default: {}, required: true
-property :path, String, name_property: true
 
-action :create do
-  template new_resource.path do
+action :add do
+
+  directory '/etc/php.d' do
+    mode '0755'
+  end
+
+  template "/etc/php.d/#{new_resource.name}" do
     source 'php_ini.erb'
     cookbook 'osl-php'
     variables data: new_resource.options
     mode new_resource.mode
+  end
+end
+
+action :remove do
+  execute "rm /etc/php.d/#{new_resource.name}" do
+    only_if "test -f /etc/php.d/#{new_resource.name}"
   end
 end

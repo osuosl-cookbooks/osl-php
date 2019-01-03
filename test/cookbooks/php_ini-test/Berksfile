@@ -1,5 +1,0 @@
-source 'https://supermarket.chef.io'
-
-cookbook 'osl-php', path: '/home/kindlehl/chef-repo/osuosl-cookbooks/osl-php'
-
-metadata
