@@ -120,7 +120,7 @@ php_ini 'no_sections_rendered_removed' do
   action :remove
 end
 
-# These cookbook_files are the ini files that the two hashes above are based on. 
+# These cookbook_files are the ini files that the two hashes above are based on.
 # They are copied to the server to be compared with the rendered versions of themselves
 cookbook_file '/etc/php.d/with_sections_static' do
   source 'with_sections_static'
