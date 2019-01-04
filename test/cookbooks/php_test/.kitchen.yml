@@ -1,0 +1,5 @@
+---
+suites:
+  - name: default
+    run_list:
+      - recipe[php_ini-test::default]
