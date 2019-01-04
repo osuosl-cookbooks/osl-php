@@ -6,10 +6,7 @@ property :mode, String, default: '0644'
 property :options, Hash, default: {}, required: true
 
 action :add do
-
-  directory '/etc/php.d' do
-    mode '0755'
-  end
+  directory '/etc/php.d'
 
   template "/etc/php.d/#{new_resource.name}" do
     source 'php_ini.erb'
