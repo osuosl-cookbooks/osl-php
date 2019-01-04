@@ -65,5 +65,3 @@ suites:
   - name: php_ini
     run_list:
     - recipe[php_test::php_ini]
-    excludes:
-      - centos-6

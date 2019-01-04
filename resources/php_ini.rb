@@ -20,7 +20,7 @@ action :add do
 end
 
 action :remove do
-  execute "rm /etc/php.d/#{new_resource.name}" do
-    only_if "test -f /etc/php.d/#{new_resource.name}"
+  file "/etc/php.d/#{new_resource.name}" do
+    action :delete
   end
 end
