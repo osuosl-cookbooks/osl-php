@@ -1,8 +1,7 @@
 #
 # Cookbook:: php_ini-test
 # Recipe:: default
-#
-# Copyright:: 2019, Oregon State University
+# # Copyright:: 2019, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -116,15 +115,14 @@ php_ini 'no_sections_rendered_removed' do
 end
 
 php_ini 'no_sections_rendered_removed' do
-  options no_sections
   action :remove
 end
 
 # These cookbook_files are the ini files that the two hashes above are based on.
 # They are copied to the server to be compared with the rendered versions of themselves
-cookbook_file '/etc/php.d/with_sections_static' do
+cookbook_file '/tmp/with_sections_static' do
   source 'with_sections_static'
 end
-cookbook_file '/etc/php.d/no_sections_static' do
+cookbook_file '/tmp/no_sections_static' do
   source 'no_sections_static'
 end
