@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+3.1.0 (2019-01-16)
+------------------
+- Added custom resource for php ini files
+
 3.0.0 (2018-07-17)
 ------------------
 - Chef 13 compatibility fixes
