@@ -62,3 +62,6 @@ suites:
         version: '7.2'
     excludes:
       - centos-6
+  - name: php_ini
+    run_list:
+    - recipe[php_test::php_ini]
