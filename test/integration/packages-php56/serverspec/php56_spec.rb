@@ -11,3 +11,7 @@ set :backend, :exec
     it { should be_installed }
   end
 end
+
+describe file '/etc/yum.repos.d/ius-archive.repo' do
+  its(:content) { should match(/^enabled=1$/) }
+end
