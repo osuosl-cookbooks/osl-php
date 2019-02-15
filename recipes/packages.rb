@@ -16,9 +16,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# List PHP versions that require IUS archive repo: https://ius.io/LifeCycle/#php
-node.default['osl-php']['ius_archive_versions'] = %w(5.6 7.0)
-
 if node['osl-php']['use_ius']
   # Enable IUS archive repo for archived versions
   enable_ius_archive = node['osl-php']['ius_archive_versions'].include?(node['php']['version'])
