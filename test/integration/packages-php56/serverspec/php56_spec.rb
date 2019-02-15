@@ -12,6 +12,11 @@ set :backend, :exec
   end
 end
 
-describe file '/etc/yum.repos.d/ius-archive.repo' do
-  its(:content) { should match(/^enabled=1$/) }
+%w(
+  ius
+  ius-archive
+).each do |repo|
+  describe file "/etc/yum.repos.d/#{repo}.repo" do
+    its(:content) { should match(/^enabled=1$/) }
+  end
 end
