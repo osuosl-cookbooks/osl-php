@@ -17,12 +17,13 @@
 # limitations under the License.
 
 # List PHP versions that require IUS archive repo: https://ius.io/LifeCycle/#php
-ius_archive_versions = %w(5.6 7.0)
+node.default['osl-php']['ius_archive_versions'] = %w(5.6 7.0)
 
 if node['osl-php']['use_ius']
   # Enable IUS archive repo for archived versions
-  node.default['yum']['ius-archive']['enabled'] = ius_archive_versions.include?(node['php']['version'])
-  node.default['yum']['ius-archive']['managed'] = ius_archive_versions.include?(node['php']['version'])
+  enable_ius_archive = node['osl-php']['ius_archive_versions'].include?(node['php']['version'])
+  node.default['yum']['ius-archive']['enabled'] = enable_ius_archive
+  node.default['yum']['ius-archive']['managed'] = enable_ius_archive
 
   include_recipe 'yum-ius'
 

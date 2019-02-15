@@ -2,6 +2,7 @@
 
 Attributes
 ----------
+* `node['osl-php']['ius_archive_versions']` - A list tracking versions of PHP that have moved into IUS's archive repo. The recipe should be updated when new versions on this list reach EOL: https://ius.io/LifeCycle/#php
 * `node['osl-php']['use_ius']` - Use PHP packages from [IUS Community](https://ius.io/) repositories when true. Defaults
   to false.
 * `node['osl-php']['packages']` - PHP packages to install that don't begin with a PHP prefix ("php-", "php56u-",
