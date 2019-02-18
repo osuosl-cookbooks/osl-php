@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+3.1.1 (2019-02-18)
+------------------
+- Enable IUS Archive repo for PHP 5.6, 7.0
+
 3.1.0 (2019-01-16)
 ------------------
 - Added custom resource for php ini files
