@@ -15,7 +15,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 if node['osl-php']['use_ius']
+  # Enable IUS archive repo for archived versions
+  enable_ius_archive = node['osl-php']['ius_archive_versions'].include?(node['php']['version'])
+  node.default['yum']['ius-archive']['enabled'] = enable_ius_archive
+  node.default['yum']['ius-archive']['managed'] = enable_ius_archive
+
   include_recipe 'yum-ius'
 
   if node['php']['version'].to_f == 7.1
