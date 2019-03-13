@@ -86,8 +86,8 @@ suites:
           - 'opcache'
         use_ius: true
         use_opcache: true
-        opcache: 
-          opcache.enable_cli: 'true' 
+        opcache:
+          opcache.enable_cli: 'true'
           opcache.memory_consumption: 1024
           opcache.max_accelerated_files: 1000
       php:
@@ -107,8 +107,8 @@ suites:
           - 'opcache'
         use_ius: true
         use_opcache: true
-        opcache: 
-          opcache.enable_cli: 'true' 
+        opcache:
+          opcache.enable_cli: 'true'
           opcache.memory_consumption: 1024
           opcache.max_accelerated_files: 1000
       php:
