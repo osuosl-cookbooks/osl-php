@@ -13,6 +13,11 @@ CENTOS_6_OPTS = {
   version: '6.7',
 }.freeze
 
+ALL_PLATFORMS = [
+  CENTOS_6_OPTS,
+  CENTOS_7_OPTS,
+].freeze
+
 RSpec.configure do |config|
   config.log_level = :fatal
 end

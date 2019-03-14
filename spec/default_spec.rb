@@ -1,7 +1,7 @@
 require_relative 'spec_helper'
 
 describe 'osl-php::default' do
-  [CENTOS_7_OPTS, CENTOS_6_OPTS].each do |pltfrm|
+  ALL_PLATFORMS.each do |pltfrm|
     context "on #{pltfrm[:platform]} #{pltfrm[:version]}" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
@@ -19,7 +19,7 @@ describe 'osl-php::default' do
       end
     end
   end
-  [CENTOS_7_OPTS, CENTOS_6_OPTS].each do |pltfrm|
+  ALL_PLATFORMS.each do |pltfrm|
     ['5.4', '5.6', '7.2'].each do |php_v|
       [false, true].each do |use_opcache|
         description = "php v#{php_v} and #{'no ' unless use_opcache}opcache"

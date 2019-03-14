@@ -1,7 +1,7 @@
 require_relative 'spec_helper'
 
 describe 'osl-php::opcache' do
-  [CENTOS_7_OPTS].each do |pltfrm|
+  ALL_PLATFORMS.each do |pltfrm|
     context "on #{pltfrm[:platform]} #{pltfrm[:version]}" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(pltfrm) do |node|
