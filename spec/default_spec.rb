@@ -14,11 +14,11 @@ describe 'osl-php::default' do
           expect(chef_run).to include_recipe(r)
         end
       end
+      it do
+        expect(chef_run).to_not include_recipe('osl-php::opcache')
+      end
     end
   end
-end
-
-describe 'osl-php::default' do
   [CENTOS_7_OPTS, CENTOS_6_OPTS].each do |pltfrm|
     ['5.4', '5.6', '7.2'].each do |php_v|
       [false, true].each do |use_opcache|

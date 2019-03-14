@@ -17,5 +17,14 @@ describe file '/etc/php.d/APC.ini' do
   it { should exist }
   it { should be_owned_by 'root' }
   it { should be_mode 644 }
-  its(:content) { should contain '128M' }
+end
+
+describe command 'echo "<?php phpinfo(); ?>" | php' do
+  its(:stdout) { should match /shm_size.+128M/ }
+  its(:stdout) { should match /enable_cli.+Off/ }
+  its(:stdout) { should match /ttl.+3600/ }
+  its(:stdout) { should match /user_ttl.+7200/ }
+  its(:stdout) { should match /gc_ttl.+3600/ }
+  its(:stdout) { should match /max_file_size.+1M/ }
+  its(:stdout) { should match /stat.+1/ }
 end

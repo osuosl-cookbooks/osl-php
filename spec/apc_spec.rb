@@ -33,10 +33,10 @@ describe 'osl-php::apc' do
         expect(chef_run).to add_php_ini('APC').with(
           options: {
             'extension' => 'apc.so',
-            'shm_size' => '64M',
+            'apc.shm_size' => '64M',
             'enable_cli' => 0,
             'ttl' => 3600,
-            'user_ttl' => 7200,
+            'apc.user_ttl' => 7200,
             'gc_ttl' => 3600,
             'max_file_size' => '1M',
             'stat' => 1,

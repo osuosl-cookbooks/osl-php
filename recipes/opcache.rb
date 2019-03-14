@@ -20,14 +20,14 @@
 # if trying to use opcache with an incompatible version of php (default pkg)
 # and using an unsupported version of php. use_ius must be true to install a valid php interpreter.
 
-node.default['osl-php']['php_packages'] << 'opcache'
-
 if node['osl-php']['use_opcache'] && node['php']['version'].to_f < 5.5
   raise 'Must use PHP >= 5.5 with ius enabled to use Zend Opcache.  Try adding '\
         "'node.default['osl-php']['use_ius'] = true' and install a proper version of php."
 end
 
+node.default['osl-php']['php_packages'] << 'opcache'
+
 php_ini '10-opcache' do
-  options({ 'zend_extension' => 'opcache.so' }.merge(node['osl-php']['opcache']))
+  options node['osl-php']['opcache']
   only_if { node['osl-php']['use_opcache'] }
 end

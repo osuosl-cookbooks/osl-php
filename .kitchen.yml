@@ -21,7 +21,7 @@ suites:
     attributes:
       osl-php:
         apc:
-          shm_size: '128M'
+          apc.shm_size: '128M'
   - name: composer
     run_list:
     - recipe[osl-php::composer]
@@ -76,7 +76,7 @@ suites:
   - name: opcache-php56
     run_list:
     - recipe[osl-php::default]
-    - recipe[php_test::opcache_apache]
+    - recipe[php_test::phpinfo_apache]
     attributes:
       osl-php:
         php_packages:
@@ -97,7 +97,7 @@ suites:
   - name: opcache-php72
     run_list:
     - recipe[osl-php::default]
-    - recipe[php_test::opcache_apache]
+    - recipe[php_test::phpinfo_apache]
     attributes:
       osl-php:
         php_packages:
