@@ -28,6 +28,14 @@ suites:
   - name: packages
     run_list:
     - recipe[osl-php::packages]
+  - name: packages-php53
+    run_list:
+    - recipe[osl-php::packages]
+    attributes:
+      osl-php:
+        use_ius: true
+      php:
+        version: '5.3'
   - name: packages-php56
     run_list:
     - recipe[osl-php::packages]

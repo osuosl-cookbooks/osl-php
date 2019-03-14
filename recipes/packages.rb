@@ -22,6 +22,13 @@ if node['osl-php']['use_ius']
   node.default['yum']['ius-archive']['enabled'] = enable_ius_archive
   node.default['yum']['ius-archive']['managed'] = enable_ius_archive
 
+  # php53u RPMs built against CentOS 7
+  if node['php']['version'].to_f == 5.3 && node['platform_version'].to_i >= 7
+    node.default['yum']['ius']['gpgkey'] = 'http://ftp.osuosl.org/pub/osl/repos/yum/RPM-GPG-KEY-osuosl'
+    node.default['yum']['ius']['baseurl'] = 'http://ftp.osuosl.org/pub/osl/repos/yum/$releasever/php53/$basearch'
+    node.default['yum']['ius']['mirrorlist'] = nil
+  end
+
   include_recipe 'yum-ius'
 
   if node['php']['version'].to_f == 7.1

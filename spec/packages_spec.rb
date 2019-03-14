@@ -21,7 +21,7 @@ describe 'osl-php::packages' do
           expect(chef_run).to install_package('php-pear')
         end
       end
-      %w(7.1 7.2).each do |version|
+      %w(5.3 5.6 7.1 7.2).each do |version|
         prefix = "php#{version.split('.').join}u"
         context "using php #{version}" do
           context 'using packages with versioned prefixes' do
@@ -44,14 +44,35 @@ describe 'osl-php::packages' do
               expect(chef_run).to install_package('pear')
             end
             it do
-              if version == '7.1'
-                expect(chef_run).to create_yum_repository('ius').with(
-                  exclude: 'php72*'
-                )
+              case version
+              when '5.3'
+                if pltfrm[:version].to_i >= 7
+                  expect(chef_run).to create_yum_repository('ius')
+                    .with(
+                      gpgkey: 'http://ftp.osuosl.org/pub/osl/repos/yum/RPM-GPG-KEY-osuosl',
+                      baseurl: 'http://ftp.osuosl.org/pub/osl/repos/yum/$releasever/php53/$basearch',
+                      mirrorlist: nil
+                    )
+                else
+                  expect(chef_run).to_not create_yum_repository('ius')
+                    .with(
+                      gpgkey: 'http://ftp.osuosl.org/pub/osl/repos/yum/RPM-GPG-KEY-osuosl',
+                      baseurl: 'http://ftp.osuosl.org/pub/osl/repos/yum/$releasever/php53/$basearch',
+                      mirrorlist: nil
+                    )
+                end
+              when '7.1'
+                expect(chef_run).to create_yum_repository('ius').with(exclude: 'php72*')
               else
-                expect(chef_run).to_not create_yum_repository('ius').with(
-                  exclude: 'php72*'
-                )
+                expect(chef_run).to_not create_yum_repository('ius').with(exclude: 'php72*')
+              end
+            end
+            it do
+              case version
+              when '5.3', '5.6', '7.0'
+                expect(chef_run).to create_yum_repository('ius-archive')
+              else
+                expect(chef_run).to_not create_yum_repository('ius-archive')
               end
             end
           end
