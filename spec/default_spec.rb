@@ -51,6 +51,9 @@ describe 'osl-php::default' do
             it do
               expect(chef_run).to add_php_ini('10-opcache')
             end
+            it do
+              expect(chef_run).to_not include_recipe 'osl-php::opcache' unless use_opcache
+            end
           end
         end
       end

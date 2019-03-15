@@ -21,7 +21,7 @@ file '/var/www/localhost/index.php' do
   content <<-EOF
 <?php
   phpinfo();
-?>'
+?>
 EOF
   owner 'apache'
   group 'apache'

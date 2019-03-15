@@ -18,6 +18,7 @@ suites:
     run_list:
       - recipe[osl-php::default]
       - recipe[osl-php::apc]
+      - recipe[php_test::phpinfo_apache]
     attributes:
       osl-php:
         apc:

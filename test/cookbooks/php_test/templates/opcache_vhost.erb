@@ -1,7 +1,16 @@
+<FilesMatch \.php$>
+  SetHandler application/x-httpd-php
+</FilesMatch>
+
 <VirtualHost *:80>
   ServerName localhost
   DocumentRoot /var/www/localhost
   <Directory /var/www>
+<% if node["platform_version"].to_i == 6 %>
+    Order allow,deny
+    Allow from all
+<% else %>
     Require all granted
+<% end %>
   </Directory>
 </VirtualHost>
