@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+3.1.2 (2019-03-15)
+------------------
+- Bring php-5.3 back from the dead
+
 3.1.1 (2019-02-18)
 ------------------
 - Enable IUS Archive repo for PHP 5.6, 7.0
