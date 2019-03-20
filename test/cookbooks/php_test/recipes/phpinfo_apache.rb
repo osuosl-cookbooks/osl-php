@@ -28,5 +28,5 @@ EOF
 end
 
 service 'httpd' do
-  action [:start, :restart]
+  action :restart
 end

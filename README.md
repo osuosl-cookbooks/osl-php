@@ -16,18 +16,18 @@ Attributes
 Usage
 -----
 ### osl-php::default
-Installs PHP packages (see below), updates upstream's default pear channels, and creates a `php.ini` configuration. 
+Installs PHP packages (see below), updates upstream's default pear channels, and creates a `php.ini` configuration.
 This recipe will also install Zend Opcache if`use_opcache` is true, and the php is compatible (5.5 or greater).
 Use the `node['osl-php']['opcache']` hash to set parameters for Zend Opcache.
 
 ### osl-php::opcache
-Adds Opcache package to `node['osl-php']['php_packages']` and configures Zend Opcache's ini. Don't include this recipe 
+Adds Opcache package to `node['osl-php']['php_packages']` and configures Zend Opcache's ini. Don't include this recipe
 directly, it gets included by the default recipe. `use_opcache` should be set to true to enable Zend Opcache.
 If true, php must be v5.5 or greater. Include `osl-php::default` after setting the proper attributes.
 
 ### osl-php::apc
 Installs APC using the hash `node['osl-php']['apc']` to configure the it's ini in the exact same manner as opcache.
-This is not compatible with PHP packages from IUS Community repos, so an exception will be raised if 
+This is not compatible with PHP packages from IUS Community repos, so an exception will be raised if
 `node['osl-php']['use_ius']` is true.
 
 ### osl-php::packages
@@ -61,7 +61,7 @@ node.default['osl-php']['opcache']['opcache.enable_cli'] = 'true'
 node.default['osl-php']['opcache']['opcache.memory_consumption'] = 512
 include_recipe 'osl-php'
 ```
-will install `php56u`, `php56u-opcache`, and add `opcache.enable_cli=true`, `opcache.memory_consumption=512` to the 
+will install `php56u`, `php56u-opcache`, and add `opcache.enable_cli=true`, `opcache.memory_consumption=512` to the
 opcache's ini file.
 
 ```ruby

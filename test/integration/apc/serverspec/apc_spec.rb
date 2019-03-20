@@ -22,11 +22,11 @@ end
 ['echo "<?php phpinfo(); ?>" | php', 'curl localhost'].each do |cmd|
   describe command cmd do
     its(:stdout) { should match /apc.shm_size.+128M/ }
-    its(:stdout) { should match /enable_cli.+Off/ }
-    its(:stdout) { should match /ttl.+3600/ }
+    its(:stdout) { should match /apc.enable_cli.+Off/ }
+    its(:stdout) { should match /apc.ttl.+3600/ }
     its(:stdout) { should match /apc.user_ttl.+7200/ }
-    its(:stdout) { should match /gc_ttl.+3600/ }
-    its(:stdout) { should match /max_file_size.+1M/ }
-    its(:stdout) { should match /stat.+1/ }
+    its(:stdout) { should match /apc.gc_ttl.+3600/ }
+    its(:stdout) { should match /apc.max_file_size.+1M/ }
+    its(:stdout) { should match /apc.stat.+On/ }
   end
 end
