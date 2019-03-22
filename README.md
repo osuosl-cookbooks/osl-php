@@ -26,7 +26,7 @@ directly, it gets included by the default recipe. `use_opcache` should be set to
 If true, php must be v5.5 or greater. Include `osl-php::default` after setting the proper attributes.
 
 ### osl-php::apc
-Installs APC using the hash `node['osl-php']['apc']` to configure the it's ini in the exact same manner as opcache.
+Installs APC using the hash `node['osl-php']['apc']` to configure it's ini in the exact same manner as opcache.
 This is not compatible with PHP packages from IUS Community repos, so an exception will be raised if
 `node['osl-php']['use_ius']` is true.
 
