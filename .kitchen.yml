@@ -18,10 +18,11 @@ suites:
     run_list:
       - recipe[osl-php::default]
       - recipe[osl-php::apc]
+      - recipe[php_test::phpinfo_apache]
     attributes:
       osl-php:
         apc:
-          shm_size: '128M'
+          apc.shm_size: '128M'
   - name: composer
     run_list:
     - recipe[osl-php::composer]
@@ -73,3 +74,45 @@ suites:
   - name: php_ini
     run_list:
     - recipe[php_test::php_ini]
+  - name: opcache-php56
+    run_list:
+    - recipe[osl-php::default]
+    - recipe[php_test::phpinfo_apache]
+    attributes:
+      osl-php:
+        php_packages:
+          - 'devel'
+          - 'fpm'
+          - 'gd'
+          - 'opcache'
+        use_ius: true
+        use_opcache: true
+        opcache:
+          opcache.enable_cli: 'true'
+          opcache.memory_consumption: 1024
+          opcache.max_accelerated_files: 1000
+      php:
+        version: '5.6'
+    excludes:
+      - centos-6
+  - name: opcache-php72
+    run_list:
+    - recipe[osl-php::default]
+    - recipe[php_test::phpinfo_apache]
+    attributes:
+      osl-php:
+        php_packages:
+          - 'devel'
+          - 'fpm'
+          - 'gd'
+          - 'opcache'
+        use_ius: true
+        use_opcache: true
+        opcache:
+          opcache.enable_cli: 'true'
+          opcache.memory_consumption: 1024
+          opcache.max_accelerated_files: 1000
+      php:
+        version: '7.2'
+    excludes:
+      - centos-6

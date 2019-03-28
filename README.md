@@ -5,6 +5,8 @@ Attributes
 * `node['osl-php']['ius_archive_versions']` - A list tracking versions of PHP that have moved into IUS's archive repo. The recipe should be updated when new versions on this list reach EOL: https://ius.io/LifeCycle/#php
 * `node['osl-php']['use_ius']` - Use PHP packages from [IUS Community](https://ius.io/) repositories when true. Defaults
   to false.
+* `node['osl-php']['use_opcache']` - Use [Zend Opcache](http://files.zend.com/help/Zend-Server/content/working_with_opcache.htm)
+  to cache compiled PHP scritps. Defaults to false.
 * `node['osl-php']['packages']` - PHP packages to install that don't begin with a PHP prefix ("php-", "php56u-",
   "php71u-", etc.). Prefixed packages should be put in the `php_packages` attribute instead.
 * `node['osl-php']['php_packages']` - PHP packages to install with prefixed names ("php-", "php56u-", "php71u-", etc.),
@@ -15,9 +17,21 @@ Usage
 -----
 ### osl-php::default
 Installs PHP packages (see below), updates upstream's default pear channels, and creates a `php.ini` configuration.
+This recipe will also install Zend Opcache if`use_opcache` is true, and the php is compatible (5.5 or greater).
+Use the `node['osl-php']['opcache']` hash to set parameters for Zend Opcache.
+
+### osl-php::opcache
+Adds Opcache package to `node['osl-php']['php_packages']` and configures Zend Opcache's ini. Don't include this recipe
+directly, it gets included by the default recipe. `use_opcache` should be set to true to enable Zend Opcache.
+If true, php must be v5.5 or greater. Include `osl-php::default` after setting the proper attributes.
+
+### osl-php::apc
+Installs APC using the hash `node['osl-php']['apc']` to configure it's ini in the exact same manner as opcache.
+This is not compatible with PHP packages from IUS Community repos, so an exception will be raised if
+`node['osl-php']['use_ius']` is true.
 
 ### osl-php::packages
-The packages recipe makes use of the three attributes described above (`use_ius`, `packages`, and `php_packages`).
+The packages recipe uses three of the four attributes described above (`use_ius`, `packages`, and `php_packages`).
 `use_ius` should be set to true or false depending on whether PHP packages from IUS Community repos should be used.
 
 The primary PHP package and pear package are installed by this recipe automatically, and do not have to be specified in
@@ -38,6 +52,17 @@ node.default['osl-php']['php_packages'] = %w(devel cli)
 include_recipe 'osl-php::packages'
 ```
 will install `php`, `php-devel`, `php-cli`, and `php-pear`.
+
+```ruby
+node.default['php']['version'] = '5.6'
+node.default['osl-php']['use_ius'] = true
+node.default['osl-php']['use_opcache'] = true
+node.default['osl-php']['opcache']['opcache.enable_cli'] = 'true'
+node.default['osl-php']['opcache']['opcache.memory_consumption'] = 512
+include_recipe 'osl-php'
+```
+will install `php56u`, `php56u-opcache`, and add `opcache.enable_cli=true`, `opcache.memory_consumption=512` to the
+opcache's ini file.
 
 ```ruby
 node.default['php']['version'] = '5.6'
