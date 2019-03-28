@@ -7,7 +7,7 @@ license          'Apache-2.0'
 chef_version     '>= 12.18' if respond_to?(:chef_version)
 description      'Installs/Configures osl-php'
 long_description 'Installs/Configures osl-php'
-version          '3.1.2'
+version          '3.2.0'
 
 supports         'centos', '~> 6.0'
 supports         'centos', '~> 7.0'

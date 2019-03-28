@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+3.2.0 (2019-03-28)
+------------------
+- Added Option to Install + Configure Zend Opcache
+
 3.1.2 (2019-03-15)
 ------------------
 - Bring php-5.3 back from the dead
