@@ -12,18 +12,17 @@ end
   ius
   ius-archive
 ).each do |repo|
-  if os[:release].to_i >= 7
-    describe file "/etc/yum.repos.d/#{repo}.repo" do
-      its(:content) { should match(/^enabled=1$/) }
-      if repo == 'ius'
-        its(:content) { should match(%r{^baseurl=http://ftp.osuosl.org/pub/osl/repos/yum/\$releasever/php53/\$basearch$}) }
-        its(:content) { should match(%r{^gpgkey=http://ftp.osuosl.org/pub/osl/repos/yum/RPM-GPG-KEY-osuosl$}) }
-        its(:content) { should_not match(/^mirrorlist/) }
-      else
-        its(:content) { should_not match(%r{^baseurl=http://ftp.osuosl.org/pub/osl/repos/yum/\$releasever/php53/\$basearch$}) }
-        its(:content) { should_not match(%r{^gpgkey=http://ftp.osuosl.org/pub/osl/repos/yum/RPM-GPG-KEY-osuosl$}) }
-        its(:content) { should match(/^mirrorlist/) }
-      end
+  next unless os[:release].to_i >= 7
+  describe file "/etc/yum.repos.d/#{repo}.repo" do
+    its(:content) { should match(/^enabled=1$/) }
+    if repo == 'ius'
+      its(:content) { should match(%r{^baseurl=http://ftp.osuosl.org/pub/osl/repos/yum/\$releasever/php53/\$basearch$}) }
+      its(:content) { should match(%r{^gpgkey=http://ftp.osuosl.org/pub/osl/repos/yum/RPM-GPG-KEY-osuosl$}) }
+      its(:content) { should_not match(/^mirrorlist/) }
+    else
+      its(:content) { should_not match(%r{^baseurl=http://ftp.osuosl.org/pub/osl/repos/yum/\$releasever/php53/\$basearch$}) }
+      its(:content) { should_not match(%r{^gpgkey=http://ftp.osuosl.org/pub/osl/repos/yum/RPM-GPG-KEY-osuosl$}) }
+      its(:content) { should match(/^mirrorlist/) }
     end
   end
 end
