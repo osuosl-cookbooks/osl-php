@@ -18,7 +18,7 @@
 
 if node['osl-php']['use_ius']
   # Enable IUS archive repo for archived versions
-  enable_ius_archive = node['osl-php']['ius_archive_versions'].include?(node['php']['version'])
+  enable_ius_archive = node['osl-php']['ius_archive_versions'].any? { |v| node['php']['version'].start_with?(v) }
   node.default['yum']['ius-archive']['enabled'] = enable_ius_archive
   node.default['yum']['ius-archive']['managed'] = enable_ius_archive
 
