@@ -1,7 +1,3 @@
-require 'serverspec'
-
-set :backend, :exec
-
 %w(php
    php-devel
    php-fpm

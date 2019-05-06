@@ -1,7 +1,3 @@
-require 'serverspec'
-
-set :backend, :exec
-
 describe file('/usr/local/bin/composer') do
   it { should exist }
 end

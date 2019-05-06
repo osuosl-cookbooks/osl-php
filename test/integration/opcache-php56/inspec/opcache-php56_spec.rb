@@ -1,10 +1,6 @@
-require 'serverspec'
-
-set :backend, :exec
-
 ['echo "<?php phpinfo(); ?>" | php', 'curl localhost'].each do |cmd|
   describe command cmd do
-    its(:stdout) { should match /PHP Version.*7.2/ }
+    its(:stdout) { should match /PHP Version.*5.6/ }
     its(:stdout) { should match /opcache\.memory_consumption.+1024/ }
     its(:stdout) { should match /opcache\.max_accelerated_files.+1000/ }
     its(:stdout) { should match /opcache\.enable.+On/ }
@@ -13,6 +9,6 @@ set :backend, :exec
   end
 end
 
-describe package 'php72u-opcache' do
+describe package 'php56u-opcache' do
   it { should be_installed }
 end

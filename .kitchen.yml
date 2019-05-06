@@ -1,4 +1,6 @@
 ---
+verifier:
+  name: inspec
 provisioner:
   name: chef_solo
   attributes:

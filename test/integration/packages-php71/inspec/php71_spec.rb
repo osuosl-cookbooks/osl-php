@@ -1,7 +1,3 @@
-require 'serverspec'
-
-set :backend, :exec
-
 %w(mod_php71u
    php71u-devel
    php71u-fpm
