@@ -1,5 +1,5 @@
 default['osl-php']['apc']['extension'] = 'apc.so'
-default['osl-php']['apc']['apc.shm_size'] = '64M'
+default['osl-php']['apc']['apc.shm_size'] = '128M'
 default['osl-php']['apc']['apc.user_ttl'] = 7200
 default['osl-php']['apc']['apc.enable_cli'] = 0
 default['osl-php']['apc']['apc.ttl'] = 3600

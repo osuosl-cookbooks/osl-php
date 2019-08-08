@@ -1,16 +1,14 @@
 require 'chefspec'
 require 'chefspec/berkshelf'
 
-ChefSpec::Coverage.start! { add_filter 'osl-php' }
-
 CENTOS_7_OPTS = {
   platform: 'centos',
-  version: '7.4.1708',
+  version: '7',
 }.freeze
 
 CENTOS_6_OPTS = {
   platform: 'centos',
-  version: '6.9',
+  version: '6',
 }.freeze
 
 ALL_PLATFORMS = [
@@ -19,5 +17,5 @@ ALL_PLATFORMS = [
 ].freeze
 
 RSpec.configure do |config|
-  config.log_level = :fatal
+  config.log_level = :warn
 end

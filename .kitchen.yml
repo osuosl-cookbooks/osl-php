@@ -22,9 +22,6 @@ suites:
       - recipe[osl-php::apc]
       - recipe[php_test::phpinfo_apache]
     attributes:
-      osl-php:
-        apc:
-          apc.shm_size: '128M'
   - name: composer
     run_list:
     - recipe[osl-php::composer]

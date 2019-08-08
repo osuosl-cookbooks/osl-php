@@ -9,7 +9,7 @@ describe file '/etc/php.d' do
   it { should be_directory }
 end
 
-describe file '/etc/php.d/APC.ini' do
+describe file '/etc/php.d/apc.ini' do
   it { should exist }
   it { should be_owned_by 'root' }
   its('mode') { should cmp '0644' }
