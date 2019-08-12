@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+4.0.0 (2019-08-12)
+------------------
+- Migrate to Chef 14
+
 3.2.1 (2019-05-03)
 ------------------
 - Fix IUS archive not being enabled properly
