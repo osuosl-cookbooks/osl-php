@@ -31,13 +31,13 @@ end
   end
 end
 
-build_essential 'apc'
+build_essential 'APC'
 
-php_pear 'apc' do
+php_pear 'APC' do
   action :install
   channel 'pecl'
 end
 
-php_ini 'apc' do
+php_ini 'APC' do
   options node['osl-php']['apc']
 end
