@@ -35,6 +35,7 @@ build_essential 'APC'
 
 php_pear 'APC' do
   action :install
+  # Use channel 'pecl' since APC is not available on the default channel
   channel 'pecl'
 end
 
