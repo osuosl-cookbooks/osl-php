@@ -3,5 +3,5 @@ describe file('/usr/local/bin/composer') do
 end
 
 describe command('/usr/local/bin/composer --version') do
-  its(:stdout) { should contain('Composer version 1.2.1') }
+  its(:stdout) { should match 'Composer version 1.2.1' }
 end

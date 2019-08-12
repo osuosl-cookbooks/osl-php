@@ -25,16 +25,18 @@ ruby_block 'raise_use_ius_exception' do
   only_if { node['osl-php']['use_ius'] }
 end
 
-include_recipe 'build-essential'
-
 %w(httpd-devel pcre pcre-devel).each do |pkg|
   package pkg do
     action :install
   end
 end
 
+build_essential 'APC'
+
 php_pear 'APC' do
   action :install
+  # Use channel 'pecl' since APC is not available on the default channel
+  channel 'pecl'
 end
 
 php_ini 'APC' do
