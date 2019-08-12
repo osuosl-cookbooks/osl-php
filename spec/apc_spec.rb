@@ -24,13 +24,13 @@ describe 'osl-php::apc' do
         end
       end
       it do
-        expect(chef_run). to install_php_pear('apc')
+        expect(chef_run). to install_php_pear('APC')
       end
       it do
-        expect(chef_run).to install_build_essential('apc')
+        expect(chef_run).to install_build_essential('APC')
       end
       it do
-        expect(chef_run).to add_php_ini('apc').with(
+        expect(chef_run).to add_php_ini('APC').with(
           options: {
             'extension' => 'apc.so',
             'apc.shm_size' => '128M',
