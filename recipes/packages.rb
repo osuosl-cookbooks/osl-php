@@ -31,9 +31,13 @@ if node['osl-php']['use_ius']
 
   include_recipe 'yum-ius'
 
-  if node['php']['version'].to_f == 7.1
+  case node['php']['version'].to_f
+  when 7.1
     r = resources(yum_repository: 'ius')
-    r.exclude = [r.exclude, 'php72*'].reject(&:nil?).join(' ')
+    r.exclude = [r.exclude, 'php72* php73*'].reject(&:nil?).join(' ')
+  when 7.2
+    r = resources(yum_repository: 'ius')
+    r.exclude = [r.exclude, 'php73*'].reject(&:nil?).join(' ')
   end
 end
 
