@@ -21,6 +21,30 @@ describe 'osl-php::packages' do
           expect(chef_run).to install_package('php-pear')
         end
       end
+      context 'using php 7.3' do
+        cached(:chef_run) do
+          ChefSpec::SoloRunner.new(pltfrm) do |node|
+            node.normal['php']['version'] = '7.3'
+            node.normal['osl-php']['use_ius'] = true
+            node.normal['osl-php']['php_packages'] = %w(devel cli)
+          end.converge(described_recipe)
+        end
+        it 'converges successfully' do
+          expect { chef_run }.to_not raise_error
+        end
+        it do
+          expect(chef_run).to install_package('php73-devel, php73-cli, mod_php73')
+        end
+        it do
+          expect(chef_run).to install_package('pear').with(package_name: 'pear1')
+        end
+        it do
+          expect(chef_run).to create_yum_repository('ius')
+        end
+        it do
+          expect(chef_run).to_not create_yum_repository('ius-archive')
+        end
+      end
       %w(5.3 5.6 7.1 7.2).each do |version|
         prefix = "php#{version.split('.').join}u"
         context "using php #{version}" do

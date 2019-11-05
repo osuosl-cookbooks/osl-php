@@ -45,7 +45,8 @@ version = node['php']['version']
 
 # Get package prefix from version (e.g. "php71u" or "php")
 prefix = if node['osl-php']['use_ius']
-           'php' + version.split('.')[0, 2].join + 'u'
+           # The IUS repo removed the 'u' at the end of the prefix with PHP 7.3 packages.
+           'php' + version.split('.')[0, 2].join + (version.to_f < 7.3 ? 'u' : '')
          else
            'php'
          end
@@ -60,11 +61,27 @@ end
 
 # If any of our attributes are set, modify upstream packages attribute
 if packages.any? || node['osl-php']['use_ius']
-  packages <<= prefix # Prefix is also the name of the main PHP package
+  packages <<= if version.to_f < 7.3
+                 # Prefix is also the name of the main PHP package until 7.3
+                 prefix
+               else
+                 # When you install the main PHP package directly, like php72u, it's actually
+                 # installing the mod_php package. With the IUS PHP 7.3 packages, installing
+                 # php73 directly no longer works, so we have to explicitly install the
+                 # mod_php package. This may or may not be true for future IUS PHP packages.
+                 "mod_php#{version.split('.')[0, 2].join}"
+               end
 
   # Include pear package (pear1u for PHP 7.1+)
   package 'pear' do
-    package_name version.to_f >= 7.1 ? 'pear1u' : prefix + '-pear'
+    vers = version.to_f
+    pkg_name = if vers > 7
+                 vers < 7.3 ? 'pear1u' : 'pear1'
+               else
+                 prefix + '-pear'
+               end
+
+    package_name pkg_name
   end
 
   node.default['php']['packages'] = packages
