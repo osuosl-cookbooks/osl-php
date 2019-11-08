@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-node.default['composer']['url'] = 'https://getcomposer.org/download/1.2.1/composer.phar'
+node.default['composer']['url'] = "https://getcomposer.org/download/#{node['osl-php']['composer_version']}/composer.phar"
 
 include_recipe 'php::default'
 include_recipe 'composer::default'
