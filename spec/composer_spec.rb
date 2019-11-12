@@ -11,7 +11,7 @@ describe 'osl-php::composer' do
         expect { chef_run }.to_not raise_error
       end
       it do
-        expect(chef_run.node['composer']['url']).to eq('https://getcomposer.org/download/1.2.1/composer.phar')
+        expect(chef_run.node['composer']['url']).to eq('https://getcomposer.org/download/1.9.1/composer.phar')
       end
       %w(php::default composer::default).each do |r|
         it do
@@ -21,7 +21,7 @@ describe 'osl-php::composer' do
       context 'install different version' do
         cached(:chef_run) do
           ChefSpec::SoloRunner.new(pltfrm) do |node|
-            node.normal['osl-php']['composer_version'] = '1.9.1'
+            node.normal['osl-php']['composer_version'] = '1.2.1'
           end.converge(described_recipe)
         end
         it 'converges successfully' do
@@ -29,7 +29,7 @@ describe 'osl-php::composer' do
           expect { chef_run }.to_not raise_error
         end
         it do
-          expect(chef_run.node['composer']['url']).to eq('https://getcomposer.org/download/1.9.1/composer.phar')
+          expect(chef_run.node['composer']['url']).to eq('https://getcomposer.org/download/1.2.1/composer.phar')
         end
       end
     end
