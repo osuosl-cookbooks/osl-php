@@ -21,8 +21,8 @@ describe 'osl-php::packages' do
           expect(chef_run).to install_package('php-pear')
         end
       end
-      %w(5.3 5.6 7.1 7.2).each do |version|
-        prefix = "php#{version.split('.').join}u"
+      %w(5.3 5.6 7.1 7.2 7.3).each do |version|
+        prefix = "php#{version.split('.').join}#{version.to_f < 7.3 ? 'u' : ''}"
         context "using php #{version}" do
           context 'using packages with versioned prefixes' do
             cached(:chef_run) do
@@ -36,8 +36,9 @@ describe 'osl-php::packages' do
               expect { chef_run }.to_not raise_error
             end
             it do
+              php_pkg = version.to_f < 7 ? prefix : "mod_#{prefix}"
               expect(chef_run).to install_package(
-                "#{prefix}-devel, #{prefix}-cli, #{prefix}"
+                "#{prefix}-devel, #{prefix}-cli, #{php_pkg}"
               )
             end
             it do
@@ -63,8 +64,10 @@ describe 'osl-php::packages' do
                 end
               when '7.1'
                 expect(chef_run).to create_yum_repository('ius').with(exclude: 'php72* php73*')
+              when '7.2'
+                expect(chef_run).to create_yum_repository('ius').with(exclude: 'php73*')
               else
-                expect(chef_run).to_not create_yum_repository('ius').with(exclude: 'php72*')
+                expect(chef_run).to_not create_yum_repository('ius').with(exclude: 'php73*')
               end
             end
             it do
@@ -89,8 +92,9 @@ describe 'osl-php::packages' do
               expect { chef_run }.to_not raise_error
             end
             it do
+              php_pkg = version.to_f < 7 ? prefix : "mod_#{prefix}"
               expect(chef_run).to install_package(
-                "#{prefix}-devel, #{prefix}-cli, #{prefix}"
+                "#{prefix}-devel, #{prefix}-cli, #{php_pkg}"
               )
             end
             it do
@@ -101,9 +105,11 @@ describe 'osl-php::packages' do
                 expect(chef_run).to create_yum_repository('ius').with(
                   exclude: 'php72* php73*'
                 )
+              elsif version == '7.2'
+                expect(chef_run).to create_yum_repository('ius').with(exclude: 'php73*')
               else
                 expect(chef_run).to_not create_yum_repository('ius').with(
-                  exclude: 'php72*'
+                  exclude: 'php73*'
                 )
               end
             end
