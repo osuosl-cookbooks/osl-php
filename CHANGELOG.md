@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+4.0.2 (2019-11-14)
+------------------
+- Add support for PHP 7.3
+
 4.0.1 (2019-10-18)
 ------------------
 - Bump to yum-ius ~> 3.1.0 to pull in upstream fixes
