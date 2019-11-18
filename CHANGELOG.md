@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+4.0.3 (2019-11-18)
+------------------
+- Allow Composer version to be configured via attribute
+
 4.0.2 (2019-11-14)
 ------------------
 - Add support for PHP 7.3
