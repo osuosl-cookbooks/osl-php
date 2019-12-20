@@ -21,7 +21,8 @@ suites:
       - recipe[osl-php::default]
       - recipe[osl-php::apc]
       - recipe[php_test::phpinfo_apache]
-    attributes:
+    excludes:
+      - centos-8
   - name: composer
     run_list:
     - recipe[osl-php::composer]
@@ -36,6 +37,8 @@ suites:
         use_ius: true
       php:
         version: '5.3'
+    excludes:
+      - centos-8
   - name: packages-php56
     run_list:
     - recipe[osl-php::packages]
@@ -44,6 +47,8 @@ suites:
         use_ius: true
       php:
         version: '5.6'
+    excludes:
+      - centos-8
   - name: packages-php70
     run_list:
     - recipe[osl-php::packages]
@@ -52,6 +57,8 @@ suites:
         use_ius: true
       php:
         version: '7.0'
+    excludes:
+      - centos-8
   - name: packages-php71
     run_list:
     - recipe[osl-php::packages]
@@ -60,6 +67,8 @@ suites:
         use_ius: true
       php:
         version: '7.1'
+    excludes:
+      - centos-8
   - name: packages-php72
     run_list:
     - recipe[osl-php::packages]
@@ -80,6 +89,7 @@ suites:
         version: '7.3'
     excludes:
       - centos-6
+      - centos-8
   - name: php_ini
     run_list:
     - recipe[php_test::php_ini]
@@ -104,6 +114,7 @@ suites:
         version: '5.6'
     excludes:
       - centos-6
+      - centos-8
   - name: opcache-php72
     run_list:
     - recipe[osl-php::default]

@@ -16,7 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-if node['osl-php']['use_ius']
+if node['osl-php']['use_ius'] && node['platform_version'].to_i < 8
   # Enable IUS archive repo for archived versions
   enable_ius_archive = node['osl-php']['ius_archive_versions'].any? { |v| node['php']['version'].start_with?(v) }
   node.default['yum']['ius-archive']['enabled'] = enable_ius_archive
@@ -39,12 +39,14 @@ if node['osl-php']['use_ius']
     r = resources(yum_repository: 'ius')
     r.exclude = [r.exclude, 'php73*'].reject(&:nil?).join(' ')
   end
+elsif node['osl-php']['use_ius'] && node['platform_version'].to_i >= 8
+  Chef::Log.warn("Use of node['osl-php']['use_ius'] is ignored on CentOS 8 as there is no support for it upstream")
 end
 
 version = node['php']['version']
 
 # Get package prefix from version (e.g. "php71u" or "php")
-prefix = if node['osl-php']['use_ius']
+prefix = if node['osl-php']['use_ius'] && node['platform_version'].to_i < 8
            # The IUS repo removed the 'u' at the end of the prefix with PHP 7.3 packages.
            'php' + version.split('.')[0, 2].join + (version.to_f < 7.3 ? 'u' : '')
          else
@@ -63,6 +65,8 @@ end
 if packages.any? || node['osl-php']['use_ius']
   packages <<= if version.to_f < 7
                  prefix
+               elsif node['platform_version'].to_i >= 8
+                 'php'
                else
                  # When installing the main PHP (>= 7.0) package directly, like
                  # php72u, it's actually installing the mod_php package, so we
@@ -71,8 +75,16 @@ if packages.any? || node['osl-php']['use_ius']
                end
 
   # Include pear package (pear1 for PHP 7.1+)
+  pear_pkg =
+    if node['platform_version'].to_i >= 8
+      'php-pear'
+    elsif version.to_f >= 7.1
+      'pear1'
+    else
+      prefix + '-pear'
+    end
   package 'pear' do
-    package_name version.to_f >= 7.1 ? 'pear1' : prefix + '-pear'
+    package_name pear_pkg
   end
 
   node.default['php']['packages'] = packages

@@ -22,7 +22,13 @@ describe 'osl-php::packages' do
         end
       end
       %w(5.3 5.6 7.1 7.2 7.3).each do |version|
-        prefix = "php#{version.split('.').join}#{version.to_f < 7.3 ? 'u' : ''}"
+        prefix =
+          case pltfrm
+          when CENTOS_6, CENTOS_7
+            "php#{version.split('.').join}#{version.to_f < 7.3 ? 'u' : ''}"
+          when CENTOS_8
+            'php'
+          end
         context "using php #{version}" do
           context 'using packages with versioned prefixes' do
             cached(:chef_run) do
@@ -36,7 +42,12 @@ describe 'osl-php::packages' do
               expect { chef_run }.to_not raise_error
             end
             it do
-              php_pkg = version.to_f < 7 ? prefix : "mod_#{prefix}"
+              php_pkg =
+                if pltfrm == CENTOS_8
+                  'php'
+                else
+                  version.to_f < 7 ? prefix : "mod_#{prefix}"
+                end
               expect(chef_run).to install_package(
                 "#{prefix}-devel, #{prefix}-cli, #{php_pkg}"
               )
@@ -45,37 +56,45 @@ describe 'osl-php::packages' do
               expect(chef_run).to install_package('pear')
             end
             it do
-              case version
-              when '5.3'
-                if pltfrm[:version].to_i >= 7
-                  expect(chef_run).to create_yum_repository('ius')
-                    .with(
-                      gpgkey: 'http://ftp.osuosl.org/pub/osl/repos/yum/RPM-GPG-KEY-osuosl',
-                      baseurl: 'http://ftp.osuosl.org/pub/osl/repos/yum/$releasever/php53/$basearch',
-                      mirrorlist: nil
-                    )
-                else
-                  expect(chef_run).to_not create_yum_repository('ius')
-                    .with(
-                      gpgkey: 'http://ftp.osuosl.org/pub/osl/repos/yum/RPM-GPG-KEY-osuosl',
-                      baseurl: 'http://ftp.osuosl.org/pub/osl/repos/yum/$releasever/php53/$basearch',
-                      mirrorlist: nil
-                    )
-                end
-              when '7.1'
-                expect(chef_run).to create_yum_repository('ius').with(exclude: 'php72* php73*')
-              when '7.2'
-                expect(chef_run).to create_yum_repository('ius').with(exclude: 'php73*')
+              if pltfrm == CENTOS_8
+                expect(chef_run).to_not create_yum_repository('ius')
               else
-                expect(chef_run).to_not create_yum_repository('ius').with(exclude: 'php73*')
+                case version
+                when '5.3'
+                  if pltfrm[:version].to_i >= 7 && pltfrm[:version].to_i < 8
+                    expect(chef_run).to create_yum_repository('ius')
+                      .with(
+                        gpgkey: 'http://ftp.osuosl.org/pub/osl/repos/yum/RPM-GPG-KEY-osuosl',
+                        baseurl: 'http://ftp.osuosl.org/pub/osl/repos/yum/$releasever/php53/$basearch',
+                        mirrorlist: nil
+                      )
+                  else
+                    expect(chef_run).to_not create_yum_repository('ius')
+                      .with(
+                        gpgkey: 'http://ftp.osuosl.org/pub/osl/repos/yum/RPM-GPG-KEY-osuosl',
+                        baseurl: 'http://ftp.osuosl.org/pub/osl/repos/yum/$releasever/php53/$basearch',
+                        mirrorlist: nil
+                      )
+                  end
+                when '7.1'
+                  expect(chef_run).to create_yum_repository('ius').with(exclude: 'php72* php73*')
+                when '7.2'
+                  expect(chef_run).to create_yum_repository('ius').with(exclude: 'php73*')
+                else
+                  expect(chef_run).to_not create_yum_repository('ius').with(exclude: 'php73*')
+                end
               end
             end
             it do
-              case version
-              when '5.3', '5.6', '7.0'
-                expect(chef_run).to create_yum_repository('ius-archive')
-              else
+              if pltfrm == CENTOS_8
                 expect(chef_run).to_not create_yum_repository('ius-archive')
+              else
+                case version
+                when '5.3', '5.6', '7.0'
+                  expect(chef_run).to create_yum_repository('ius-archive')
+                else
+                  expect(chef_run).to_not create_yum_repository('ius-archive')
+                end
               end
             end
           end
@@ -92,7 +111,12 @@ describe 'osl-php::packages' do
               expect { chef_run }.to_not raise_error
             end
             it do
-              php_pkg = version.to_f < 7 ? prefix : "mod_#{prefix}"
+              php_pkg =
+                if pltfrm == CENTOS_8
+                  'php'
+                else
+                  version.to_f < 7 ? prefix : "mod_#{prefix}"
+                end
               expect(chef_run).to install_package(
                 "#{prefix}-devel, #{prefix}-cli, #{php_pkg}"
               )
@@ -101,7 +125,9 @@ describe 'osl-php::packages' do
               expect(chef_run).to install_package('pear')
             end
             it do
-              if version == '7.1'
+              if pltfrm == CENTOS_8
+                expect(chef_run).to_not create_yum_repository('ius')
+              elsif version == '7.1'
                 expect(chef_run).to create_yum_repository('ius').with(
                   exclude: 'php72* php73*'
                 )

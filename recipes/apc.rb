@@ -25,6 +25,13 @@ ruby_block 'raise_use_ius_exception' do
   only_if { node['osl-php']['use_ius'] }
 end
 
+ruby_block 'raise_centos8_exception' do
+  block do
+    raise 'APC is not compatible with CentOS 8.'
+  end
+  only_if { node['platform_version'].to_i >= 8 }
+end
+
 %w(httpd-devel pcre pcre-devel).each do |pkg|
   package pkg do
     action :install
