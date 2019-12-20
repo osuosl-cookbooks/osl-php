@@ -12,7 +12,6 @@ version          '4.0.3'
 supports         'centos', '~> 6.0'
 supports         'centos', '~> 7.0'
 
-depends          'build-essential'
 depends          'composer'
 depends          'php', '~> 6.1.1'
 depends          'yum-ius', '~> 3.1.0'
