@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+4.1.0 (2019-12-22)
+------------------
+- Chef 14 post-migration fixes
+
 4.0.3 (2019-11-18)
 ------------------
 - Allow Composer version to be configured via attribute
