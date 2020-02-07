@@ -21,19 +21,19 @@ describe 'osl-php::packages' do
           expect(chef_run).to install_package('php-pear')
         end
       end
-      %w(5.3 5.6 7.1 7.2 7.3).each do |version|
+      %w(5.3 5.6 7.1 7.2 7.3).each do |php_version|
         prefix =
           case pltfrm
           when CENTOS_6, CENTOS_7
-            "php#{version.split('.').join}#{version.to_f < 7.3 ? 'u' : ''}"
+            "php#{php_version.split('.').join}#{php_version.to_f < 7.3 ? 'u' : ''}"
           when CENTOS_8
             'php'
           end
-        context "using php #{version}" do
+        context "using php #{php_version}" do
           context 'using packages with versioned prefixes' do
             cached(:chef_run) do
               ChefSpec::SoloRunner.new(pltfrm) do |node|
-                node.normal['php']['version'] = version
+                node.normal['php']['version'] = php_version
                 node.normal['osl-php']['use_ius'] = true
                 node.normal['osl-php']['php_packages'] = %w(devel cli)
               end.converge(described_recipe)
@@ -43,10 +43,11 @@ describe 'osl-php::packages' do
             end
             it do
               php_pkg =
-                if pltfrm == CENTOS_8
+                case pltfrm
+                when CENTOS_8
                   'php'
                 else
-                  version.to_f < 7 ? prefix : "mod_#{prefix}"
+                  php_version.to_f < 7 ? prefix : "mod_#{prefix}"
                 end
               expect(chef_run).to install_package(
                 "#{prefix}-devel, #{prefix}-cli, #{php_pkg}"
@@ -59,7 +60,7 @@ describe 'osl-php::packages' do
               if pltfrm == CENTOS_8
                 expect(chef_run).to_not create_yum_repository('ius')
               else
-                case version
+                case php_version
                 when '5.3'
                   if pltfrm[:version].to_i >= 7 && pltfrm[:version].to_i < 8
                     expect(chef_run).to create_yum_repository('ius')
@@ -89,7 +90,7 @@ describe 'osl-php::packages' do
               if pltfrm == CENTOS_8
                 expect(chef_run).to_not create_yum_repository('ius-archive')
               else
-                case version
+                case php_version
                 when '5.3', '5.6', '7.0'
                   expect(chef_run).to create_yum_repository('ius-archive')
                 else
@@ -101,7 +102,7 @@ describe 'osl-php::packages' do
           context 'old method for backwards compatability' do
             cached(:chef_run) do
               ChefSpec::SoloRunner.new(pltfrm) do |node|
-                node.normal['php']['version'] = version
+                node.normal['php']['version'] = php_version
                 node.normal['osl-php']['use_ius'] = true
                 node.normal['osl-php']['packages'] =
                   %w(devel cli).map { |p| "#{prefix}-#{p}" }
@@ -115,7 +116,7 @@ describe 'osl-php::packages' do
                 if pltfrm == CENTOS_8
                   'php'
                 else
-                  version.to_f < 7 ? prefix : "mod_#{prefix}"
+                  php_version.to_f < 7 ? prefix : "mod_#{prefix}"
                 end
               expect(chef_run).to install_package(
                 "#{prefix}-devel, #{prefix}-cli, #{php_pkg}"
@@ -127,11 +128,11 @@ describe 'osl-php::packages' do
             it do
               if pltfrm == CENTOS_8
                 expect(chef_run).to_not create_yum_repository('ius')
-              elsif version == '7.1'
+              elsif php_version == '7.1'
                 expect(chef_run).to create_yum_repository('ius').with(
                   exclude: 'php72* php73*'
                 )
-              elsif version == '7.2'
+              elsif php_version == '7.2'
                 expect(chef_run).to create_yum_repository('ius').with(exclude: 'php73*')
               else
                 expect(chef_run).to_not create_yum_repository('ius').with(
