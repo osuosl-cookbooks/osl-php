@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+5.0.0 (2020-02-24)
+------------------
+- CentOS 8
+
 4.1.0 (2019-12-22)
 ------------------
 - Chef 14 post-migration fixes
