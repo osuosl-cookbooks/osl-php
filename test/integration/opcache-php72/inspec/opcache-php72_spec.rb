@@ -9,6 +9,13 @@
   end
 end
 
-describe package 'php72u-opcache' do
-  it { should be_installed }
+if os.release.to_i >= 8
+  describe package 'php-opcache' do
+    it { should be_installed }
+    its('version') { should >= '7.2' }
+  end
+else
+  describe package 'php72u-opcache' do
+    it { should be_installed }
+  end
 end

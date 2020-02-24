@@ -18,39 +18,46 @@ describe 'osl-php::apc' do
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end
-      %w(httpd-devel pcre pcre-devel).each do |pkg|
+      case pltfrm
+      when CENTOS_8
         it do
-          expect(chef_run).to install_package(pkg)
+          expect(chef_run).to run_ruby_block('raise_centos8_exception')
         end
-      end
-      it do
-        expect(chef_run). to install_php_pear('APC')
-      end
-      it do
-        expect(chef_run).to install_build_essential('APC')
-      end
-      it do
-        expect(chef_run).to add_php_ini('APC').with(
-          options: {
-            'extension' => 'apc.so',
-            'apc.shm_size' => '128M',
-            'apc.enable_cli' => 0,
-            'apc.ttl' => 3600,
-            'apc.user_ttl' => 7200,
-            'apc.gc_ttl' => 3600,
-            'apc.max_file_size' => '1M',
-            'apc.stat' => 1,
-          }
-        )
-      end
-      context 'node[\'osl-php\'][\'use_ius\'] set to true' do
-        cached(:chef_run) do
-          ChefSpec::SoloRunner.new(pltfrm) do |node|
-            node.normal['osl-php']['use_ius'] = true
-          end.converge(described_recipe)
+      else
+        %w(httpd-devel pcre pcre-devel).each do |pkg|
+          it do
+            expect(chef_run).to install_package(pkg)
+          end
         end
         it do
-          expect(chef_run).to run_ruby_block('raise_use_ius_exception')
+          expect(chef_run). to install_php_pear('APC')
+        end
+        it do
+          expect(chef_run).to install_build_essential('APC')
+        end
+        it do
+          expect(chef_run).to add_php_ini('APC').with(
+            options: {
+              'extension' => 'apc.so',
+              'apc.shm_size' => '128M',
+              'apc.enable_cli' => 0,
+              'apc.ttl' => 3600,
+              'apc.user_ttl' => 7200,
+              'apc.gc_ttl' => 3600,
+              'apc.max_file_size' => '1M',
+              'apc.stat' => 1,
+            }
+          )
+        end
+        context 'node[\'osl-php\'][\'use_ius\'] set to true' do
+          cached(:chef_run) do
+            ChefSpec::SoloRunner.new(pltfrm) do |node|
+              node.normal['osl-php']['use_ius'] = true
+            end.converge(described_recipe)
+          end
+          it do
+            expect(chef_run).to run_ruby_block('raise_use_ius_exception')
+          end
         end
       end
     end

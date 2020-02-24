@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'php_test::php_ini' do
-  [CENTOS_6_OPTS, CENTOS_7_OPTS].each do |p|
+  ALL_PLATFORMS.each do |p|
     context "on platform #{p[:platform]} #{p[:version]}" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(
