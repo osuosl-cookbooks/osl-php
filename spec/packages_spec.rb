@@ -77,8 +77,6 @@ describe 'osl-php::packages' do
                         mirrorlist: nil
                       )
                   end
-                when '7.1'
-                  expect(chef_run).to create_yum_repository('ius').with(exclude: 'php72* php73*')
                 when '7.2'
                   expect(chef_run).to create_yum_repository('ius').with(exclude: 'php73*')
                 else
@@ -91,7 +89,7 @@ describe 'osl-php::packages' do
                 expect(chef_run).to_not create_yum_repository('ius-archive')
               else
                 case php_version
-                when '5.3', '5.6', '7.0'
+                when '5.3', '5.6', '7.0', '7.1'
                   expect(chef_run).to create_yum_repository('ius-archive')
                 else
                   expect(chef_run).to_not create_yum_repository('ius-archive')
@@ -128,10 +126,6 @@ describe 'osl-php::packages' do
             it do
               if pltfrm == CENTOS_8
                 expect(chef_run).to_not create_yum_repository('ius')
-              elsif php_version == '7.1'
-                expect(chef_run).to create_yum_repository('ius').with(
-                  exclude: 'php72* php73*'
-                )
               elsif php_version == '7.2'
                 expect(chef_run).to create_yum_repository('ius').with(exclude: 'php73*')
               else
