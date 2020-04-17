@@ -33,6 +33,8 @@ if node['osl-php']['use_ius'] && node['platform_version'].to_i < 8
 
   case node['php']['version'].to_f
   when 7.1
+    r_a = resources(yum_repository: 'ius-archive')
+    r_a.exclude = [r_a.exclude, 'php5* php72* php73*'].reject(&:nil?).join(' ')
     r = resources(yum_repository: 'ius')
     r.exclude = [r.exclude, 'php72* php73*'].reject(&:nil?).join(' ')
   when 7.2
@@ -83,6 +85,7 @@ if packages.any? || node['osl-php']['use_ius']
     else
       prefix + '-pear'
     end
+
   package 'pear' do
     package_name pear_pkg
   end
