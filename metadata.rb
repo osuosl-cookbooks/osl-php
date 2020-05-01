@@ -15,4 +15,6 @@ supports         'centos', '~> 6.0'
 
 depends          'composer'
 depends          'php', '~> 6.1.1'
+depends          'yum-centos'
 depends          'yum-ius', '~> 3.1.0'
+depends          'yum-osuosl'

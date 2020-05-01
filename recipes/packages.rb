@@ -22,6 +22,20 @@ if node['osl-php']['use_ius'] && node['platform_version'].to_i < 8
   node.default['yum']['ius-archive']['enabled'] = enable_ius_archive
   node.default['yum']['ius-archive']['managed'] = enable_ius_archive
 
+  # CentOS 7.8 updated ImageMagick which broke installations from ius-archive
+  if enable_ius_archive && node['platform_version'].to_i >= 7
+    include_recipe 'yum-centos'
+    include_recipe 'yum-osuosl'
+
+    # Exclude all ImageMagick packages from the CentOS repos
+    node['yum-centos']['repos'].each do |repo|
+      next unless node['yum'][repo]['managed']
+      r = resources(yum_repository: repo)
+      # If we already have excludes, include them and append ImageMagick
+      r.exclude = [r.exclude, 'ImageMagick*'].reject(&:nil?).join(' ')
+    end
+  end
+
   # php53u RPMs built against CentOS 7
   if node['php']['version'].to_f == 5.3 && node['platform_version'].to_i >= 7
     node.default['yum']['ius']['gpgkey'] = 'http://ftp.osuosl.org/pub/osl/repos/yum/RPM-GPG-KEY-osuosl'
@@ -60,7 +74,13 @@ packages += node['osl-php']['packages'].flatten
 
 # Prepend PHP package prefix to short packages (e.g. "php71u-memcached")
 if node['osl-php']['php_packages'].any?
-  packages += node['osl-php']['php_packages'].map { |pkg| prefix + '-' + pkg }
+  osl_packages = []
+  osl_packages = osl_packages.concat(node['osl-php']['php_packages'])
+  # pecl-imagick does not exist in CentOS 8
+  if node['platform_version'].to_i >= 8 && osl_packages.include?('pecl-imagick')
+    osl_packages.delete_if { |pkg| pkg == 'pecl-imagick' }
+  end
+  packages += osl_packages.map { |pkg| prefix + '-' + pkg }
 end
 
 # If any of our attributes are set, modify upstream packages attribute

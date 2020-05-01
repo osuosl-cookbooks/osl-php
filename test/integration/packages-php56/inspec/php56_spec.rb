@@ -4,6 +4,7 @@
   php56u-fpm
   php56u-gd
   php56u-pear
+  php56u-pecl-imagick
 ).each do |pkg|
   describe package(pkg) do
     it { should be_installed }

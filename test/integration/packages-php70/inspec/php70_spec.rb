@@ -4,6 +4,7 @@
   php70u-fpm
   php70u-gd
   php70u-pear
+  php70u-pecl-imagick
 ).each do |pkg|
   describe package(pkg) do
     it { should be_installed }

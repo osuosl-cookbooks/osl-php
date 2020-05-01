@@ -96,6 +96,40 @@ describe 'osl-php::packages' do
                 end
               end
             end
+            if pltfrm == CENTOS_7
+              case php_version
+              when '5.3', '5.6', '7.0', '7.1'
+                it do
+                  expect(chef_run).to include_recipe('yum-centos')
+                end
+                it do
+                  expect(chef_run).to include_recipe('yum-osuosl')
+                end
+                it do
+                  expect(chef_run).to create_yum_repository('base').with(exclude: 'ImageMagick*')
+                end
+              else
+                it do
+                  expect(chef_run).to_not include_recipe('yum-centos')
+                end
+                it do
+                  expect(chef_run).to_not include_recipe('yum-osuosl')
+                end
+                it do
+                  expect(chef_run).to_not create_yum_repository('base').with(exclude: 'ImageMagick*')
+                end
+              end
+            else
+              it do
+                expect(chef_run).to_not include_recipe('yum-centos')
+              end
+              it do
+                expect(chef_run).to_not include_recipe('yum-osuosl')
+              end
+              it do
+                expect(chef_run).to_not create_yum_repository('base').with(exclude: 'ImageMagick*')
+              end
+            end
           end
           context 'old method for backwards compatability' do
             cached(:chef_run) do

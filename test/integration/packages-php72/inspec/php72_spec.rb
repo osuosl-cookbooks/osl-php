@@ -26,10 +26,11 @@ if os.release.to_i >= 8
 else
   %w(
     mod_php72u
+    pear1
     php72u-devel
     php72u-fpm
     php72u-gd
-    pear1
+    php72u-pecl-imagick
   ).each do |pkg|
     describe package(pkg) do
       it { should be_installed }
