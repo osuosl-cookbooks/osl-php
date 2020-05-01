@@ -1,8 +1,9 @@
 %w(mod_php71u
+   pear1
    php71u-devel
    php71u-fpm
    php71u-gd
-   pear1
+   php71u-pecl-imagick
 ).each do |pkg|
   describe package(pkg) do
     it { should be_installed }

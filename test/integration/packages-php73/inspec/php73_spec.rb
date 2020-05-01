@@ -1,5 +1,10 @@
 %w(
-  mod_php73 php73-devel php73-fpm php73-gd pear1
+  mod_php73
+  pear1
+  php73-devel
+  php73-fpm
+  php73-gd
+  php73-pecl-imagick
 ).each do |pkg|
   describe package(pkg) do
     it { should be_installed }

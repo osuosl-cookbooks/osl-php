@@ -11,6 +11,7 @@ provisioner:
         - 'devel'
         - 'fpm'
         - 'gd'
+        - 'pecl-imagick'
 
 suites:
   - name: default
@@ -29,12 +30,22 @@ suites:
   - name: packages
     run_list:
     - recipe[osl-php::packages]
+    attributes:
+      osl-php:
+        php_packages:
+          - 'devel'
+          - 'fpm'
+          - 'gd'
   - name: packages-php53
     run_list:
     - recipe[osl-php::packages]
     attributes:
       osl-php:
         use_ius: true
+        php_packages:
+          - 'devel'
+          - 'fpm'
+          - 'gd'
       php:
         version: '5.3'
     excludes:
