@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+5.1.0 (2020-05-01)
+------------------
+- Workaround for ImageMagick on CentOS 7 with ius-archive
+
 5.0.1 (2020-04-17)
 ------------------
 - Set PHP 7.1 as archived
