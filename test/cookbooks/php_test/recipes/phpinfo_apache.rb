@@ -1,6 +1,6 @@
 major_version = node['php']['version'].to_i
-node.normal['apache']['mod_php']['module_name'] = "php#{major_version}"
-node.normal['apache']['mod_php']['so_filename'] = "libphp#{major_version}.so"
+node.default['apache']['mod_php']['module_name'] = "php#{major_version}"
+node.default['apache']['mod_php']['so_filename'] = "libphp#{major_version}.so"
 
 include_recipe 'apache2'
 include_recipe 'apache2::mod_php'
