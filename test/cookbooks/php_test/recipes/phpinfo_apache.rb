@@ -26,7 +26,3 @@ EOF
   owner 'apache'
   group 'apache'
 end
-
-service 'httpd' do
-  action :restart
-end

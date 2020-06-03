@@ -17,6 +17,7 @@
 # limitations under the License.
 #
 
+include_recipe 'yum-epel'
 include_recipe 'osl-php::opcache' if node['osl-php']['use_opcache']
 include_recipe 'osl-php::packages'
 include_recipe 'php::default'
