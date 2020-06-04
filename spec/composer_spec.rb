@@ -11,7 +11,7 @@ describe 'osl-php::composer' do
         expect { chef_run }.to_not raise_error
       end
       it do
-        expect(chef_run.node['composer']['url']).to eq('https://getcomposer.org/download/1.9.1/composer.phar')
+        expect(chef_run.node['composer']['url']).to eq('https://getcomposer.org/download/1.10.7/composer.phar')
       end
       %w(php::default composer::default).each do |r|
         it do
