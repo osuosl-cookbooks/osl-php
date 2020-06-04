@@ -14,8 +14,6 @@ end
   ius
   ius-archive
 ).each do |repo|
-  next unless os[:release].to_i >= 7
-
   describe yum.repo repo do
     it { should be_enabled }
   end
