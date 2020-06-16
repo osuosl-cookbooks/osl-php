@@ -1,16 +1,25 @@
-major_version = node['php']['version'].to_i
-node.default['apache']['mod_php']['module_name'] = "php#{major_version}"
-node.default['apache']['mod_php']['so_filename'] = "libphp#{major_version}.so"
+major_version = node['platform_version'].to_i < 8 ? node['php']['version'].to_i : 7
 
-include_recipe 'apache2'
-include_recipe 'apache2::mod_php'
+::Chef::Resource.send(:include, Apache2::Cookbook::Helpers)
 
-apache_conf 'localhost' do
-  source 'opcache_vhost.erb'
-  cookbook 'php_test'
+# These aren't accessible outside of the apache cookbook, so declare them here for use in this cookbook
+service 'apache2' do
+  service_name lazy { apache_platform_service_name }
+  supports restart: true, status: true, reload: true
+  action :nothing
 end
 
-apache_site 'localhost'
+apache2_install 'default'
+
+apache2_module "php#{major_version}" do
+  mod_name "libphp#{major_version}.so"
+end
+
+apache2_conf 'opcache_vhost' do
+  template_cookbook 'php_test'
+end
+
+apache2_site 'localhost'
 
 directory '/var/www/localhost' do
   owner 'apache'
