@@ -24,7 +24,7 @@ describe 'osl-php::packages' do
       %w(5.3 5.6 7.1 7.2 7.3).each do |php_version|
         prefix =
           case pltfrm
-          when CENTOS_6, CENTOS_7
+          when CENTOS_7
             "php#{php_version.split('.').join}#{php_version.to_f < 7.3 ? 'u' : ''}"
           when CENTOS_8
             'php'

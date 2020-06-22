@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: osl-php
+# Cookbook:: osl-php
 # Recipe:: default
 #
-# Copyright 2013, Oregon State University
+# Copyright:: 2013-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 # limitations under the License.
 #
 
+include_recipe 'yum-epel'
 include_recipe 'osl-php::opcache' if node['osl-php']['use_opcache']
 include_recipe 'osl-php::packages'
 include_recipe 'php::default'

@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: osl-php
+# Cookbook:: osl-php
 # Recipe:: apc
 #
-# Copyright 2013, Oregon State University
+# Copyright:: 2013-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 ruby_block 'raise_use_ius_exception' do
   block do
     raise 'APC is not compatible with PHP from IUS Community repos. ' \

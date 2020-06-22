@@ -3,7 +3,7 @@ resource_name :php_ini
 default_action :add
 
 property :mode, String, default: '0644'
-property :options, Hash, default: {}, required: true
+property :options, Hash, required: true
 
 action :add do
   directory "/etc/php.d #{new_resource.name}" do

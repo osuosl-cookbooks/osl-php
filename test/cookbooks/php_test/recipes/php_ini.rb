@@ -1,7 +1,7 @@
 #
 # Cookbook:: php_ini-test
 # Recipe:: default
-# # Copyright:: 2019, Oregon State University
+# Copyright:: 2019-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -111,7 +111,7 @@ php_ini 'no_sections_rendered' do
 end
 
 php_ini 'no_sections_rendered_removed_add_action' do
-  name 'no_sections_rendered_removed'
+  name 'no_sections_rendered_removed' # rubocop:disable ChefCorrectness/ResourceSetsNameProperty
   options no_sections
 end
 
