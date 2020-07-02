@@ -48,12 +48,15 @@ if node['osl-php']['use_ius'] && node['platform_version'].to_i < 8
   case node['php']['version'].to_f
   when 7.1
     r_a = resources(yum_repository: 'ius-archive')
-    r_a.exclude = [r_a.exclude, 'php5* php72* php73*'].reject(&:nil?).join(' ')
+    r_a.exclude = [r_a.exclude, 'php5* php72* php73* php74*'].reject(&:nil?).join(' ')
     r = resources(yum_repository: 'ius')
-    r.exclude = [r.exclude, 'php72* php73*'].reject(&:nil?).join(' ')
+    r.exclude = [r.exclude, 'php72* php73* php74*'].reject(&:nil?).join(' ')
   when 7.2
     r = resources(yum_repository: 'ius')
-    r.exclude = [r.exclude, 'php73*'].reject(&:nil?).join(' ')
+    r.exclude = [r.exclude, 'php73* php74*'].reject(&:nil?).join(' ')
+  when 7.3
+    r = resources(yum_repository: 'ius')
+    r.exclude = [r.exclude, 'php74*'].reject(&:nil?).join(' ')
   end
 elsif node['osl-php']['use_ius'] && node['platform_version'].to_i >= 8
   Chef::Log.warn("Use of node['osl-php']['use_ius'] is ignored on CentOS 8 as there is no support for it upstream")
