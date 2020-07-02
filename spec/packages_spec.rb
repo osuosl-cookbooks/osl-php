@@ -21,7 +21,7 @@ describe 'osl-php::packages' do
           expect(chef_run).to install_package('php-pear')
         end
       end
-      %w(5.3 5.6 7.1 7.2 7.3).each do |php_version|
+      %w(5.3 5.6 7.1 7.2 7.3 7.4).each do |php_version|
         prefix =
           case pltfrm
           when CENTOS_7

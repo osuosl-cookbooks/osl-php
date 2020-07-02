@@ -101,6 +101,16 @@ suites:
         version: '7.3'
     excludes:
       - centos-8
+  - name: packages-php74
+    run_list:
+    - recipe[osl-php::packages]
+    attributes:
+      osl-php:
+        use_ius: true
+      php:
+        version: '7.4'
+    excludes:
+      - centos-8
   - name: php_ini
     run_list:
     - recipe[php_test::php_ini]

@@ -80,7 +80,8 @@ if node['osl-php']['php_packages'].any?
   osl_packages = []
   osl_packages = osl_packages.concat(node['osl-php']['php_packages'])
   # pecl-imagick does not exist in CentOS 8
-  if node['platform_version'].to_i >= 8 && osl_packages.include?('pecl-imagick')
+  # pecl-imagick is not avalible for php7.4
+  if (node['platform_version'].to_i >= 8 || node['php']['version'].to_f == 7.4) && osl_packages.include?('pecl-imagick')
     osl_packages.delete_if { |pkg| pkg == 'pecl-imagick' }
   end
   packages += osl_packages.map { |pkg| prefix + '-' + pkg }
