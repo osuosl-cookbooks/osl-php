@@ -1,6 +1,6 @@
 major_version = node['platform_version'].to_i < 8 ? node['php']['version'].to_i : 7
 
-::Chef::Resource.send(:include, Apache2::Cookbook::Helpers)
+include Apache2::Cookbook::Helpers
 
 # These aren't accessible outside of the apache cookbook, so declare them here for use in this cookbook
 service 'apache2' do
