@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+5.3.0 (2020-07-06)
+------------------
+- Added exclusions for php7.4 packages
+
 5.2.0 (2020-06-22)
 ------------------
 - Chef 15 fixes
