@@ -21,5 +21,5 @@ end
 
 # TODO: move to yum.repo check once we've upgraded to a newer InSpec
 describe file '/etc/yum.repos.d/ius-archive.repo' do
-  its('content') { should match /^exclude=php5\* php72\* php73\*$/ }
+  its('content') { should match /^exclude=php5\* php72\* php73\* php74\*$/ }
 end

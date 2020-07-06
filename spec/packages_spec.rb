@@ -21,7 +21,7 @@ describe 'osl-php::packages' do
           expect(chef_run).to install_package('php-pear')
         end
       end
-      %w(5.3 5.6 7.1 7.2 7.3).each do |php_version|
+      %w(5.3 5.6 7.1 7.2 7.3 7.4).each do |php_version|
         prefix =
           case pltfrm
           when CENTOS_7
@@ -78,7 +78,9 @@ describe 'osl-php::packages' do
                       )
                   end
                 when '7.2'
-                  expect(chef_run).to create_yum_repository('ius').with(exclude: 'php73*')
+                  expect(chef_run).to create_yum_repository('ius').with(exclude: 'php73* php74*')
+                when '7.3'
+                  expect(chef_run).to create_yum_repository('ius').with(exclude: 'php74*')
                 else
                   expect(chef_run).to_not create_yum_repository('ius').with(exclude: 'php73*')
                 end
@@ -161,7 +163,9 @@ describe 'osl-php::packages' do
               if pltfrm == CENTOS_8
                 expect(chef_run).to_not create_yum_repository('ius')
               elsif php_version == '7.2'
-                expect(chef_run).to create_yum_repository('ius').with(exclude: 'php73*')
+                expect(chef_run).to create_yum_repository('ius').with(exclude: 'php73* php74*')
+              elsif php_version == '7.3'
+                expect(chef_run).to create_yum_repository('ius').with(exclude: 'php74*')
               else
                 expect(chef_run).to_not create_yum_repository('ius').with(
                   exclude: 'php73*'

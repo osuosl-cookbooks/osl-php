@@ -48,12 +48,15 @@ if node['osl-php']['use_ius'] && node['platform_version'].to_i < 8
   case node['php']['version'].to_f
   when 7.1
     r_a = resources(yum_repository: 'ius-archive')
-    r_a.exclude = [r_a.exclude, 'php5* php72* php73*'].reject(&:nil?).join(' ')
+    r_a.exclude = [r_a.exclude, 'php5* php72* php73* php74*'].reject(&:nil?).join(' ')
     r = resources(yum_repository: 'ius')
-    r.exclude = [r.exclude, 'php72* php73*'].reject(&:nil?).join(' ')
+    r.exclude = [r.exclude, 'php72* php73* php74*'].reject(&:nil?).join(' ')
   when 7.2
     r = resources(yum_repository: 'ius')
-    r.exclude = [r.exclude, 'php73*'].reject(&:nil?).join(' ')
+    r.exclude = [r.exclude, 'php73* php74*'].reject(&:nil?).join(' ')
+  when 7.3
+    r = resources(yum_repository: 'ius')
+    r.exclude = [r.exclude, 'php74*'].reject(&:nil?).join(' ')
   end
 elsif node['osl-php']['use_ius'] && node['platform_version'].to_i >= 8
   Chef::Log.warn("Use of node['osl-php']['use_ius'] is ignored on CentOS 8 as there is no support for it upstream")
@@ -76,8 +79,8 @@ packages += node['osl-php']['packages'].flatten
 if node['osl-php']['php_packages'].any?
   osl_packages = []
   osl_packages = osl_packages.concat(node['osl-php']['php_packages'])
-  # pecl-imagick does not exist in CentOS 8
-  if node['platform_version'].to_i >= 8 && osl_packages.include?('pecl-imagick')
+  # pecl-imagick is not available for php7.4 or CentOS 8
+  if (node['platform_version'].to_i >= 8 || node['php']['version'].to_f == 7.4) && osl_packages.include?('pecl-imagick')
     osl_packages.delete_if { |pkg| pkg == 'pecl-imagick' }
   end
   packages += osl_packages.map { |pkg| prefix + '-' + pkg }
