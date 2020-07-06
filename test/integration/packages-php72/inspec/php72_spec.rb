@@ -43,7 +43,7 @@ else
 
   # TODO: move to yum.repo check once we've upgraded to a newer InSpec
   describe file '/etc/yum.repos.d/ius.repo' do
-    its('content') { should match /^exclude=php73\*$/ }
+    its('content') { should match /^exclude=php73\* php74\*$/ }
   end
 
 end
