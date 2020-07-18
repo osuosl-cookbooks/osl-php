@@ -111,7 +111,7 @@ php_ini 'no_sections_rendered' do
 end
 
 php_ini 'no_sections_rendered_removed_add_action' do
-  name 'no_sections_rendered_removed' # rubocop:disable ChefCorrectness/ResourceSetsNameProperty
+  name 'no_sections_rendered_removed'
   options no_sections
 end
 

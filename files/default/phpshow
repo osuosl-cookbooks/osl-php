@@ -1,0 +1,31 @@
+#!/bin/bash
+
+if [ "$1" == "-h" ] ; then
+  echo "phpcheck / phpshow help:"
+  echo
+  echo "These are a couple of aliases to check a directory's php files for a regex expression."
+  echo "Intended to help find depreciated functions, etc."
+  echo
+  echo "phpcheck will show just the immediate subdirs that have files that match the regex."
+  echo
+  echo "phpshow will show all offending lines, but can be hard to deciper if there are a lot of matches."
+  echo
+  echo "Recommended use is:"
+  echo "- use phpcheck in /var/www/ to find sites with problems"
+  echo "- use phpshow in individual webroots to see some context around each match"
+  echo
+  echo "Note: 'geshi' directories are excluded as Geshi is a syntax highlighter and will most likely"
+  echo " throw false positives from its php highlighting."
+  echo
+  echo "Expanded aliases:"
+  echo "phpshow:"
+  echo "  find . -name '*.php' -or -name '*.ini' | grep -v '/geshi/' | xargs grep --color=auto \"$*\""
+  echo
+  echo "phpcheck:"
+  echo "  find . -name '*.php' -or -name '*.ini' | grep -v '/geshi/' | xargs grep \"$*\" | cut -d/ -f2 | uniq"
+
+  exit 0
+fi
+
+
+find . -name '*.php' -or -name '*.ini' | grep -v '/geshi/' | xargs grep --color=auto -H -T -e "$*"
