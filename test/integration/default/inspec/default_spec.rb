@@ -10,21 +10,20 @@ end
 
 describe file('/usr/local/bin/phpcheck') do
   it { should exist }
-  its('content') { should match %r{find . -name '*.php' -or -name '*.ini' | grep -v '/geshi/' | xargs grep -H -T -e "$*" | cut -d/ -f2 | uniq} }
+  it { should be_executable }
 end
 
 describe file('/usr/local/bin/phpshow') do
   it { should exist }
-  its('content') { should match %r{find . -name '*.php' -or -name '*.ini' | grep -v '/geshi/' | xargs grep --color=auto -H -T -e "$*"} }
+  it { should be_executable }
 end
 
-# inspec does not handle chaining commands nor bash -c "$cmds"
-# describe command('cd /var/www; phpcheck test for me') do
-#   its('stdout') { should cmp 'phphelpertest' }
-#   its('stdout') { should cmp 'test_the_second' }
-# end
-#
-# describe command('cd /var/www; phpshow test for me') do
-#   its('stdout') { should match './phphelpertest/test_file.php' }
-#   its('stdout') { should match './test_the_second/me_too.php' }
-# end
+describe command('/usr/local/bin/phpcheck -d /var/www test for me') do
+  its('stdout') { should match /^phphelpertest$/ }
+  its('stdout') { should match /^test_the_second$/ }
+end
+
+describe command('/usr/local/bin/phpshow -d /var/www test for me') do
+  its('stdout') { should match %r{phphelpertest/test_file.php.+test for me!} }
+  its('stdout') { should match %r{test_the_second/me_too.php.+test for me too!} }
+end

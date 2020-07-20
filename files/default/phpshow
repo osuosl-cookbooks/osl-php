@@ -1,6 +1,8 @@
 #!/bin/bash
 
-if [ "$1" == "-h" ] ; then
+SEARCHDIR=$(pwd)
+
+function show_help () {
   echo "phpcheck / phpshow help:"
   echo
   echo "These are a couple of aliases to check a directory's php files for a regex expression."
@@ -17,15 +19,25 @@ if [ "$1" == "-h" ] ; then
   echo "Note: 'geshi' directories are excluded as Geshi is a syntax highlighter and will most likely"
   echo " throw false positives from its php highlighting."
   echo
-  echo "Expanded aliases:"
-  echo "phpshow:"
-  echo "  find . -name '*.php' -or -name '*.ini' | grep -v '/geshi/' | xargs grep --color=auto \"$*\""
-  echo
-  echo "phpcheck:"
-  echo "  find . -name '*.php' -or -name '*.ini' | grep -v '/geshi/' | xargs grep \"$*\" | cut -d/ -f2 | uniq"
+  echo "ARGUMENTS:"
+  echo "  -h: show this help message"
+  echo "  -d DIR: look in DIR instead of current directory"
 
   exit 0
-fi
+}
 
+while getopts ":hd:" opt; do
+  case $opt in
+    h)
+      show_help
+      ;;
+    d)
+      SEARCHDIR="$OPTARG"
+      ;;
+    *)
+      ;;
+  esac
+done
+shift $((OPTIND -1))
 
-find . -name '*.php' -or -name '*.ini' | grep -v '/geshi/' | xargs grep --color=auto -H -T -e "$*"
+find "$SEARCHDIR" -name '*.php' -or -name '*.ini' | grep -v '/geshi/' | xargs grep --color=auto -H -T -e "$*"
