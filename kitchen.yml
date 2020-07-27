@@ -20,6 +20,7 @@ suites:
   - name: default
     run_list:
       - recipe[osl-php::default]
+      - recipe[php_test::php_helpers]
   - name: apc
     run_list:
       - recipe[osl-php::default]

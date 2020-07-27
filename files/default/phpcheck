@@ -1,0 +1,43 @@
+#!/bin/bash
+
+SEARCHDIR=/var/www
+
+function show_help () {
+  echo "phpcheck / phpshow help:"
+  echo
+  echo "These are a couple of aliases to check a directory's php files for a regex expression."
+  echo "Intended to help find depreciated functions, etc."
+  echo
+  echo "phpcheck will show just the immediate subdirs that have files that match the regex."
+  echo
+  echo "phpshow will show all offending lines, but can be hard to deciper if there are a lot of matches."
+  echo
+  echo "Recommended use is:"
+  echo "- use phpcheck in /var/www/ to find sites with problems"
+  echo "- use phpshow in individual webroots to see some context around each match"
+  echo
+  echo "Note: 'geshi' directories are excluded as Geshi is a syntax highlighter and will most likely"
+  echo " throw false positives from its php highlighting."
+  echo
+  echo "ARGUMENTS:"
+  echo "  -h: show this help message"
+  echo "  -d DIR: look in DIR instead of current directory"
+
+  exit 0
+}
+
+while getopts ":hd:" opt; do
+  case $opt in
+    h)
+      show_help
+      ;;
+    d)
+      SEARCHDIR="$OPTARG"
+      ;;
+    *)
+      ;;
+  esac
+done
+shift $((OPTIND -1)) # remove args handled by getopt
+
+find "$SEARCHDIR" -name '*.php' -or -name '*.ini' | grep -v '/geshi/' | xargs grep -H -T -e "$*" | sed "s/^${SEARCHDIR//\//\\/}//" | cut -d/ -f2 | uniq
