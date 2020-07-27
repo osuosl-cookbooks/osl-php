@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SEARCHDIR=$(pwd)
+SEARCHDIR=/var/www
 
 function show_help () {
   echo "phpcheck / phpshow help:"
@@ -38,6 +38,6 @@ while getopts ":hd:" opt; do
       ;;
   esac
 done
-shift $((OPTIND -1))
+shift $((OPTIND -1)) # remove args handled by getopt
 
 find "$SEARCHDIR" -name '*.php' -or -name '*.ini' | grep -v '/geshi/' | xargs grep -H -T -e "$*" | sed "s/^${SEARCHDIR//\//\\/}//" | cut -d/ -f2 | uniq

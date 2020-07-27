@@ -18,6 +18,14 @@ describe file('/usr/local/bin/phpshow') do
   it { should be_executable }
 end
 
+describe command('/usr/local/bin/phpcheck -h') do
+  its('stdout') { should match 'phpcheck / phpshow help:' }
+end
+
+describe command('/usr/local/bin/phpshow -h') do
+  its('stdout') { should match 'phpcheck / phpshow help:' }
+end
+
 describe command('/usr/local/bin/phpcheck -d /var/www test for me') do
   its('stdout') { should match /^phphelpertest$/ }
   its('stdout') { should match /^test_the_second$/ }
