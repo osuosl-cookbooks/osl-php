@@ -19,11 +19,11 @@ describe file('/usr/local/bin/phpshow') do
 end
 
 describe command('/usr/local/bin/phpcheck -h') do
-  its('stdout') { should match 'phpcheck / phpshow help:' }
+  its('stdout') { should match 'phpcheck help:' }
 end
 
 describe command('/usr/local/bin/phpshow -h') do
-  its('stdout') { should match 'phpcheck / phpshow help:' }
+  its('stdout') { should match 'phpshow help:' }
 end
 
 describe command('/usr/local/bin/phpcheck test for me') do
@@ -32,6 +32,6 @@ describe command('/usr/local/bin/phpcheck test for me') do
 end
 
 describe command('/usr/local/bin/phpshow test for me') do
-  its('stdout') { should match %r{phphelpertest/test_file.php.+test for me!} }
-  its('stdout') { should match %r{test_the_second/me_too.php.+test for me too!} }
+  its('stdout') { should match %r{phphelpertest/test_file.php.+1.+test for me!} }
+  its('stdout') { should match %r{test_the_second/me_too.php.+1.+test for me too!} }
 end
