@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+5.3.2 (2020-08-19)
+------------------
+- Update php bash helpers
+
 5.3.1 (2020-07-27)
 ------------------
 - Add phpcheck & phpshow bash aliases
