@@ -110,8 +110,7 @@ php_ini 'no_sections_rendered' do
   options no_sections
 end
 
-php_ini 'no_sections_rendered_removed_add_action' do
-  name 'no_sections_rendered_removed'
+php_ini 'no_sections_rendered_added' do
   options no_sections
 end
 

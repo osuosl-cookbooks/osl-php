@@ -12,7 +12,7 @@ describe 'php_test::php_ini' do
       %w(
         no_sections_rendered
         with_sections_rendered
-        no_sections_rendered_removed
+        no_sections_rendered_added
       ).each do |name|
         it do
           expect(chef_run).to create_directory("/etc/php.d #{name}").with(path: '/etc/php.d')
