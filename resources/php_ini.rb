@@ -1,9 +1,10 @@
 resource_name :php_ini
+provides :php_ini
 
 default_action :add
 
 property :mode, String, default: '0644'
-property :options, Hash, required: true
+property :options, Hash, required: [:add]
 
 action :add do
   directory "/etc/php.d #{new_resource.name}" do
