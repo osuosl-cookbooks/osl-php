@@ -36,13 +36,6 @@ if node['osl-php']['use_ius'] && node['platform_version'].to_i < 8
     end
   end
 
-  # php53u RPMs built against CentOS 7
-  if node['php']['version'].to_f == 5.3 && node['platform_version'].to_i >= 7
-    node.default['yum']['ius']['gpgkey'] = 'http://ftp.osuosl.org/pub/osl/repos/yum/RPM-GPG-KEY-osuosl'
-    node.default['yum']['ius']['baseurl'] = 'http://ftp.osuosl.org/pub/osl/repos/yum/$releasever/php53/$basearch'
-    node.default['yum']['ius']['mirrorlist'] = nil
-  end
-
   include_recipe 'yum-ius'
 
   case node['php']['version'].to_f
@@ -64,7 +57,7 @@ end
 
 version = node['php']['version']
 
-# Get package prefix from version (e.g. "php71u" or "php")
+# Get package prefix from version (e.g. "php73u" or "php")
 prefix = if node['osl-php']['use_ius'] && node['platform_version'].to_i < 8
            # The IUS repo removed the 'u' at the end of the prefix with PHP 7.3 packages.
            'php' + version.split('.')[0, 2].join + (version.to_f < 7.3 ? 'u' : '')
