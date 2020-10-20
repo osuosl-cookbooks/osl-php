@@ -76,31 +76,25 @@ describe 'osl-php::packages' do
               else
                 case php_version
                 when '5.6', '7.1'
-                  expect(chef_run).to create_yum_repository('ius-archive')
+                  expect(chef_run).to create_yum_repository('ius-archive').with(enabled: true)
                 else
-                  expect(chef_run).to_not create_yum_repository('ius-archive')
+                  expect(chef_run).to create_yum_repository('ius-archive').with(enabled: false)
                 end
               end
             end
             if pltfrm == CENTOS_7
+              it do
+                expect(chef_run).to include_recipe('yum-centos')
+              end
+              it do
+                expect(chef_run).to include_recipe('yum-osuosl')
+              end
               case php_version
               when '5.6', '7.1'
-                it do
-                  expect(chef_run).to include_recipe('yum-centos')
-                end
-                it do
-                  expect(chef_run).to include_recipe('yum-osuosl')
-                end
                 it do
                   expect(chef_run).to create_yum_repository('base').with(exclude: 'ImageMagick*')
                 end
               else
-                it do
-                  expect(chef_run).to_not include_recipe('yum-centos')
-                end
-                it do
-                  expect(chef_run).to_not include_recipe('yum-osuosl')
-                end
                 it do
                   expect(chef_run).to_not create_yum_repository('base').with(exclude: 'ImageMagick*')
                 end

@@ -20,6 +20,5 @@ describe file '/etc/yum.repos.d/ius.repo' do
 end
 
 describe yum.repo 'ius-archive' do
-  it { should_not exist }
   it { should_not be_enabled }
 end
