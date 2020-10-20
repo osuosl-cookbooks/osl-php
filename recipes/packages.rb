@@ -20,12 +20,13 @@ if node['osl-php']['use_ius'] && node['platform_version'].to_i < 8
   # Enable IUS archive repo for archived versions
   enable_ius_archive = node['osl-php']['ius_archive_versions'].any? { |v| node['php']['version'].start_with?(v) }
   node.default['yum']['ius-archive']['enabled'] = enable_ius_archive
-  node.default['yum']['ius-archive']['managed'] = enable_ius_archive
+  node.default['yum']['ius-archive']['managed'] = true
+
+  include_recipe 'yum-centos'
+  include_recipe 'yum-osuosl'
 
   # CentOS 7.8 updated ImageMagick which broke installations from ius-archive
   if enable_ius_archive && node['platform_version'].to_i >= 7
-    include_recipe 'yum-centos'
-    include_recipe 'yum-osuosl'
 
     # Exclude all ImageMagick packages from the CentOS repos
     node['yum-centos']['repos'].each do |repo|
