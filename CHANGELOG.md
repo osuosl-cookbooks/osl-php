@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+5.5.1 (2020-10-20)
+------------------
+- Fix disabling ius-archive when switching between versions
+
 5.5.0 (2020-10-07)
 ------------------
 - Remove support for php 5.3 and 7.0
