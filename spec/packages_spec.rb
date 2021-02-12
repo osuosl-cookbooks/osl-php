@@ -20,6 +20,11 @@ describe 'osl-php::packages' do
         it do
           expect(chef_run).to install_package('php-pear')
         end
+        %w(osl-selinux::default).each do |r|
+          it do
+            expect(chef_run).to include_recipe(r)
+          end
+        end
       end
       %w(5.6 7.1 7.2 7.3 7.4).each do |php_version|
         prefix =

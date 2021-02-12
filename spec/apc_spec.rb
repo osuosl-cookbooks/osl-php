@@ -18,6 +18,11 @@ describe 'osl-php::apc' do
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end
+      %w(osl-selinux::default).each do |r|
+        it do
+          expect(chef_run).to include_recipe(r)
+        end
+      end
       case pltfrm
       when CENTOS_8
         it do
