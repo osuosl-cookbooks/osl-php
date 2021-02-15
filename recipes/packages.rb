@@ -25,8 +25,8 @@ if node['osl-php']['use_ius'] && node['platform_version'].to_i < 8
   include_recipe 'yum-centos'
   include_recipe 'yum-osuosl'
 
-  # CentOS 7.8 updated ImageMagick which broke installations from ius-archive
-  if enable_ius_archive && node['platform_version'].to_i >= 7
+  # CentOS 7.8 updated ImageMagick which broke installations from ius-archive for older php versions
+  if enable_ius_archive && node['platform_version'].to_i >= 7 && node['php']['version'].to_f <= 7.1
 
     # Exclude all ImageMagick packages from the CentOS repos
     node['yum-centos']['repos'].each do |repo|
@@ -46,6 +46,8 @@ if node['osl-php']['use_ius'] && node['platform_version'].to_i < 8
     r = resources(yum_repository: 'ius')
     r.exclude = [r.exclude, 'php72* php73* php74*'].reject(&:nil?).join(' ')
   when 7.2
+    r_a = resources(yum_repository: 'ius-archive')
+    r_a.exclude = [r_a.exclude, 'php5* php71* php73* php74*'].reject(&:nil?).join(' ')
     r = resources(yum_repository: 'ius')
     r.exclude = [r.exclude, 'php73* php74*'].reject(&:nil?).join(' ')
   when 7.3
