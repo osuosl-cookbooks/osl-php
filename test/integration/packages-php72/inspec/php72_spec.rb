@@ -46,8 +46,12 @@ else
     its('content') { should match /^exclude=php73\* php74\*$/ }
   end
 
-end
+  describe yum.repo 'ius-archive' do
+    it { should be_enabled }
+  end
 
-describe yum.repo 'ius-archive' do
-  it { should_not be_enabled }
+  # TODO: move to yum.repo check once we've upgraded to a newer InSpec
+  describe file '/etc/yum.repos.d/ius-archive.repo' do
+    its('content') { should match /^exclude=php5\* php71\* php73\* php74\*$/ }
+  end
 end
