@@ -1,5 +1,0 @@
----
-name: packages-php72
-depends:
-  - name: selinux
-    path: test/integration/selinux

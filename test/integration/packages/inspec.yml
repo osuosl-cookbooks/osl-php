@@ -3,3 +3,6 @@ name: packages
 depends:
   - name: selinux
     path: test/integration/selinux
+inputs:
+  - name: version
+    type: Numeric

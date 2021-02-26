@@ -1,5 +1,0 @@
----
-name: packages-php74
-depends:
-  - name: selinux
-    path: test/integration/selinux
