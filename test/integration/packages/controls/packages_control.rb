@@ -3,34 +3,36 @@ include_controls 'selinux'
 
 version = input('version')
 
-control 'packages_config' do
+control 'packages' do
   title 'Verify the correct packages are installed'
 
   case version
-  when '5.6'
-    pkg = %w(
-      php56u
-      php56u-devel
-      php56u-fpm
-      php56u-gd
-      php56u-pear
-      php56u-pecl-imagick
-    )
-  when '7.1'
-    pkg = %w(
-      mod_php71u
-      pear1
-      php71u-devel
-      php71u-fpm
-      php71u-gd
-      php71u-pecl-imagick
-    )
-
-    # TODO: move to yum.repo check once we've upgraded to a newer InSpec
-    describe file '/etc/yum.repos.d/ius-archive.repo' do
-      its('content') { should match /^exclude=php5\* php72\* php73\* php74\*$/ }
-    end
   when '5.6', '7.1'
+    if version == '5.6'
+      pkg = %w(
+        php56u
+        php56u-devel
+        php56u-fpm
+        php56u-gd
+        php56u-pear
+        php56u-pecl-imagick
+      )
+    else
+      pkg = %w(
+        mod_php71u
+        pear1
+        php71u-devel
+        php71u-fpm
+        php71u-gd
+        php71u-pecl-imagick
+      )
+
+      # TODO: move to yum.repo check once we've upgraded to a newer InSpec
+      describe file '/etc/yum.repos.d/ius-archive.repo' do
+        its('content') { should match /^exclude=php5\* php72\* php73\* php74\*$/ }
+      end
+    end
+
     %w(
       ius
       ius-archive
@@ -93,24 +95,25 @@ control 'packages_config' do
         its('content') { should match /^exclude=php5\* php71\* php73\* php74\*$/ }
       end
     end
-  when '7.3'
-    pkg = %w(
-      mod_php73
-      pear1
-      php73-devel
-      php73-fpm
-      php73-gd
-      php73-pecl-imagick
-    )
-  when '7.4'
-    pkg = %w(
-      mod_php74
-      pear1
-      php74-devel
-      php74-fpm
-      php74-gd
-    )
   when '7.3', '7.4'
+    pkg = if version == '7.3'
+            %w(
+              mod_php73
+              pear1
+              php73-devel
+              php73-fpm
+              php73-gd
+              php73-pecl-imagick
+            )
+          else
+            %w(
+              mod_php74
+              pear1
+              php74-devel
+              php74-fpm
+              php74-gd
+            )
+          end
     describe yum.repo 'ius' do
       it { should be_enabled }
     end
@@ -144,7 +147,7 @@ control 'packages_config' do
       it { should_not be_installed }
     end
   end
-  
+
   pkg.each do |p|
     describe package(p) do
       it { should be_installed }
