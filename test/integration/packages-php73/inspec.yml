@@ -1,0 +1,5 @@
+---
+name: packages-php73
+depends:
+  - name: selinux
+    path: test/integration/selinux

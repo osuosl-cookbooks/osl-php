@@ -1,0 +1,5 @@
+---
+name: php_ini
+depends:
+  - name: selinux
+    path: test/integration/selinux

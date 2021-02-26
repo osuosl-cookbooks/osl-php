@@ -1,0 +1,5 @@
+---
+name: packages-php56
+depends:
+  - name: selinux
+    path: test/integration/selinux

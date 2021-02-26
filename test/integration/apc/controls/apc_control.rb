@@ -1,3 +1,6 @@
+# Include selinux test
+include_controls 'selinux'
+
 %w(httpd-devel pcre pcre-devel).each do |pkg|
   describe package pkg do
     it { should be_installed }

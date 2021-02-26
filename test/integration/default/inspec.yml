@@ -1,0 +1,5 @@
+---
+name: default
+depends:
+  - name: selinux
+    path: test/integration/selinux
