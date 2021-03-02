@@ -1,4 +1,9 @@
-major_version = node['platform_version'].to_i < 8 ? node['php']['version'].to_i : 7
+major_version =
+  if system_php?
+    node['platform_version'].to_i < 8 ? '5' : 7
+  else
+    node['php']['version'].to_i
+  end
 
 ::Chef::Resource.include Apache2::Cookbook::Helpers
 
