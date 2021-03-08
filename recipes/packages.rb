@@ -84,7 +84,7 @@ end
 
 # If any of our attributes are set, modify upstream packages attribute
 if packages.any? || node['osl-php']['use_ius']
-  packages <<= if version.to_f < 7
+  packages <<= if system_php? || version.to_f < 7
                  prefix
                elsif node['platform_version'].to_i >= 8
                  'php'
@@ -97,7 +97,7 @@ if packages.any? || node['osl-php']['use_ius']
 
   # Include pear package (pear1 for PHP 7.1+)
   pear_pkg =
-    if node['platform_version'].to_i >= 8
+    if system_php? || node['platform_version'].to_i >= 8
       'php-pear'
     elsif version.to_f >= 7.1
       'pear1'

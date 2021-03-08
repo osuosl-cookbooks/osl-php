@@ -12,7 +12,7 @@ supports         'centos', '~> 8.0'
 supports         'centos', '~> 7.0'
 
 depends          'composer'
-depends          'php', '~> 7.1.0'
+depends          'php', '~> 8.0.1'
 depends          'yum-centos'
 depends          'yum-epel'
 depends          'yum-ius', '~> 3.1.0'
