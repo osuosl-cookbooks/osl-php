@@ -119,6 +119,9 @@ suites:
     provisioner:
       enforce_idempotency: false
       multiple_converge: 1
+    verifier:
+      inspec_tests:
+        - test/integration/php-ini
   - name: opcache-php56
     run_list:
     - recipe[osl-php::default]
@@ -140,6 +143,11 @@ suites:
         version: '5.6'
     excludes:
       - centos-8
+    verifier:
+      inspec_tests:
+        - test/integration/opcache
+      inputs:
+        version: '5.6'
   - name: opcache-php72
     run_list:
     - recipe[osl-php::default]
@@ -158,4 +166,9 @@ suites:
           opcache.memory_consumption: 1024
           opcache.max_accelerated_files: 1000
       php:
+        version: '7.2'
+    verifier:
+      inspec_tests:
+        - test/integration/opcache
+      inputs:
         version: '7.2'

@@ -1,5 +1,5 @@
 ---
-name: opcache-php72
+name: php-ini
 depends:
   - name: selinux
     path: test/integration/selinux
