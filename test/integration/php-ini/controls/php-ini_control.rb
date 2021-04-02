@@ -1,11 +1,11 @@
-# Include selinux tests
+# Include selinux test
 include_controls 'selinux'
 
 control 'php-ini' do
   title 'Verify php ini files are correct'
 
-  # no_sections_static = inspec.file('/tmp/no_sections_static').content
-  # with_sections_static = inspec.file('/tmp/with_sections_static').content
+  no_sections_static = inspec.file('/tmp/no_sections_static').content
+  with_sections_static = inspec.file('/tmp/with_sections_static').content
 
   describe file('/etc/php.d/no_sections_rendered.ini') do
     its('content') { should match no_sections_static }
