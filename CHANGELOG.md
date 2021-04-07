@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+5.7.0 (2021-04-07)
+------------------
+- Update Chef dependency to >= 16
+
 5.6.0 (2021-03-08)
 ------------------
 - Update to cookbook use php 8.0
