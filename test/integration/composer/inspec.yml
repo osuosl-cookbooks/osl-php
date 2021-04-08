@@ -1,0 +1,5 @@
+---
+name: composer
+depends:
+  - name: selinux
+    path: test/integration/selinux

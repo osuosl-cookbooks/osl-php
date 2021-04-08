@@ -1,0 +1,5 @@
+---
+name: apc
+depends:
+  - name: selinux
+    path: test/integration/selinux
