@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+5.8.0 (2021-04-16)
+------------------
+- Enable Selinux Enforcing
+
 5.7.0 (2021-04-07)
 ------------------
 - Update Chef dependency to >= 16
