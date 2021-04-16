@@ -16,6 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+include_recipe 'osl-selinux'
+
 if node['osl-php']['use_ius'] && node['platform_version'].to_i < 8
   # Enable IUS archive repo for archived versions
   enable_ius_archive = node['osl-php']['ius_archive_versions'].any? { |v| node['php']['version'].start_with?(v) }

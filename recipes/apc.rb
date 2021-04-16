@@ -16,6 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+include_recipe 'osl-selinux'
+
 ruby_block 'raise_use_ius_exception' do
   block do
     raise 'APC is not compatible with PHP from IUS Community repos. ' \

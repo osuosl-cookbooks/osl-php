@@ -42,5 +42,10 @@ describe 'osl-php::opcache' do
         expect { chef_run }.to raise_error RuntimeError
       end
     end
+    %w(osl-selinux::default).each do |r|
+      it do
+        expect(chef_run).to include_recipe(r)
+      end
+    end
   end
 end
