@@ -20,9 +20,11 @@ include_recipe 'osl-selinux'
 
 if node['osl-php']['use_ius'] && node['platform_version'].to_i < 8
   # Enable IUS archive repo for archived versions
-  enable_ius_archive = node['osl-php']['ius_archive_versions'].any? { |v| node['php']['version'].start_with?(v) }
-  node.default['yum']['ius-archive']['enabled'] = enable_ius_archive
-  node.default['yum']['ius-archive']['managed'] = true
+  unless system_php?
+    enable_ius_archive = node['osl-php']['ius_archive_versions'].any? { |v| node['php']['version'].start_with?(v) }
+    node.default['yum']['ius-archive']['enabled'] = enable_ius_archive
+    node.default['yum']['ius-archive']['managed'] = true
+  end
 
   include_recipe 'yum-centos'
   include_recipe 'yum-osuosl'
@@ -41,20 +43,22 @@ if node['osl-php']['use_ius'] && node['platform_version'].to_i < 8
 
   include_recipe 'yum-ius'
 
-  case node['php']['version'].to_f
-  when 7.1
-    r_a = resources(yum_repository: 'ius-archive')
-    r_a.exclude = [r_a.exclude, 'php5* php72* php73* php74*'].reject(&:nil?).join(' ')
-    r = resources(yum_repository: 'ius')
-    r.exclude = [r.exclude, 'php72* php73* php74*'].reject(&:nil?).join(' ')
-  when 7.2
-    r_a = resources(yum_repository: 'ius-archive')
-    r_a.exclude = [r_a.exclude, 'php5* php71* php73* php74*'].reject(&:nil?).join(' ')
-    r = resources(yum_repository: 'ius')
-    r.exclude = [r.exclude, 'php73* php74*'].reject(&:nil?).join(' ')
-  when 7.3
-    r = resources(yum_repository: 'ius')
-    r.exclude = [r.exclude, 'php74*'].reject(&:nil?).join(' ')
+  unless system_php?
+    case node['php']['version'].to_f
+    when 7.1
+      r_a = resources(yum_repository: 'ius-archive')
+      r_a.exclude = [r_a.exclude, 'php5* php72* php73* php74*'].reject(&:nil?).join(' ')
+      r = resources(yum_repository: 'ius')
+      r.exclude = [r.exclude, 'php72* php73* php74*'].reject(&:nil?).join(' ')
+    when 7.2
+      r_a = resources(yum_repository: 'ius-archive')
+      r_a.exclude = [r_a.exclude, 'php5* php71* php73* php74*'].reject(&:nil?).join(' ')
+      r = resources(yum_repository: 'ius')
+      r.exclude = [r.exclude, 'php73* php74*'].reject(&:nil?).join(' ')
+    when 7.3
+      r = resources(yum_repository: 'ius')
+      r.exclude = [r.exclude, 'php74*'].reject(&:nil?).join(' ')
+    end
   end
 elsif node['osl-php']['use_ius'] && node['platform_version'].to_i >= 8
   Chef::Log.warn("Use of node['osl-php']['use_ius'] is ignored on CentOS 8 as there is no support for it upstream")
@@ -63,7 +67,10 @@ end
 version = node['php']['version']
 
 # Get package prefix from version (e.g. "php73u" or "php")
-prefix = if node['osl-php']['use_ius'] && node['platform_version'].to_i < 8
+prefix = if node['osl-php']['use_ius'] && system_php? && node['platform_version'].to_i < 8
+           # Let's default to php74 if no version is set when using IUS
+           'php74'
+         elsif node['osl-php']['use_ius'] && node['platform_version'].to_i < 8
            # The IUS repo removed the 'u' at the end of the prefix with PHP 7.3 packages.
            'php' + version.split('.')[0, 2].join + (version.to_f < 7.3 ? 'u' : '')
          else
@@ -78,7 +85,7 @@ if node['osl-php']['php_packages'].any?
   osl_packages = []
   osl_packages = osl_packages.concat(node['osl-php']['php_packages'])
   # pecl-imagick is not available for php7.4 or CentOS 8
-  if (node['platform_version'].to_i >= 8 || node['php']['version'].to_f == 7.4) && osl_packages.include?('pecl-imagick')
+  if (node['platform_version'].to_i >= 8 || prefix == 'php74') && osl_packages.include?('pecl-imagick')
     osl_packages.delete_if { |pkg| pkg == 'pecl-imagick' }
   end
   packages += osl_packages.map { |pkg| prefix + '-' + pkg }
@@ -86,7 +93,7 @@ end
 
 # If any of our attributes are set, modify upstream packages attribute
 if packages.any? || node['osl-php']['use_ius']
-  packages <<= if system_php? || version.to_f < 7
+  packages <<= if (system_php? && !node['osl-php']['use_ius']) || version.to_f < 7
                  prefix
                elsif node['platform_version'].to_i >= 8
                  'php'
@@ -99,7 +106,7 @@ if packages.any? || node['osl-php']['use_ius']
 
   # Include pear package (pear1 for PHP 7.1+)
   pear_pkg =
-    if system_php? || node['platform_version'].to_i >= 8
+    if (system_php? && !node['osl-php']['use_ius']) || node['platform_version'].to_i >= 8
       'php-pear'
     elsif version.to_f >= 7.1
       'pear1'

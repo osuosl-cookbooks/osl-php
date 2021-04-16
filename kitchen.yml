@@ -42,6 +42,19 @@ suites:
           - 'devel'
           - 'fpm'
           - 'gd'
+  - name: packages-php-ius
+    run_list:
+    - recipe[osl-php::packages]
+    attributes:
+      osl-php:
+        use_ius: true
+    excludes:
+      - centos-8
+    verifier:
+      inspec_tests:
+        - test/integration/packages
+      inputs:
+        version: '7.4'
   - name: packages-php56
     run_list:
     - recipe[osl-php::packages]
