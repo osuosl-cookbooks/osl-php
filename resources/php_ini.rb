@@ -1,5 +1,6 @@
 resource_name :php_ini
 provides :php_ini
+unified_mode true
 
 default_action :add
 
