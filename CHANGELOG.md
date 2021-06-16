@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+5.9.0 (2021-06-16)
+------------------
+- Set unified_mode for custom resources
+
 5.8.1 (2021-04-16)
 ------------------
 - Fix default IUS installation if we don't explictly set node['php']['version']
