@@ -89,7 +89,7 @@ describe 'osl-php::packages' do
             end
             if pltfrm == CENTOS_7
               it do
-                expect(chef_run).to include_recipe('yum-centos')
+                expect(chef_run).to include_recipe('osl-repos::centos')
               end
               it do
                 expect(chef_run).to include_recipe('yum-osuosl')
