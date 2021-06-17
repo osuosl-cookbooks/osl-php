@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+5.10.0 (2021-06-17)
+-------------------
+- Migrate to using osl-repos
+
 5.9.0 (2021-06-16)
 ------------------
 - Set unified_mode for custom resources
