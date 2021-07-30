@@ -112,6 +112,7 @@ control 'packages' do
               php74-devel
               php74-fpm
               php74-gd
+              php74-pecl-imagick
             )
           end
     describe yum.repo 'ius' do
