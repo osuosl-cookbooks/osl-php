@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+5.10.1 (2021-08-05)
+-------------------
+- Allow pecl-imagick for php7.4 on CentOS 7
+
 5.10.0 (2021-06-17)
 -------------------
 - Migrate to using osl-repos
