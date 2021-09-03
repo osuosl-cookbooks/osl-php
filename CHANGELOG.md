@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+5.10.2 (2021-09-03)
+-------------------
+- Set the default timezone to UTC
+
 5.10.1 (2021-08-05)
 -------------------
 - Allow pecl-imagick for php7.4 on CentOS 7
