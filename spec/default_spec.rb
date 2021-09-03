@@ -15,6 +15,9 @@ describe 'osl-php::default' do
         end
       end
       it do
+        expect(chef_run).to add_php_ini('timezone').with(options: { 'date.timezone' => 'UTC' })
+      end
+      it do
         expect(chef_run).to_not include_recipe('osl-php::opcache')
       end
     end
