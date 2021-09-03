@@ -23,6 +23,10 @@ include_recipe 'osl-php::opcache' if node['osl-php']['use_opcache']
 include_recipe 'osl-php::packages'
 include_recipe 'php::default'
 
+php_ini 'timezone' do
+  options('date.timezone' => 'UTC')
+end
+
 %w(phpcheck phpshow).each do |file|
   cookbook_file "/usr/local/bin/#{file}" do
     source file

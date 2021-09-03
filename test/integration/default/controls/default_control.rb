@@ -14,6 +14,12 @@ control 'php_packages' do
     end
   end
 
+  describe command 'php -i' do
+    its('stdout') { should match '/etc/php.d/timezone.ini' }
+    its('stdout') { should match 'date.timezone => UTC => UTC' }
+    its('stdout') { should match 'Default timezone => UTC' }
+  end
+
   describe file('/usr/local/bin/phpcheck') do
     it { should exist }
     it { should be_executable }
