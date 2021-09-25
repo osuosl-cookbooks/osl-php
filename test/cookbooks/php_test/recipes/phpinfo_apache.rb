@@ -1,10 +1,3 @@
-major_version =
-  if system_php?
-    node['platform_version'].to_i < 8 ? '5' : 7
-  else
-    node['php']['version'].to_i
-  end
-
 ::Chef::Resource.include Apache2::Cookbook::Helpers
 
 # These aren't accessible outside of the apache cookbook, so declare them here for use in this cookbook
@@ -15,6 +8,10 @@ service 'apache2' do
 end
 
 apache2_install 'default'
+
+# php modules from IUS (C7) have version number in module name
+# modules from Remi (C8) do not, so only set this if on C7
+major_version = (node['php']['version'].to_i if node['platform_version'].to_i == 7)
 
 apache2_module "php#{major_version}" do
   mod_name "libphp#{major_version}.so"
@@ -32,11 +29,11 @@ directory '/var/www/localhost' do
 end
 
 file '/var/www/localhost/index.php' do
-  content <<-EOF
-<?php
-  phpinfo();
-?>
-EOF
+  content <<~EOF
+    <?php
+      phpinfo();
+    ?>
+  EOF
   owner 'apache'
   group 'apache'
 end

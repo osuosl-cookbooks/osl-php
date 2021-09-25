@@ -30,9 +30,9 @@ describe 'osl-php::packages' do
         prefix =
           case pltfrm
           when CENTOS_7
-            "php#{php_version.split('.').join}#{php_version.to_f < 7.3 ? 'u' : ''}"
+            "php#{php_version.delete('.')}#{php_version.to_f < 7.3 ? 'u' : ''}"
           when CENTOS_8
-            'php'
+            "php#{php_version.delete('.')}-php"
           end
         context "using php #{php_version}" do
           context 'using packages with versioned prefixes' do
@@ -50,7 +50,7 @@ describe 'osl-php::packages' do
               php_pkg =
                 case pltfrm
                 when CENTOS_8
-                  'php'
+                  prefix
                 else
                   php_version.to_f < 7 ? prefix : "mod_#{prefix}"
                 end
@@ -131,7 +131,7 @@ describe 'osl-php::packages' do
             it do
               php_pkg =
                 if pltfrm == CENTOS_8
-                  'php'
+                  prefix
                 else
                   php_version.to_f < 7 ? prefix : "mod_#{prefix}"
                 end

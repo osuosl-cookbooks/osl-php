@@ -1,133 +1,134 @@
 # Include selinux test
 include_controls 'selinux'
 
-version = input('version')
+version = input('version', value: '')
+shortver = version.delete('.')
 
-control 'packages' do
-  title 'Verify the correct packages are installed'
+control 'version' do
+  title 'Verify that PHP is the correct version'
+
+  only_if 'version is not given' do
+    !version.nil?
+  end
+
+  describe command('php --version') do
+    its('stdout') { should match version }
+  end
+end
+
+control 'site' do
+  title 'Verify mod_php works'
+
+  describe command('curl localhost') do
+    its('stdout') { should match /PHP Version #{version}/ }
+  end
+end
+
+control 'packages c7' do
+  title 'Verify the correct packages are installed on CentOS 7'
+
+  only_if 'not on CentOS 7' do
+    os.release.to_i == 7
+  end
 
   case version
-  when '5.6', '7.1'
-    if version == '5.6'
-      pkg = %w(
-        php56u
-        php56u-devel
-        php56u-fpm
-        php56u-gd
-        php56u-pear
-        php56u-pecl-imagick
-      )
-    else
-      pkg = %w(
-        mod_php71u
-        pear1
-        php71u-devel
-        php71u-fpm
-        php71u-gd
-        php71u-pecl-imagick
-      )
-
-      # TODO: move to yum.repo check once we've upgraded to a newer InSpec
-      describe file '/etc/yum.repos.d/ius-archive.repo' do
-        its('content') { should match /^exclude=php5\* php72\* php73\* php74\*$/ }
-      end
-    end
+  when '5.6'
+    php_packages = %w(
+      php56u
+      php56u-devel
+      php56u-fpm
+      php56u-gd
+      php56u-pear
+      php56u-pecl-imagick
+    )
 
     %w(
       ius
       ius-archive
     ).each do |repo|
       describe yum.repo repo do
+        it { should exist }
         it { should be_enabled }
       end
     end
-  when '7.2'
-    if os.release.to_i >= 8
-      pkg = %w(
-        php
-        php-devel
-        php-fpm
-        php-gd
-      )
-      pkg.each do |p|
-        describe package(p) do
-          its('version') { should >= '7.2' }
-        end
-      end
 
-      describe package 'php-pear' do
-        it { should be_installed }
-      end
+  when '7.1'
+    php_packages = %w(
+      mod_php71u
+      pear1
+      php71u-devel
+      php71u-fpm
+      php71u-gd
+      php71u-pecl-imagick
+    )
 
-      describe yum.repo 'ius' do
-        it { should_not exist }
-        it { should_not be_enabled }
-      end
-
-      describe file '/etc/yum.repos.d/ius.repo' do
-        it { should_not exist }
-      end
-    else
-      pkg = %w(
-        mod_php72u
-        pear1
-        php72u-devel
-        php72u-fpm
-        php72u-gd
-        php72u-pecl-imagick
-      )
-
-      describe yum.repo 'ius' do
-        it { should be_enabled }
-      end
-
-      # TODO: move to yum.repo check once we've upgraded to a newer InSpec
-      describe file '/etc/yum.repos.d/ius.repo' do
-        its('content') { should match /^exclude=php73\* php74\*$/ }
-      end
-
-      describe yum.repo 'ius-archive' do
-        it { should be_enabled }
-      end
-
-      # TODO: move to yum.repo check once we've upgraded to a newer InSpec
-      describe file '/etc/yum.repos.d/ius-archive.repo' do
-        its('content') { should match /^exclude=php5\* php71\* php73\* php74\*$/ }
-      end
-    end
-  when '7.3', '7.4'
-    pkg = if version == '7.3'
-            %w(
-              mod_php73
-              pear1
-              php73-devel
-              php73-fpm
-              php73-gd
-              php73-pecl-imagick
-            )
-          else
-            %w(
-              mod_php74
-              pear1
-              php74-devel
-              php74-fpm
-              php74-gd
-              php74-pecl-imagick
-            )
-          end
-    describe yum.repo 'ius' do
+    describe yum.repo('ius') do
+      it { should exist }
       it { should be_enabled }
     end
 
-    describe file '/etc/yum.repos.d/ius.repo' do
+    describe yum.repo('ius-archive') do
       it { should exist }
+      it { should be_enabled }
+      # its('exclude') { should match /^exclude=php5\* php72\* php73\* php74\*$/ }
+    end
+
+    # yum resource doesnt do exclude, so check manually
+    describe file('/etc/yum.repos.d/ius-archive.repo') do
+      its('content') { should match /^exclude=php5\* php72\* php73\* php74\*$/ }
+    end
+
+  when '7.2'
+    php_packages = %w(
+      mod_php72u
+      pear1
+      php72u-devel
+      php72u-fpm
+      php72u-gd
+      php72u-pecl-imagick
+    )
+
+    describe yum.repo('ius') do
+      it { should be_enabled }
+    end
+
+    # TODO: move to yum.repo check once we've upgraded to a newer InSpec
+    describe file '/etc/yum.repos.d/ius.repo' do
+      its('content') { should match /^exclude=php73\* php74\*$/ }
     end
 
     describe yum.repo 'ius-archive' do
+      it { should be_enabled }
+    end
+
+    # TODO: move to yum.repo check once we've upgraded to a newer InSpec
+    describe file '/etc/yum.repos.d/ius-archive.repo' do
+      its('content') { should match /^exclude=php5\* php71\* php73\* php74\*$/ }
+    end
+
+  when '7.3', '7.4'
+    php_packages = %W(
+      mod_php#{shortver}
+      pear1
+      php#{shortver}-devel
+      php#{shortver}-fpm
+      php#{shortver}-gd
+      php#{shortver}-pecl-imagick
+    )
+
+    describe yum.repo('ius') do
+      it { should exist }
+      it { should be_enabled }
+    end
+
+    describe yum.repo('ius-archive') do
       it { should_not be_enabled }
     end
+
   else
-    pkg = %w(
+    # assume system packages
+
+    php_packages = %w(
       php
       php-devel
       php-fpm
@@ -149,7 +150,34 @@ control 'packages' do
     end
   end
 
-  pkg.each do |p|
+  php_packages.each do |p|
+    describe package(p) do
+      it { should be_installed }
+    end
+  end
+end
+
+control 'packages c8' do
+  title 'Verify the correct packages are installed on CentOS 8'
+
+  only_if 'not on CentOS 8' do
+    os.release.to_i == 8
+  end
+
+  describe yum.repo('remi-modular') do
+    it { should exist }
+    it { should be_enabled }
+  end
+
+  php_packages = %w(
+    php
+    php-pear
+    php-devel
+    php-fpm
+    php-gd
+  )
+
+  php_packages.each do |p|
     describe package(p) do
       it { should be_installed }
     end

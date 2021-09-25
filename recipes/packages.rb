@@ -18,19 +18,27 @@
 
 include_recipe 'osl-selinux'
 
-if node['osl-php']['use_ius'] && node['platform_version'].to_i < 8
+version = node['php']['version']
+shortver = version.delete('.')
+packages = node['osl-php']['packages'].flatten
+prefix = 'php'
+
+# === use IUS repo on C7 ===
+if node['platform_version'].to_i == 7 && node['osl-php']['use_ius']
+  # default to 7.4 if version not explicitly set
+  version = node.default['php']['version'] = '7.4' if system_php?
+  shortver = version.delete('.')
+
   # Enable IUS archive repo for archived versions
-  unless system_php?
-    enable_ius_archive = node['osl-php']['ius_archive_versions'].any? { |v| node['php']['version'].start_with?(v) }
-    node.default['yum']['ius-archive']['enabled'] = enable_ius_archive
-    node.default['yum']['ius-archive']['managed'] = true
-  end
+  enable_ius_archive = node['osl-php']['ius_archive_versions'].any? { |v| version.start_with?(v) }
+  node.default['yum']['ius-archive']['enabled'] = enable_ius_archive
+  node.default['yum']['ius-archive']['managed'] = true
 
   include_recipe 'osl-repos::centos'
   include_recipe 'yum-osuosl'
 
   # CentOS 7.8 updated ImageMagick which broke installations from ius-archive for php versions 7.1 and below
-  if enable_ius_archive && node['platform_version'].to_i >= 7 && node['php']['version'].to_f <= 7.1
+  if enable_ius_archive && node['platform_version'].to_i >= 7 && version.to_f <= 7.1
     # This is an annoying workaround since the resource doesn't show up properly using the osl_repos_centos resource. We
     # don't include this in metadata as it will mess up ordering but gets pulled in automatically with osl-repos
     include_recipe 'yum-centos'
@@ -40,88 +48,71 @@ if node['osl-php']['use_ius'] && node['platform_version'].to_i < 8
       next unless node['yum'][repo]['managed']
       r = resources(yum_repository: repo)
       # If we already have excludes, include them and append ImageMagick
-      r.exclude = [r.exclude, 'ImageMagick*'].reject(&:nil?).join(' ')
+      r.exclude = [r.exclude, 'ImageMagick*'].flatten.compact.join(' ')
     end
   end
 
   include_recipe 'yum-ius'
 
-  unless system_php?
-    case node['php']['version'].to_f
-    when 7.1
-      r_a = resources(yum_repository: 'ius-archive')
-      r_a.exclude = [r_a.exclude, 'php5* php72* php73* php74*'].reject(&:nil?).join(' ')
-      r = resources(yum_repository: 'ius')
-      r.exclude = [r.exclude, 'php72* php73* php74*'].reject(&:nil?).join(' ')
-    when 7.2
-      r_a = resources(yum_repository: 'ius-archive')
-      r_a.exclude = [r_a.exclude, 'php5* php71* php73* php74*'].reject(&:nil?).join(' ')
-      r = resources(yum_repository: 'ius')
-      r.exclude = [r.exclude, 'php73* php74*'].reject(&:nil?).join(' ')
-    when 7.3
-      r = resources(yum_repository: 'ius')
-      r.exclude = [r.exclude, 'php74*'].reject(&:nil?).join(' ')
-    end
+  case version.to_f
+  when 7.1
+    r_a = resources(yum_repository: 'ius-archive')
+    r_a.exclude = [r_a.exclude, 'php5* php72* php73* php74*'].compact.join(' ')
+    r = resources(yum_repository: 'ius')
+    r.exclude = [r.exclude, 'php72* php73* php74*'].compact.join(' ')
+  when 7.2
+    r_a = resources(yum_repository: 'ius-archive')
+    r_a.exclude = [r_a.exclude, 'php5* php71* php73* php74*'].compact.join(' ')
+    r = resources(yum_repository: 'ius')
+    r.exclude = [r.exclude, 'php73* php74*'].compact.join(' ')
+  when 7.3
+    r = resources(yum_repository: 'ius')
+    r.exclude = [r.exclude, 'php74*'].compact.join(' ')
   end
-elsif node['osl-php']['use_ius'] && node['platform_version'].to_i >= 8
-  Chef::Log.warn("Use of node['osl-php']['use_ius'] is ignored on CentOS 8 as there is no support for it upstream")
+
+  # IUS has php versions as php72u-foo or php73-foo
+  prefix = "php#{shortver}#{'u' if version.to_f < 7.3}"
 end
 
-version = node['php']['version']
+# === use REMI dnf modules on C8 ===
+if node['platform_version'] >= 8 && !system_php?
+  osl_repos_centos 'default' # enable powertools repo for libedit-devel
 
-# Get package prefix from version (e.g. "php73u" or "php")
-prefix = if node['osl-php']['use_ius'] && system_php? && node['platform_version'].to_i < 8
-           # Let's default to php74 if no version is set when using IUS
-           'php74'
-         elsif node['osl-php']['use_ius'] && node['platform_version'].to_i < 8
-           # The IUS repo removed the 'u' at the end of the prefix with PHP 7.3 packages.
-           'php' + version.split('.')[0, 2].join + (version.to_f < 7.3 ? 'u' : '')
-         else
-           'php'
-         end
+  # use remi PHP module to override stock php
 
-packages = []
-packages += node['osl-php']['packages'].flatten
-
-# Prepend PHP package prefix to short packages (e.g. "php71u-memcached")
-if node['osl-php']['php_packages'].any?
-  osl_packages = []
-  osl_packages = osl_packages.concat(node['osl-php']['php_packages'])
-  # pecl-imagick is not available for php7.4 on CentOS 8
-  if node['platform_version'].to_i >= 8 && prefix == 'php74' && osl_packages.include?('pecl-imagick')
-    osl_packages.delete_if { |pkg| pkg == 'pecl-imagick' }
-  end
-  packages += osl_packages.map { |pkg| prefix + '-' + pkg }
+  # programatically define resource as to not have a bit long case/when
+  declare_resource(:"yum_remi_php#{shortver}", 'default')
 end
+
+packages += node['osl-php']['php_packages'].map { |p| "#{prefix}-#{p}" }
+
+# pecl-imagick is not available on CentOS 8
+packages.delete_if { |p| p.match? /pecl-imagick/ } if node['platform_version'].to_i >= 8
 
 # If any of our attributes are set, modify upstream packages attribute
-if packages.any? || node['osl-php']['use_ius']
-  packages <<= if (system_php? && !node['osl-php']['use_ius']) || version.to_f < 7
-                 prefix
-               elsif node['platform_version'].to_i >= 8
-                 'php'
-               else
+if packages.any?
+  # add the mod_php package, which is 'mod_php' in IUS or just 'php' otherwise
+  packages <<= if node['platform_version'].to_i == 7 && node['osl-php']['use_ius']
                  # When installing the main PHP (>= 7.0) package directly, like
                  # php72u, it's actually installing the mod_php package, so we
                  # explicitly do that here.
                  "mod_#{prefix}"
+               else
+                 prefix
                end
-
-  # Include pear package (pear1 for PHP 7.1+)
-  pear_pkg =
-    if (system_php? && !node['osl-php']['use_ius']) || node['platform_version'].to_i >= 8
-      'php-pear'
-    elsif version.to_f >= 7.1
-      'pear1'
-    else
-      prefix + '-pear'
-    end
-
-  package 'pear' do
-    package_name pear_pkg
-  end
 
   node.default['php']['packages'] = packages
 end
 
 include_recipe 'php::package'
+
+# Include pear package (pear1 for PHP 7.1+ on C7)
+pear_pkg = if !system_php? && version.to_f >= 7.1 && node['platform_version'].to_i == 7
+             'pear1'
+           else
+             prefix + '-pear'
+           end
+
+package 'pear' do
+  package_name pear_pkg
+end

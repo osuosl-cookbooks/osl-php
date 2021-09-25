@@ -9,6 +9,7 @@ cookbook 'osl-nrpe', git: 'git@github.com:osuosl-cookbooks/osl-nrpe'
 cookbook 'osl-repos', git: 'git@github.com:osuosl-cookbooks/osl-repos'
 cookbook 'osl-rsync', git: 'git@github.com:osuosl-cookbooks/osl-rsync'
 cookbook 'osl-selinux', git: 'git@github.com:osuosl-cookbooks/osl-selinux'
+
 cookbook 'php_test', path: 'test/cookbooks/php_test'
 
 metadata
