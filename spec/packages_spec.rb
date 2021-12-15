@@ -32,7 +32,7 @@ describe 'osl-php::packages' do
           when CENTOS_7
             "php#{php_version.delete('.')}#{php_version.to_f < 7.3 ? 'u' : ''}"
           when CENTOS_8
-            "php#{php_version.delete('.')}-php"
+            'php'
           end
         context "using php #{php_version}" do
           context 'using packages with versioned prefixes' do
@@ -105,15 +105,10 @@ describe 'osl-php::packages' do
                 end
               end
             else
-              it do
-                expect(chef_run).to_not include_recipe('yum-centos')
-              end
-              it do
-                expect(chef_run).to_not include_recipe('yum-osuosl')
-              end
-              it do
-                expect(chef_run).to_not create_yum_repository('base').with(exclude: 'ImageMagick*')
-              end
+              next if php_version.to_f < 7.2
+              shortver = php_version.to_s.delete('.')
+              it { is_expected.to add_osl_repos_centos('default') }
+              it { is_expected.to send(:"create_yum_remi_php#{shortver}", 'default') }
             end
           end
           context 'old method for backwards compatability' do

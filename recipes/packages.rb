@@ -91,7 +91,7 @@ packages.delete_if { |p| p.match? /pecl-imagick/ } if node['platform_version'].t
 # If any of our attributes are set, modify upstream packages attribute
 if packages.any?
   # add the mod_php package, which is 'mod_php' in IUS or just 'php' otherwise
-  packages <<= if node['platform_version'].to_i == 7 && node['osl-php']['use_ius']
+  packages <<= if node['platform_version'].to_i == 7 && version.to_i >= 7 && !system_php?
                  # When installing the main PHP (>= 7.0) package directly, like
                  # php72u, it's actually installing the mod_php package, so we
                  # explicitly do that here.
