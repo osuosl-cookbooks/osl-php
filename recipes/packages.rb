@@ -79,7 +79,6 @@ if node['platform_version'] >= 8 && !system_php?
   osl_repos_centos 'default' # enable powertools repo for libedit-devel
 
   # use remi PHP module to override stock php
-
   # programatically define resource as to not have a bit long case/when
   declare_resource(:"yum_remi_php#{shortver}", 'default')
 end

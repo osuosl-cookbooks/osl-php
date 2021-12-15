@@ -164,9 +164,11 @@ control 'packages c8' do
     os.release.to_i == 8
   end
 
-  describe yum.repo('remi-modular') do
-    it { should exist }
-    it { should be_enabled }
+  if version.to_f > 7.2
+    describe yum.repo('remi-modular') do
+      it { should exist }
+      it { should be_enabled }
+    end
   end
 
   php_packages = %w(

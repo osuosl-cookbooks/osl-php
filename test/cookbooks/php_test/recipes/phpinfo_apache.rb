@@ -9,9 +9,12 @@ end
 
 apache2_install 'default'
 
-# php modules from IUS (C7) have version number in module name
-# modules from Remi (C8) do not, so only set this if on C7
-major_version = (node['php']['version'].to_i if node['platform_version'].to_i == 7)
+major_version = if system_php?
+                  node['platform_version'].to_i == 7 ? '5' : '7'
+                else
+                  # PHP 8 in Remi does not have version in filename
+                  node['php']['version'].to_i if node['php']['version'].to_i < 8
+                end
 
 apache2_module "php#{major_version}" do
   mod_name "libphp#{major_version}.so"
