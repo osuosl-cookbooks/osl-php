@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+6.0.0 (2022-01-24)
+------------------
+- Proper C8 support w/ Remi modules
+
 5.10.2 (2021-09-03)
 -------------------
 - Set the default timezone to UTC
