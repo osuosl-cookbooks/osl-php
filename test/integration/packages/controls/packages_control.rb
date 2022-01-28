@@ -52,32 +52,6 @@ control 'packages c7' do
       end
     end
 
-  when '7.1'
-    php_packages = %w(
-      mod_php71u
-      pear1
-      php71u-devel
-      php71u-fpm
-      php71u-gd
-      php71u-pecl-imagick
-    )
-
-    describe yum.repo('ius') do
-      it { should exist }
-      it { should be_enabled }
-    end
-
-    describe yum.repo('ius-archive') do
-      it { should exist }
-      it { should be_enabled }
-      # its('exclude') { should match /^exclude=php5\* php72\* php73\* php74\*$/ }
-    end
-
-    # yum resource doesnt do exclude, so check manually
-    describe file('/etc/yum.repos.d/ius-archive.repo') do
-      its('content') { should match /^exclude=php5\* php72\* php73\* php74\*$/ }
-    end
-
   when '7.2'
     php_packages = %w(
       mod_php72u

@@ -26,7 +26,7 @@ describe 'osl-php::packages' do
           end
         end
       end
-      %w(5.6 7.1 7.2 7.3 7.4).each do |php_version|
+      %w(5.6 7.2 7.4).each do |php_version|
         prefix =
           case pltfrm
           when CENTOS_7
@@ -80,7 +80,7 @@ describe 'osl-php::packages' do
                 expect(chef_run).to_not create_yum_repository('ius-archive')
               else
                 case php_version
-                when '5.6', '7.1', '7.2'
+                when '5.6', '7.2'
                   expect(chef_run).to create_yum_repository('ius-archive').with(enabled: true)
                 else
                   expect(chef_run).to create_yum_repository('ius-archive').with(enabled: false)
@@ -95,7 +95,7 @@ describe 'osl-php::packages' do
                 expect(chef_run).to include_recipe('yum-osuosl')
               end
               case php_version
-              when '5.6', '7.1'
+              when '5.6'
                 it do
                   expect(chef_run).to create_yum_repository('base').with(exclude: 'ImageMagick*')
                 end
