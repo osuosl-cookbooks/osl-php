@@ -68,8 +68,6 @@ describe 'osl-php::packages' do
                 case php_version
                 when '7.2'
                   expect(chef_run).to create_yum_repository('ius').with(exclude: 'php73* php74*')
-                when '7.3'
-                  expect(chef_run).to create_yum_repository('ius').with(exclude: 'php74*')
                 else
                   expect(chef_run).to_not create_yum_repository('ius').with(exclude: 'php73*')
                 end
@@ -142,8 +140,6 @@ describe 'osl-php::packages' do
                 expect(chef_run).to_not create_yum_repository('ius')
               elsif php_version == '7.2'
                 expect(chef_run).to create_yum_repository('ius').with(exclude: 'php73* php74*')
-              elsif php_version == '7.3'
-                expect(chef_run).to create_yum_repository('ius').with(exclude: 'php74*')
               else
                 expect(chef_run).to_not create_yum_repository('ius').with(
                   exclude: 'php73*'

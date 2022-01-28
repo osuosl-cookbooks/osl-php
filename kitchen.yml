@@ -98,21 +98,6 @@ suites:
       inputs:
         version: '7.2'
 
-  - name: packages-php73
-    run_list:
-    - recipe[osl-php::packages]
-    - recipe[php_test::phpinfo_apache]
-    attributes:
-      osl-php:
-        use_ius: true
-      php:
-        version: '7.3'
-    verifier:
-      inspec_tests:
-        - test/integration/packages
-      inputs:
-        version: '7.3'
-
   - name: packages-php74
     run_list:
     - recipe[osl-php::packages]

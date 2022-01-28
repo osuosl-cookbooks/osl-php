@@ -80,7 +80,7 @@ control 'packages c7' do
       its('content') { should match /^exclude=php5\* php71\* php73\* php74\*$/ }
     end
 
-  when '7.3', '7.4'
+  when '7.4'
     php_packages = %W(
       mod_php#{shortver}
       pear1
