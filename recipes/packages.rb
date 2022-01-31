@@ -55,19 +55,11 @@ if node['platform_version'].to_i == 7 && node['osl-php']['use_ius']
   include_recipe 'yum-ius'
 
   case version.to_f
-  when 7.1
-    r_a = resources(yum_repository: 'ius-archive')
-    r_a.exclude = [r_a.exclude, 'php5* php72* php73* php74*'].compact.join(' ')
-    r = resources(yum_repository: 'ius')
-    r.exclude = [r.exclude, 'php72* php73* php74*'].compact.join(' ')
   when 7.2
     r_a = resources(yum_repository: 'ius-archive')
     r_a.exclude = [r_a.exclude, 'php5* php71* php73* php74*'].compact.join(' ')
     r = resources(yum_repository: 'ius')
     r.exclude = [r.exclude, 'php73* php74*'].compact.join(' ')
-  when 7.3
-    r = resources(yum_repository: 'ius')
-    r.exclude = [r.exclude, 'php74*'].compact.join(' ')
   end
 
   # IUS has php versions as php72u-foo or php73-foo
