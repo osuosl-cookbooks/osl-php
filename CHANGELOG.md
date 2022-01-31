@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+6.1.0 (2022-01-31)
+------------------
+- Remove PHP 7.1 and 7.3 support
+
 6.0.0 (2022-01-24)
 ------------------
 - Proper C8 support w/ Remi modules
