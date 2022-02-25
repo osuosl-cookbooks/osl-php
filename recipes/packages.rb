@@ -99,11 +99,11 @@ include_recipe 'php::package'
 
 # Include pear package (pear1 for PHP 7.1+ on C7)
 pear_pkg = if !system_php? && version.to_f >= 7.1 && node['platform_version'].to_i == 7
-             'pear1'
+             prefix + '-pear1'
            else
              prefix + '-pear'
            end
 
-php_pear pear_pkg do
-  action :install
+package 'pear' do
+  package_name pear_pkg
 end
