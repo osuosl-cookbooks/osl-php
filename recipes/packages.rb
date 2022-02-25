@@ -104,6 +104,6 @@ pear_pkg = if !system_php? && version.to_f >= 7.1 && node['platform_version'].to
              prefix + '-pear'
            end
 
-package 'pear' do
-  package_name pear_pkg
+php_pear pear_pkg do
+  action :install
 end
