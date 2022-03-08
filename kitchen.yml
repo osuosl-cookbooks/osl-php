@@ -31,7 +31,6 @@ suites:
       - recipe[osl-php::apc]
       - recipe[php_test::phpinfo_apache]
     excludes:
-      - centos-8
       - centos_stream-8
 
   - name: composer
@@ -57,7 +56,6 @@ suites:
       osl-php:
         use_ius: true
     excludes:
-      - centos-8
       - centos_stream-8
     verifier:
       inspec_tests:
@@ -75,7 +73,6 @@ suites:
       php:
         version: '5.6'
     excludes:
-      - centos-8
       - centos_stream-8
     verifier:
       inspec_tests:
@@ -173,7 +170,6 @@ suites:
       php:
         version: '5.6'
     excludes:
-      - centos-8
       - centos_stream-8
     verifier:
       inspec_tests:
