@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+6.2.0 (2022-03-15)
+------------------
+- Add composer pin to metadata
+
 6.1.0 (2022-01-31)
 ------------------
 - Remove PHP 7.1 and 7.3 support
