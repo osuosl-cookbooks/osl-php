@@ -17,7 +17,7 @@ describe 'osl-php::composer' do
       end
 
       it do
-        expect(chef_run.node['composer']['url']).to eq('https://getcomposer.org/download/1.10.7/composer.phar')
+        expect(chef_run.node['composer']['url']).to eq('https://getcomposer.org/download/2.2.18/composer.phar')
       end
 
       %w(php::default composer::default osl-selinux::default).each do |r|
