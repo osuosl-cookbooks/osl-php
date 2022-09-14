@@ -9,6 +9,6 @@ control 'composer_config' do
   end
 
   describe command('/usr/local/bin/composer --version') do
-    its(:stdout) { should match 'Composer version 1.10.7' }
+    its(:stdout) { should match 'Composer version 2.2.18' }
   end
 end
