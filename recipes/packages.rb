@@ -68,7 +68,9 @@ end
 
 # === use REMI dnf modules on C8 ===
 if node['platform_version'] >= 8 && !system_php?
-  osl_repos_centos 'default' # enable powertools repo for libedit-devel
+  # enable powertools repo for libedit-devel
+  osl_repos_centos 'default' if platform?('centos')
+  osl_repos_alma 'default' if platform?('almalinux')
 
   # use remi PHP module to override stock php
   # programatically define resource as to not have a bit long case/when
@@ -77,7 +79,7 @@ end
 
 packages += node['osl-php']['php_packages'].map { |p| "#{prefix}-#{p}" }
 
-# pecl-imagick is not available on CentOS 8
+# pecl-imagick is not available on CentOS/AlmaLinux 8
 packages.delete_if { |p| p.match? /pecl-imagick/ } if node['platform_version'].to_i >= 8
 
 # If any of our attributes are set, modify upstream packages attribute
