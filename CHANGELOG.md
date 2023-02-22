@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+6.3.0 (2023-02-22)
+------------------
+- AlmaLinux 8 Support
+
 6.2.1 (2022-09-14)
 ------------------
 - Update to composer 2.2.18
