@@ -24,7 +24,7 @@ describe 'osl-php::apc' do
         end
       end
       case pltfrm
-      when CENTOS_8
+      when ALMA_8, CENTOS_8
         it do
           expect(chef_run).to run_ruby_block('raise_centos8_exception')
         end

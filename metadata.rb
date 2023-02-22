@@ -8,6 +8,7 @@ chef_version     '>= 16.0'
 description      'Installs/Configures osl-php'
 version          '6.2.1'
 
+supports         'almalinux', '~> 8.0'
 supports         'centos', '~> 7.0'
 supports         'centos_stream', '~> 8.0'
 

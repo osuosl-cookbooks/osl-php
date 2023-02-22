@@ -31,7 +31,7 @@ describe 'osl-php::packages' do
           case pltfrm
           when CENTOS_7
             "php#{php_version.delete('.')}#{php_version.to_f < 7.3 ? 'u' : ''}"
-          when CENTOS_8
+          when ALMA_8, CENTOS_8
             'php'
           end
         context "using php #{php_version}" do
@@ -49,7 +49,7 @@ describe 'osl-php::packages' do
             it do
               php_pkg =
                 case pltfrm
-                when CENTOS_8
+                when ALMA_8, CENTOS_8
                   prefix
                 else
                   php_version.to_f < 7 ? prefix : "mod_#{prefix}"
@@ -62,7 +62,8 @@ describe 'osl-php::packages' do
               expect(chef_run).to install_package('pear')
             end
             it do
-              if pltfrm == CENTOS_8
+              case pltfrm
+              when ALMA_8, CENTOS_8
                 expect(chef_run).to_not create_yum_repository('ius')
               else
                 case php_version
@@ -74,9 +75,10 @@ describe 'osl-php::packages' do
               end
             end
             it do
-              if pltfrm == CENTOS_8
+              case pltfrm
+              when ALMA_8, CENTOS_8
                 expect(chef_run).to_not create_yum_repository('ius-archive')
-              else
+              when CENTOS_7
                 case php_version
                 when '5.6', '7.2'
                   expect(chef_run).to create_yum_repository('ius-archive').with(enabled: true)
@@ -85,7 +87,8 @@ describe 'osl-php::packages' do
                 end
               end
             end
-            if pltfrm == CENTOS_7
+            case pltfrm
+            when CENTOS_7
               it do
                 expect(chef_run).to include_recipe('osl-repos::centos')
               end
@@ -102,10 +105,15 @@ describe 'osl-php::packages' do
                   expect(chef_run).to_not create_yum_repository('base').with(exclude: 'ImageMagick*')
                 end
               end
-            else
+            when CENTOS_8
               next if php_version.to_f < 7.2
               shortver = php_version.to_s.delete('.')
               it { is_expected.to add_osl_repos_centos('default') }
+              it { is_expected.to send(:"create_yum_remi_php#{shortver}", 'default') }
+            when ALMA_8
+              next if php_version.to_f < 7.2
+              shortver = php_version.to_s.delete('.')
+              it { is_expected.to add_osl_repos_alma('default') }
               it { is_expected.to send(:"create_yum_remi_php#{shortver}", 'default') }
             end
           end
@@ -123,9 +131,10 @@ describe 'osl-php::packages' do
             end
             it do
               php_pkg =
-                if pltfrm == CENTOS_8
+                case pltfrm
+                when ALMA_8, CENTOS_8
                   prefix
-                else
+                when CENTOS_7
                   php_version.to_f < 7 ? prefix : "mod_#{prefix}"
                 end
               expect(chef_run).to install_package(
@@ -136,14 +145,17 @@ describe 'osl-php::packages' do
               expect(chef_run).to install_package('pear')
             end
             it do
-              if pltfrm == CENTOS_8
+              case pltfrm
+              when ALMA_8, CENTOS_8
                 expect(chef_run).to_not create_yum_repository('ius')
-              elsif php_version == '7.2'
-                expect(chef_run).to create_yum_repository('ius').with(exclude: 'php73* php74*')
-              else
-                expect(chef_run).to_not create_yum_repository('ius').with(
-                  exclude: 'php73*'
-                )
+              when CENTOS_7
+                if php_version == '7.2'
+                  expect(chef_run).to create_yum_repository('ius').with(exclude: 'php73* php74*')
+                else
+                  expect(chef_run).to_not create_yum_repository('ius').with(
+                    exclude: 'php73*'
+                  )
+                end
               end
             end
           end

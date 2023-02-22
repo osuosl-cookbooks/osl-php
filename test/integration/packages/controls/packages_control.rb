@@ -132,9 +132,9 @@ control 'packages c7' do
 end
 
 control 'packages c8' do
-  title 'Verify the correct packages are installed on CentOS 8'
+  title 'Verify the correct packages are installed on RHEL 8 family'
 
-  only_if 'not on CentOS 8' do
+  only_if 'not on RHEL 8 family' do
     os.release.to_i == 8
   end
 
