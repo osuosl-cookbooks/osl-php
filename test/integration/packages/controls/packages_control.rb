@@ -2,6 +2,8 @@
 include_controls 'selinux'
 
 version = input('version', value: '')
+system_php = input('system_php', value: false)
+
 shortver = version.delete('.')
 
 control 'version' do
@@ -152,6 +154,12 @@ control 'packages c8' do
     php-fpm
     php-gd
   )
+
+  if version.to_f >= 8.1
+    php_packages.push('php-pecl-imagick-im7')
+  else
+    php_packages.push('php-pecl-imagick') unless system_php
+  end
 
   php_packages.each do |p|
     describe package(p) do
