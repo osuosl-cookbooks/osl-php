@@ -80,7 +80,7 @@ describe 'osl-php::packages' do
                 expect(chef_run).to_not create_yum_repository('ius-archive')
               when CENTOS_7
                 case php_version
-                when '5.6', '7.2'
+                when '5.6', '7.2', '7.4'
                   expect(chef_run).to create_yum_repository('ius-archive').with(enabled: true)
                 else
                   expect(chef_run).to create_yum_repository('ius-archive').with(enabled: false)
