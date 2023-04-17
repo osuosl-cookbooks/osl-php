@@ -96,7 +96,7 @@ control 'packages c7' do
     end
 
     describe yum.repo('ius-archive') do
-      it { should_not be_enabled }
+      it { should be_enabled }
     end
 
   else
