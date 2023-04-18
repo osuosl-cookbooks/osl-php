@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+6.4.1 (2023-04-18)
+------------------
+- Update support for pecl-imagic
+
 6.4.0 (2023-04-17)
 ------------------
 - Added PHP 7.4 to ius archive versions
