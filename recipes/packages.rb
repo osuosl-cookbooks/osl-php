@@ -80,7 +80,7 @@ end
 packages += node['osl-php']['php_packages'].map { |p| "#{prefix}-#{p}" }
 
 # pecl-imagick is not available on CentOS/AlmaLinux 8
-packages.delete_if { |p| p.match? /pecl-imagick/ } if node['platform_version'].to_i >= 8
+packages.delete_if { |p| p.match? /pecl-imagick/ } if node['platform_version'].to_i >= 8 && system_php?
 
 # If any of our attributes are set, modify upstream packages attribute
 if packages.any?

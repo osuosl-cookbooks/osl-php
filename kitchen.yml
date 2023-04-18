@@ -48,6 +48,9 @@ suites:
           - 'devel'
           - 'fpm'
           - 'gd'
+    verifier:
+      inputs:
+        system_php: true
 
   - name: packages-php-ius
     run_list:

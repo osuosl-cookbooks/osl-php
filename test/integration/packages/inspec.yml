@@ -5,3 +5,4 @@ depends:
     path: test/integration/selinux
 inputs:
   - name: version
+  - name: system_php
