@@ -31,7 +31,7 @@ describe 'osl-php::packages' do
           case pltfrm
           when CENTOS_7
             "php#{php_version.delete('.')}#{php_version.to_f < 7.3 ? 'u' : ''}"
-          when ALMA_8, CENTOS_8
+          when ALMA_8
             'php'
           end
         context "using php #{php_version}" do
@@ -49,7 +49,7 @@ describe 'osl-php::packages' do
             it do
               php_pkg =
                 case pltfrm
-                when ALMA_8, CENTOS_8
+                when ALMA_8
                   prefix
                 else
                   php_version.to_f < 7 ? prefix : "mod_#{prefix}"
@@ -63,7 +63,7 @@ describe 'osl-php::packages' do
             end
             it do
               case pltfrm
-              when ALMA_8, CENTOS_8
+              when ALMA_8
                 expect(chef_run).to_not create_yum_repository('ius')
               else
                 case php_version
@@ -76,7 +76,7 @@ describe 'osl-php::packages' do
             end
             it do
               case pltfrm
-              when ALMA_8, CENTOS_8
+              when ALMA_8
                 expect(chef_run).to_not create_yum_repository('ius-archive')
               when CENTOS_7
                 case php_version
@@ -105,11 +105,6 @@ describe 'osl-php::packages' do
                   expect(chef_run).to_not create_yum_repository('base').with(exclude: 'ImageMagick*')
                 end
               end
-            when CENTOS_8
-              next if php_version.to_f < 7.2
-              shortver = php_version.to_s.delete('.')
-              it { is_expected.to add_osl_repos_centos('default') }
-              it { is_expected.to send(:"create_yum_remi_php#{shortver}", 'default') }
             when ALMA_8
               next if php_version.to_f < 7.2
               shortver = php_version.to_s.delete('.')
@@ -132,7 +127,7 @@ describe 'osl-php::packages' do
             it do
               php_pkg =
                 case pltfrm
-                when ALMA_8, CENTOS_8
+                when ALMA_8
                   prefix
                 when CENTOS_7
                   php_version.to_f < 7 ? prefix : "mod_#{prefix}"
@@ -146,7 +141,7 @@ describe 'osl-php::packages' do
             end
             it do
               case pltfrm
-              when ALMA_8, CENTOS_8
+              when ALMA_8
                 expect(chef_run).to_not create_yum_repository('ius')
               when CENTOS_7
                 if php_version == '7.2'
