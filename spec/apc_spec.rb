@@ -26,7 +26,7 @@ describe 'osl-php::apc' do
       case pltfrm
       when ALMA_8
         it do
-          expect(chef_run).to run_ruby_block('raise_almalinux8_exception')
+          expect(chef_run).to run_ruby_block('raise_el8_exception')
         end
       else
         %w(httpd-devel pcre pcre-devel).each do |pkg|
