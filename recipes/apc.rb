@@ -26,9 +26,9 @@ ruby_block 'raise_use_ius_exception' do
   only_if { node['osl-php']['use_ius'] }
 end
 
-ruby_block 'raise_almalinux8_exception' do
+ruby_block 'raise_el8_exception' do
   block do
-    raise 'APC is not compatible with Almalinux 8.'
+    raise 'APC is not compatible with EL 8.'
   end
   only_if { node['platform_version'].to_i >= 8 }
 end
