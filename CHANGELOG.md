@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+6.4.2 (2023-05-04)
+------------------
+- Remove CentOS Stream 8
+
 6.4.1 (2023-04-18)
 ------------------
 - Update support for pecl-imagic
