@@ -6,11 +6,6 @@ ALMA_8 = {
   version: '8',
 }.freeze
 
-CENTOS_8 = {
-  platform: 'centos',
-  version: '8',
-}.freeze
-
 CENTOS_7 = {
   platform: 'centos',
   version: '7',
@@ -18,7 +13,6 @@ CENTOS_7 = {
 
 ALL_PLATFORMS = [
   ALMA_8,
-  CENTOS_8,
   CENTOS_7,
 ].freeze
 
