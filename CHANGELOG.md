@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+6.4.3 (2023-05-22)
+------------------
+- Helper methods for setting php-fpm servers base on memory
+
 6.4.2 (2023-05-04)
 ------------------
 - Remove CentOS Stream 8
