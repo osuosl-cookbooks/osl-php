@@ -21,5 +21,5 @@ include_recipe 'osl-selinux::default'
 
 node.default['composer']['url'] = "https://getcomposer.org/download/#{node['osl-php']['composer_version']}/composer.phar"
 
-include_recipe 'php::default'
+php_install 'default'
 include_recipe 'composer::default'
