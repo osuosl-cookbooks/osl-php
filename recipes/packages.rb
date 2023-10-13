@@ -19,10 +19,8 @@
 # include Php::Cookbook::ResourceHelpers
 
 include_recipe 'osl-selinux'
-Chef::DSL::Recipe.include Php::Cookbook::Helpers
 
-version = Php::Cookbook::Helpers.php_version
-###version = php_version
+version = php_version
 shortver = version.delete('.')
 packages = node['osl-php']['packages'].flatten
 prefix = 'php'
