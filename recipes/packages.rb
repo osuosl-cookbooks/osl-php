@@ -16,9 +16,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include_recipe 'osl-selinux'
+# include Php::Cookbook::ResourceHelpers
 
-version = node['php']['version']
+include_recipe 'osl-selinux'
+Chef::DSL::Recipe.include Php::Cookbook::Helpers
+
+version = Php::Cookbook::Helpers.php_version
+###version = php_version
 shortver = version.delete('.')
 packages = node['osl-php']['packages'].flatten
 prefix = 'php'
@@ -26,7 +30,7 @@ prefix = 'php'
 # === use IUS repo on C7 ===
 if node['platform_version'].to_i == 7 && node['osl-php']['use_ius']
   # default to 7.4 if version not explicitly set
-  version = node.default['php']['version'] = '7.4' if system_php?
+  version = '7.4' if system_php?
   shortver = version.delete('.')
 
   # Enable IUS archive repo for archived versions
@@ -97,6 +101,7 @@ end
 
 php_install 'packages' do
   packages packages if packages.any?
+  version version
 end
 
 # Include pear package (pear1 for PHP 7.1+ on C7)

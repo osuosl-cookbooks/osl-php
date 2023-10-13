@@ -38,7 +38,7 @@ describe 'osl-php::packages' do
           context 'using packages with versioned prefixes' do
             cached(:chef_run) do
               ChefSpec::SoloRunner.new(pltfrm) do |node|
-                node.normal['php']['version'] = php_version
+                # node.normal['php']['version'] = php_version
                 node.normal['osl-php']['use_ius'] = true
                 node.normal['osl-php']['php_packages'] = %w(devel cli)
               end.converge(described_recipe)
@@ -115,7 +115,7 @@ describe 'osl-php::packages' do
           context 'old method for backwards compatability' do
             cached(:chef_run) do
               ChefSpec::SoloRunner.new(pltfrm) do |node|
-                node.normal['php']['version'] = php_version
+                # node.normal['php']['version'] = php_version
                 node.normal['osl-php']['use_ius'] = true
                 node.normal['osl-php']['packages'] =
                   %w(devel cli).map { |p| "#{prefix}-#{p}" }

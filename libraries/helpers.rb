@@ -1,6 +1,9 @@
 module OslPhp
   module Cookbook
     module Helpers
+      def php_version
+      end
+
       def system_php?
         # If didn't change this to 7.2 or 7.3, etc then let's assume we're using the system php package
         node['php']['version'].match?(/\d+\.\d+\.\d+/)
@@ -49,3 +52,6 @@ module OslPhp
 end
 Chef::DSL::Recipe.include ::OslPhp::Cookbook::Helpers
 Chef::Resource.include ::OslPhp::Cookbook::Helpers
+
+Chef::DSL::Recipe.include ::Php::Cookbook::Helpers
+Chef::Resource.include ::Php::Cookbook::Helpers
