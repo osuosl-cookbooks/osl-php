@@ -23,8 +23,8 @@
 include_recipe 'osl-selinux'
 
 if node['osl-php']['use_opcache'] && php_version.to_f < 5.5
-  raise 'Must use PHP >= 5.5 with ius enabled to use Zend Opcache.  Try adding '\
-        "'node.default['osl-php']['use_ius'] = true' and install a proper version of php."
+  raise 'Must use PHP >= 5.5 with ius enabled to use Zend Opcache. Try setting '\
+        'the `use_ius` property to true and install a proper version of php.'
 end
 
 node.default['osl-php']['php_packages'] << 'opcache'

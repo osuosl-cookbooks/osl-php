@@ -22,12 +22,55 @@ module OslPhp
         end
       end
 
+      def use_ius?
+        false
+      end
+
+      # List PHP versions that require IUS archive repo: https://github.com/iusrepo/packaging/wiki/End-Of-Life-Dates#php
+      # Also see https://github.com/orgs/iusrepo/repositories?q=&type=archived&language=&sort=
+      def ius_archive_versions
+        %w(5.6 7.1 7.2 7.4)
+      end
+
+      def use_opcache?
+        false
+      end
+
+      def composer_version
+        '2.2.18'
+      end
+
+      def apc_conf
+        {
+          'apc_extension' => 'apc.so',
+          'def apc_shm_size' => '128M',
+          'apc_user_ttl' => 7200,
+          'apc_enable_cli' => 0,
+          'apc_ttl' => 3600,
+          'apc_gc_ttl' => 3600,
+          'apc_max_file_size' => '1M',
+          'apc_stat' => 1,
+         }
+      end
+
+      # defaults from php72u-opcache package on CentOS 7
+      def opcache_conf
+        {
+          'zend_extension' => 'opcache.so',
+          'opcache.blacklist_filename' => '/etc/php.d/opcache*.blacklist',
+          'opcache.enable' => 1,
+          'opcache.interned_strings_buffer' => 8,
+          'opcache.max_accelerated_files' => 4000,
+          'opcache.memory_consumption' => 128,
+        }
+      end
+
       # process_size: in MB
       def osl_php_fpm_settings(process_size)
         # https://chrismoore.ca/2018/10/finding-the-correct-pm-max-children-settings-for-php-fpm/
         # https://github.com/spot13/pmcalculator
 
-        # Run the following to figure the RSS size of php-fpm: ps -ylC php-fpm
+        # Run the following to figure out the RSS size of php-fpm: ps -ylC php-fpm
         # [Available RAM for PHP] / [Average Process Size] = [max_children]
         max_children = (osl_php_available_ram / process_size).floor
 

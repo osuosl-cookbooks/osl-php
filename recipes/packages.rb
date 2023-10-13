@@ -100,7 +100,6 @@ end
 
 php_install 'packages' do
   packages packages if packages.any?
-  version full_version
 end
 
 # Include pear package (pear1 for PHP 7.1+ on C7)
