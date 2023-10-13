@@ -30,7 +30,7 @@ describe 'osl-php::default' do
         context "on #{pltfrm[:platform]} #{pltfrm[:version]} with #{description}" do
           cached(:chef_run) do
             ChefSpec::SoloRunner.new(pltfrm) do |node|
-              node.normal['php']['version'] = php_v
+              # node.normal['php']['version'] = php_v
               node.normal['osl-php'].merge!(
                 'use_opcache' => use_opcache,
                 'php_packages' => []

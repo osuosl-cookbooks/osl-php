@@ -2,8 +2,9 @@ module OslPhp
   module Cookbook
     module Helpers
       def system_php?
+        # TODO: change this condition to actually check for changes
         # If didn't change this to 7.2 or 7.3, etc then let's assume we're using the system php package
-        node['php']['version'].match?(/\d+\.\d+\.\d+/)
+        php_version.match?(/\d+\.\d+/)
       end
 
       def osl_php_available_ram

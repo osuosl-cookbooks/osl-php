@@ -28,6 +28,7 @@ prefix = 'php'
 # === use IUS repo on C7 ===
 if node['platform_version'].to_i == 7 && node['osl-php']['use_ius']
   # default to 7.4 if version not explicitly set
+  # TODO: fix check for version not being explicitly set
   version = '7.4' if system_php?
   shortver = version.delete('.')
 
