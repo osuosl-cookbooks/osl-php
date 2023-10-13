@@ -32,10 +32,6 @@ module OslPhp
         %w(5.6 7.1 7.2 7.4)
       end
 
-      def use_opcache?
-        false
-      end
-
       def composer_version
         '2.2.18'
       end

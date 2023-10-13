@@ -17,9 +17,28 @@
 # limitations under the License.
 #
 
+property :packages, default: php_packages
+property :version, default: php_version
+property :use_ius, [true, false], default: false
+property :use_opcache, [true, false], default: false
+property :opcache_conf, Hash, default: osl-php_opcache_conf
+
 include_recipe 'osl-selinux'
 include_recipe 'osl-repos::epel'
-include_recipe 'osl-php::opcache' if node['osl-php']['use_opcache']
+
+if new_resource.opcache
+  if new_resource.version.to_f < 5.5
+    raise 'Must use PHP >= 5.5 with ius enabled to use Zend Opcache. Try setting '\
+        'the `use_ius` property to true and install a proper version of php.'
+
+    new_resource.packages << 'opcache'
+
+    php_ini '10-opcache' do
+      options new_resource.opcache_conf
+    end
+  end
+end
+
 include_recipe 'osl-php::packages'
 
 php_install 'default'
