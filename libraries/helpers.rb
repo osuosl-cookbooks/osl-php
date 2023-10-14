@@ -1,10 +1,11 @@
 module OslPhp
   module Cookbook
     module Helpers
-      def system_php?
-        # TODO: change this condition to actually check for changes
-        # If didn't change this to 7.2 or 7.3, etc then let's assume we're using the system php package
-        php_version.match?(/\d+\.\d+/)
+      def osl_php_version(use_ius)
+        if node['platform_version'].to_i && use_ius
+          '7.4'
+        end
+        php_version
       end
 
       def osl_php_available_ram
@@ -20,10 +21,6 @@ module OslPhp
         else
           php_ram
         end
-      end
-
-      def use_ius?
-        false
       end
 
       # List PHP versions that require IUS archive repo: https://github.com/iusrepo/packaging/wiki/End-Of-Life-Dates#php
