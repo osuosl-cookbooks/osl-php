@@ -9,8 +9,8 @@ module OslPhp
       end
 
       def osl_php_installation_packages
-        # php_installation_packages
-        %w(php)
+        php_installation_packages
+        # %w(php)
       end
 
       def osl_php_available_ram

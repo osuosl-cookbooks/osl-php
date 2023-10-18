@@ -1,13 +1,11 @@
 require_relative 'spec_helper'
 
-describe 'osl-php::packages' do
+describe 'php_test::prefixed_packages' do
   ALL_PLATFORMS.each do |pltfrm|
     context "on #{pltfrm[:platform]} #{pltfrm[:version]}" do
       context 'using packages with non-versioned prefixes' do
         cached(:chef_run) do
-          ChefSpec::SoloRunner.new(pltfrm) do |node|
-            node.normal['osl-php']['php_packages'] = %w(devel cli)
-          end.converge(described_recipe)
+          ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
         end
         it 'converges successfully' do
           expect { chef_run }.to_not raise_error
@@ -26,21 +24,28 @@ describe 'osl-php::packages' do
           end
         end
       end
-      %w(5.6 7.2 7.4).each do |php_version|
+    end
+  end
+end
+
+describe 'php_test::unprefixed_packages' do
+  ALL_PLATFORMS.each do |pltfrm|
+    context "on #{pltfrm[:platform]} #{pltfrm[:version]}" do
+      %w(5.6 7.2 7.4).each do |version|
         prefix =
           case pltfrm
           when CENTOS_7
-            "php#{php_version.delete('.')}#{php_version.to_f < 7.3 ? 'u' : ''}"
+            "php#{version.delete('.')}#{version.to_f < 7.3 ? 'u' : ''}"
           when ALMA_8
             'php'
           end
-        context "using php #{php_version}" do
+        context "using php #{version}" do
           context 'using packages with versioned prefixes' do
             cached(:chef_run) do
               ChefSpec::SoloRunner.new(pltfrm) do |node|
-                # node.normal['php']['version'] = php_version
-                node.normal['osl-php']['use_ius'] = true
-                node.normal['osl-php']['php_packages'] = %w(devel cli)
+                node['version'] = version
+                node['use_ius'] = true
+                node['unprefixed_names'] = %w(devel cli)
               end.converge(described_recipe)
             end
             it 'converges successfully' do
@@ -52,7 +57,7 @@ describe 'osl-php::packages' do
                 when ALMA_8
                   prefix
                 else
-                  php_version.to_f < 7 ? prefix : "mod_#{prefix}"
+                  version.to_f < 7 ? prefix : "mod_#{prefix}"
                 end
               expect(chef_run).to install_package(
                 "#{prefix}-devel, #{prefix}-cli, #{php_pkg}"
@@ -79,7 +84,7 @@ describe 'osl-php::packages' do
               when ALMA_8
                 expect(chef_run).to_not create_yum_repository('ius-archive')
               when CENTOS_7
-                case php_version
+                case version
                 when '5.6', '7.2', '7.4'
                   expect(chef_run).to create_yum_repository('ius-archive').with(enabled: true)
                 else
@@ -115,10 +120,8 @@ describe 'osl-php::packages' do
           context 'old method for backwards compatability' do
             cached(:chef_run) do
               ChefSpec::SoloRunner.new(pltfrm) do |node|
-                # node.normal['php']['version'] = php_version
-                node.normal['osl-php']['use_ius'] = true
-                node.normal['osl-php']['packages'] =
-                  %w(devel cli).map { |p| "#{prefix}-#{p}" }
+                node['version'] = version
+                node['packages'] = %w(devel cli).map { |p| "#{prefix}-#{p}" }
               end.converge(described_recipe)
             end
             it 'converges successfully' do

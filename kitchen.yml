@@ -10,6 +10,7 @@ provisioner:
   attributes:
     omnibus_updater:
       disabled: true
+    # TODO: remove these attributes
     osl-php:
       php_packages:
         - 'devel'
