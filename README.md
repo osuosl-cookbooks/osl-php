@@ -87,15 +87,68 @@ This is not compatible with PHP packages from IUS Community repos, so an excepti
 
 ## Resources
 
+### osl\_php\_install
+This resource is used to install php packages.
+
+#### Actions
+* `:install` - Default action. Installs the given packages using the given properties.
+
+#### Properties
+
+<table style="width:80%">
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Default</th>
+    <th>Description</th>
+    <th>Required?</th>
+  </tr>
+  <tr>
+    <td>packages</td>
+    <td align="center">Array</td>
+     <td align="center">`osl_php_installation_packages` helper</td>
+    <td>Full names of specific packages to install. The primary PHP and PEAR packages will be installed automatically, so they don't need to be specified here.</td>
+    <td>false</td>
+  </tr>
+  <tr>
+    <td>unprefixed_names</td>
+    <td align="center">Array</td>
+    <td align="center"></td>
+    <td>List of package names without their versioned prefix (`phpX.X-` or `phpX.Xu-`). The resource will add the appropriate prefix to these names and install the packages.</td>
+    <td>false</td>
+  </tr>
+  <tr>
+    <td>version</td>
+    <td align="center">String</td>
+    <td align="center">`osl_php_version()` helper</td>
+    <td>Php version to install.</td>
+    <td>false</td>
+  </tr>
+  <tr>
+    <td>use_ius</td>
+    <td align="center">[true, false]</td>
+    <td align="center">false</td>
+    <td>Whether to install from IUS (Inline with Upstream Stable) repositories..</td>
+    <td>false</td>
+  </tr>
+  <tr>
+    <td>use_opcache</td>
+    <td align="center">[true, false]</td>
+    <td align="center">false</td>
+    <td>Whether to install PHP OPcache and configure Zend OPcache using an ini file.</td>
+    <td>false</td>
+  </tr>
+</table>
+
 ### php\_ini
-This resource is used to create ini files for php configuration.
+This resource is used to create ini files for PHP configuration.
 
 #### Actions
 * `:create` - Default action. Creates an ini file at the location specified by the name property with the configuration
   passed to the options property, while applying other properties.
 * `:remove` - Removes an ini file at the location specified by the name property.
 
-#### Attributes
+#### Properties
 
 <table style="width:80%">
   <tr>

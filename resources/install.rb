@@ -20,7 +20,7 @@ resource_name :osl_php_install
 provides :osl_php_install
 unified_mode true
 
-property :packages, Array, default: php_installation_packages
+property :packages, Array, default: osl_php_installation_packages
 property :unprefixed_names, Array
 property :version, String, default: osl_php_version(new_resource.use_ius)
 property :use_ius, [true, false], default: false
@@ -100,13 +100,15 @@ action :install do
     declare_resource(:"yum_remi_php#{shortver}", 'default')
   end
 
-  all_packages += new_resource.unprefixed_names.map { |p| "#{prefix}-#{p}" }
+  all_packages |= new_resource.unprefixed_names.map { |p| "#{prefix}-#{p}" }
 
   # pecl-imagick is not available on EL 8
   all_packages.delete_if { |p| p.match? /pecl-imagick/ } if node['platform_version'].to_i >= 8
+                                                            && !new_resource.use_remi
+                                                            && !new_resource.use_ius
 
   # add the mod_php package, which is 'mod_php' in IUS or just 'php' otherwise
-  all_packages |= if node['platform_version'].to_i == 7 && full_version.to_i >= 7
+  all_packages |= if node['platform_version'].to_i == 7 && new_resource.version.to_i >= 7
                     # When installing the main PHP (>= 7.0) package directly, like
                     # php72u, it's actually installing the mod_php package, so we
                     # explicitly do that here.

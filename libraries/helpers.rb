@@ -2,10 +2,15 @@ module OslPhp
   module Cookbook
     module Helpers
       def osl_php_version(use_ius)
-        if node['platform_version'].to_i && use_ius
+        if node['platform_version'].to_i == 7 && use_ius
           '7.4'
         end
         php_version
+      end
+
+      def osl_php_installation_packages
+        # php_installation_packages
+        %w(php)
       end
 
       def osl_php_available_ram
