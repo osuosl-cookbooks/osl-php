@@ -20,13 +20,14 @@ resource_name :osl_php_install
 provides :osl_php_install
 unified_mode true
 
-property :packages, Array, default: osl_php_installation_packages
+property :packages, Array, default: lazy { php_installation_packages }
+# property :packages, Array, default: %w(php php-devel php-cli)
 property :unprefixed_names, Array
-property :version, String, default: osl_php_version(new_resource.use_ius)
+property :version, String, default: lazy { osl_php_version(new_resource.use_ius) }
 property :use_ius, [true, false], default: false
 property :use_opcache, [true, false], default: false
 property :use_remi, [true, false], default: false
-property :opcache_conf, Hash, default: opcache_conf
+property :opcache_conf, Hash, default: lazy { opcache_conf }
 
 action :install do
   include_recipe 'osl-selinux'
