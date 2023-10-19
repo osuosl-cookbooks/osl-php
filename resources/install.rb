@@ -103,9 +103,9 @@ action :install do
   all_packages |= new_resource.unprefixed_names.map { |p| "#{prefix}-#{p}" }
 
   # pecl-imagick is not available on EL 8
-  all_packages.delete_if { |p| p.match? /pecl-imagick/ } if node['platform_version'].to_i >= 8
-                                                            && !new_resource.use_remi
-                                                            && !new_resource.use_ius
+  all_packages.delete_if { |p| p.match? /pecl-imagick/ } if node['platform_version'].to_i >= 8 &&
+                                                            !new_resource.use_remi &&
+                                                            !new_resource.use_ius
 
   # add the mod_php package, which is 'mod_php' in IUS or just 'php' otherwise
   all_packages |= if node['platform_version'].to_i == 7 && new_resource.version.to_i >= 7

@@ -1,4 +1,4 @@
-require_relative 'spec_helper'
+require_relative '../../spec_helper'
 
 describe 'php_test::prefixed_packages' do
   ALL_PLATFORMS.each do |pltfrm|
@@ -71,7 +71,7 @@ describe 'php_test::unprefixed_packages' do
               when ALMA_8
                 expect(chef_run).to_not create_yum_repository('ius')
               else
-                case php_version
+                case version
                 when '7.2'
                   expect(chef_run).to create_yum_repository('ius').with(exclude: 'php73* php74*')
                 else
@@ -100,7 +100,7 @@ describe 'php_test::unprefixed_packages' do
               it do
                 expect(chef_run).to include_recipe('yum-osuosl')
               end
-              case php_version
+              case version
               when '5.6'
                 it do
                   expect(chef_run).to create_yum_repository('base').with(exclude: 'ImageMagick*')
@@ -111,8 +111,8 @@ describe 'php_test::unprefixed_packages' do
                 end
               end
             when ALMA_8
-              next if php_version.to_f < 7.2
-              shortver = php_version.to_s.delete('.')
+              next if version.to_f < 7.2
+              shortver = version.to_s.delete('.')
               it { is_expected.to add_osl_repos_alma('default') }
               it { is_expected.to send(:"create_yum_remi_php#{shortver}", 'default') }
             end
@@ -133,7 +133,7 @@ describe 'php_test::unprefixed_packages' do
                 when ALMA_8
                   prefix
                 when CENTOS_7
-                  php_version.to_f < 7 ? prefix : "mod_#{prefix}"
+                  version.to_f < 7 ? prefix : "mod_#{prefix}"
                 end
               expect(chef_run).to install_package(
                 "#{prefix}-devel, #{prefix}-cli, #{php_pkg}"
@@ -147,7 +147,7 @@ describe 'php_test::unprefixed_packages' do
               when ALMA_8
                 expect(chef_run).to_not create_yum_repository('ius')
               when CENTOS_7
-                if php_version == '7.2'
+                if version == '7.2'
                   expect(chef_run).to create_yum_repository('ius').with(exclude: 'php73* php74*')
                 else
                   expect(chef_run).to_not create_yum_repository('ius').with(
