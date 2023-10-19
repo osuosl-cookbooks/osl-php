@@ -8,11 +8,6 @@ module OslPhp
         php_version
       end
 
-      def osl_php_installation_packages
-        php_installation_packages
-        # %w(php)
-      end
-
       def osl_php_available_ram
         total_ram = (node['memory']['total'].split('kB')[0].to_i / 1024) # in MB
         reserved_ram = 1024

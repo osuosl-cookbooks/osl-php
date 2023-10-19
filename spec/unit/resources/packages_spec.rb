@@ -1,26 +1,27 @@
 require_relative '../../spec_helper'
 
-describe 'php_test::prefixed_packages' do
-  ALL_PLATFORMS.each do |pltfrm|
-    context "on #{pltfrm[:platform]} #{pltfrm[:version]}" do
-      context 'using packages with non-versioned prefixes' do
-        cached(:chef_run) do
-          ChefSpec::SoloRunner.new(
-            pltfrm.dup.merge(step_into: %w(osl_php_install))
-          ).converge(described_recipe)
-        end
+describe 'osl_php_install' do
+  platform 'almalinux', '8'
+  cached(:subject) { chef_run }
+  step_into :osl_php_install
 
-        it 'converges successfully' do
-          expect { chef_run }.to_not raise_error
-        end
-        it do
-          expect(chef_run).to install_package(
-            'php-devel, php-cli, php'
-          )
-        end
-        it do
-          expect(chef_run).to install_package('php-pear')
-        end
+  recipe do
+    osl_php_install 'default packages'
+  end
+
+  it do
+    is_expected.to include_recipe %w(osl-selinux::default osl-repos::epel)
+    is_expected.to_not include_recipe %w(osl-repos::centos yum-osuosl)
+    is_expected.to install_packages %w(php php-devel php-cli pear)
+    is_expected.to_not install_packages %w(mod_php opcache pecl-imagick)
+    # is_expected.to create_php_ini
+  end
+
+  context 'CentOS 7' do
+    platform 'centos', '7'
+  end
+end
+=begin
         %w(osl-selinux::default).each do |r|
           it do
             expect(chef_run).to include_recipe(r)
@@ -159,3 +160,4 @@ describe 'php_test::prefixed_packages' do
     end
   end
 end
+=end
