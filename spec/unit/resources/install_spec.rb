@@ -1,11 +1,11 @@
 require_relative '../../spec_helper'
 
-describe 'php_test::php_ini' do
+describe 'php_test::php_install' do
   ALL_PLATFORMS.each do |p|
     context "on platform #{p[:platform]} #{p[:version]}" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(
-          p.dup.merge(step_into: %w(php_ini))
+          p.dup.merge(step_into: %w(osl_php_install))
         ).converge(described_recipe)
       end
 

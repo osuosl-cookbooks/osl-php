@@ -5,8 +5,11 @@ describe 'php_test::prefixed_packages' do
     context "on #{pltfrm[:platform]} #{pltfrm[:version]}" do
       context 'using packages with non-versioned prefixes' do
         cached(:chef_run) do
-          ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
+          ChefSpec::SoloRunner.new(
+            pltfrm.dup.merge(step_into: %w(osl_php_install))
+          ).converge(described_recipe)
         end
+
         it 'converges successfully' do
           expect { chef_run }.to_not raise_error
         end
@@ -24,13 +27,7 @@ describe 'php_test::prefixed_packages' do
           end
         end
       end
-    end
-  end
-end
 
-describe 'php_test::unprefixed_packages' do
-  ALL_PLATFORMS.each do |pltfrm|
-    context "on #{pltfrm[:platform]} #{pltfrm[:version]}" do
       %w(5.6 7.2 7.4).each do |version|
         prefix =
           case pltfrm
@@ -42,7 +39,7 @@ describe 'php_test::unprefixed_packages' do
         context "using php #{version}" do
           context 'using packages with versioned prefixes' do
             cached(:chef_run) do
-              ChefSpec::SoloRunner.new(pltfrm) do |node|
+              ChefSpec::SoloRunner.new(pltfrm.dup.merge(step_into: %w(osl_php_install))) do |node|
                 node['version'] = version
                 node['use_ius'] = true
                 node['unprefixed_names'] = %w(devel cli)
@@ -119,7 +116,7 @@ describe 'php_test::unprefixed_packages' do
           end
           context 'old method for backwards compatability' do
             cached(:chef_run) do
-              ChefSpec::SoloRunner.new(pltfrm) do |node|
+              ChefSpec::SoloRunner.new(pltfrm.dup.merge(step_into: %w(osl_php_install))) do |node|
                 node['version'] = version
                 node['packages'] = %w(devel cli).map { |p| "#{prefix}-#{p}" }
               end.converge(described_recipe)
