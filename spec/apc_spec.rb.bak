@@ -35,7 +35,7 @@ describe 'osl-php::apc' do
           end
         end
         it do
-          expect(chef_run). to install_php_pear('APC')
+          expect(chef_run).to install_php_pear('APC')
         end
         it do
           expect(chef_run).to install_build_essential('APC')
