@@ -4,22 +4,19 @@ describe 'osl_php_install' do
   platform 'almalinux', '8'
   cached(:subject) { chef_run }
   step_into :osl_php_install
+  # Step into the php_install resource as well to get the list of actual packages installed
+  step_into :php_install
 
   recipe do
     osl_php_install 'default packages'
   end
 
   it do
-    %w(osl-selinux::default osl-repos::epel).each do |r|
-      is_expected.to include_recipe(r)
-    end
-    %w(osl-repos::centos yum-osuosl).each do |r|
-      is_expected.to_not include_recipe(r)
-    end
-    is_expected.to install_php_install('packages').with(packages: %w(php php-devel php-cli php-pear))
-    # %w(php php-devel php-cli php-pear).each do |p|
-    # is_expected.to install_package(p)
-    # end
+    is_expected.to install_selinux_install('osl-selinux')
+    is_expected.to enforcing_selinux_state('osl-selinux')
+    is_expected.to add_osl_repos_epel('default')
+
+    is_expected.to install_package(%w(php php-devel php-cli php-pear))
     %w(pear1 mod_php opcache pecl-imagick).each do |p|
       is_expected.to_not install_package(p)
     end
