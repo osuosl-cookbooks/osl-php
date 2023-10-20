@@ -1,11 +1,11 @@
 require_relative '../../spec_helper'
 
-describe 'php_test::php_ini' do
+describe 'php_test::ini' do
   ALL_PLATFORMS.each do |p|
     context "on platform #{p[:platform]} #{p[:version]}" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(
-          p.dup.merge(step_into: %w(php_ini))
+          p.dup.merge(step_into: %w(osl_php_ini))
         ).converge(described_recipe)
       end
 
@@ -18,7 +18,7 @@ describe 'php_test::php_ini' do
           expect(chef_run).to create_directory("/etc/php.d #{name}").with(path: '/etc/php.d')
         end
         it do
-          expect(chef_run).to add_php_ini name
+          expect(chef_run).to add_osl_php_ini name
         end
         it do
           expect(chef_run).to create_template("/etc/php.d/#{name}.ini").with(
@@ -30,7 +30,7 @@ describe 'php_test::php_ini' do
       end
 
       it do
-        expect(chef_run).to remove_php_ini('no_sections_rendered_removed')
+        expect(chef_run).to remove_osl_php_ini('no_sections_rendered_removed')
       end
 
       it do

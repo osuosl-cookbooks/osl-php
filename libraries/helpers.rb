@@ -1,13 +1,6 @@
 module OslPhp
   module Cookbook
     module Helpers
-      def osl_php_version(use_ius)
-        if node['platform_version'].to_i == 7 && use_ius
-          '7.4'
-        end
-        php_version
-      end
-
       def osl_php_available_ram
         total_ram = (node['memory']['total'].split('kB')[0].to_i / 1024) # in MB
         reserved_ram = 1024

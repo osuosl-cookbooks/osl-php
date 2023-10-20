@@ -1,5 +1,5 @@
 #
-# Cookbook:: php_ini-test
+# Cookbook:: php_test
 # Recipe:: default
 # Copyright:: 2019-2023, Oregon State University
 #
@@ -102,19 +102,19 @@ no_sections = {
   'session.cache_expire' => '180',
 }
 
-php_ini 'with_sections_rendered' do
+osl_php_ini 'with_sections_rendered' do
   options with_sections
 end
 
-php_ini 'no_sections_rendered' do
+osl_php_ini 'no_sections_rendered' do
   options no_sections
 end
 
-php_ini 'no_sections_rendered_added' do
+osl_php_ini 'no_sections_rendered_added' do
   options no_sections
 end
 
-php_ini 'no_sections_rendered_removed' do
+osl_php_ini 'no_sections_rendered_removed' do
   action :remove
 end
 

@@ -111,10 +111,10 @@ This resource is used to install php packages.
     <td>false</td>
   </tr>
   <tr>
-    <td>unprefixed_names</td>
+    <td>php_packages</td>
     <td align="center">Array</td>
     <td align="center"></td>
-    <td>List of package names without their versioned prefix (`phpX.X-` or `phpX.Xu-`). The resource will add the appropriate prefix to these names and install the packages.</td>
+    <td>List of names of packages that should be installed with prefixed names(`phpX.X-` or `phpX.Xu-`), specified without the prefixes. The resource will add the appropriate prefixes to these names and install the packages.</td>
     <td>false</td>
   </tr>
   <tr>

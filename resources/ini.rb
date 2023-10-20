@@ -1,5 +1,5 @@
-resource_name :php_ini
-provides :php_ini
+resource_name :osl_php_ini
+provides :osl_php_ini
 unified_mode true
 
 default_action :add

@@ -20,29 +20,30 @@ resource_name :osl_php_install
 provides :osl_php_install
 unified_mode true
 
-property :packages, Array, default: lazy { php_installation_packages }
-# property :packages, Array, default: %w(php php-devel php-cli)
-property :unprefixed_names, Array
-property :version, String, default: lazy { osl_php_version(new_resource.use_ius) }
+property :packages, [Array, nil], default: lazy { php_installation_packages }
+property :php_packages, [Array, nil]
 property :use_ius, [true, false], default: false
+property :version, String, default: lazy { php_version }
 property :use_opcache, [true, false], default: false
 property :use_remi, [true, false], default: false
 property :opcache_conf, Hash, default: lazy { opcache_conf }
 
 action :install do
+  node.default['osl-selinux']['enforcing'] = true
   include_recipe 'osl-selinux'
   include_recipe 'osl-repos::epel'
 
   all_packages = new_resource.packages
+  prefix = 'php'
 
-  if new_resource.opcache
+  if new_resource.use_opcache
     if new_resource.version.to_f < 5.5 || !new_resource.use_opcache
       raise 'Must use PHP >= 5.5 with ius enabled to use Zend Opcache.'
     end
 
     all_packages << 'opcache'
 
-    php_ini '10-opcache' do
+    osl_php_ini '10-opcache' do
       options new_resource.opcache_conf
     end
   end
@@ -101,7 +102,7 @@ action :install do
     declare_resource(:"yum_remi_php#{shortver}", 'default')
   end
 
-  all_packages |= new_resource.unprefixed_names.map { |p| "#{prefix}-#{p}" }
+  all_packages |= new_resource.php_packages.map { |p| "#{prefix}-#{p}" } unless new_resource.php_packages.nil?
 
   # pecl-imagick is not available on EL 8
   all_packages.delete_if { |p| p.match? /pecl-imagick/ } if node['platform_version'].to_i >= 8 &&
@@ -113,9 +114,9 @@ action :install do
                     # When installing the main PHP (>= 7.0) package directly, like
                     # php72u, it's actually installing the mod_php package, so we
                     # explicitly do that here.
-                    "mod_#{prefix}"
+                    ["mod_#{prefix}"]
                   else
-                    prefix
+                    [prefix]
                   end
 
   php_install 'packages' do
@@ -123,11 +124,11 @@ action :install do
   end
 
   # Include pear package (pear1 for PHP 7.1+ on C7)
-  pear_pkg |= if new_resource.version >= 7.1 && node['platform_version'].to_i == 7
-                'pear1'
-              else
-                prefix + '-pear'
-              end
+  pear_pkg = if new_resource.version.to_f >= 7.1 && node['platform_version'].to_i == 7
+               ['pear1']
+             else
+               ["#{prefix}-pear"]
+             end
 
   # TODO: use pear resource?
   package 'pear' do
@@ -138,7 +139,7 @@ action :install do
     packages all_packages
   end
 
-  php_ini 'timezone' do
+  osl_php_ini 'timezone' do
     options('date.timezone' => 'UTC')
   end
 
