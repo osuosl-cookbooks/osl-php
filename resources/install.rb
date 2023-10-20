@@ -29,9 +29,15 @@ property :use_remi, [true, false], default: false
 property :opcache_conf, Hash, default: lazy { opcache_conf }
 
 action :install do
-  node.default['osl-selinux']['enforcing'] = true
-  include_recipe 'osl-selinux'
-  include_recipe 'osl-repos::epel'
+  # To avoid warnings about including recipes in a resource, do the same things these recipes do
+  # include_recipe 'osl-selinux'
+  selinux_install 'osl-selinux'
+  selinux_state 'osl-selinux' do
+    action :enforcing
+  end
+
+  # include_recipe 'osl-repos::epel'
+  osl_repos_epel 'default'
 
   all_packages = new_resource.packages
   prefix = 'php'
