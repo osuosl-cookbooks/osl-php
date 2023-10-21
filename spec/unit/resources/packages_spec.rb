@@ -4,8 +4,6 @@ describe 'osl_php_install' do
   platform 'almalinux', '8'
   cached(:subject) { chef_run }
   step_into :osl_php_install
-  # Step into the php_install resource as well to get the list of actual packages installed
-  step_into :php_install
 
   recipe do
     osl_php_install 'default packages'
@@ -16,40 +14,59 @@ describe 'osl_php_install' do
     is_expected.to enforcing_selinux_state('osl-selinux')
     is_expected.to add_osl_repos_epel('default')
 
-    is_expected.to install_package(%w(php php-devel php-cli php-pear))
-    %w(pear1 mod_php opcache pecl-imagick).each do |p|
-      is_expected.to_not install_package(p)
-    end
-    # is_expected.to create_osl_php_ini
+    is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear))
+    is_expected.to_not add_osl_php_ini('10-opcache')
+    # TODO: convert this recipe include to resources
+    is_expected.to_not include_recipe('osl-repos::centos')
+    is_expected.to_not add_osl_repos_centos('default')
+    is_expected.to_not add_osl_repos_alma('default')
+
+    # TODO: this should be in an integration test, not here
+    # %w(pear1 mod_php opcache pecl-imagick).each do |p|
+    # is_expected.to_not install_package(p)
+    # end
+    # is_expected.to add_osl_php_ini
   end
 
   context 'CentOS 7' do
     platform 'centos', '7'
+    it do
+      is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear))
+    end
+  end
+
+  context 'packages' do
+    recipe do
+      osl_php_install 'packages' do
+        packages %w(php-devel)
+      end
+    end
+
+    it do
+      is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-pear))
+      is_expected.not_to install_package('php-cli')
+    end
+  end
+
+  %w(5.6 7.2 7.4).each do |version|
+    context "using php #{version}" do
+      prefix = 'php'
+      context 'using packages with versioned prefixes' do
+        recipe do
+        end
+
+        context 'CentOS 7' do
+          prefix = "php#{version.delete('.')}#{version.to_f < 7.3 ? 'u' : ''}"
+        end
+
+      end
+    end
   end
 end
-#         %w(osl-selinux::default).each do |r|
-#           it do
-#             expect(chef_run).to include_recipe(r)
-#           end
-#         end
-#       end
-#
-#       %w(5.6 7.2 7.4).each do |version|
-#         prefix =
-#           case pltfrm
-#           when CENTOS_7
-#             "php#{version.delete('.')}#{version.to_f < 7.3 ? 'u' : ''}"
-#           when ALMA_8
-#             'php'
-#           end
-#         context "using php #{version}" do
-#           context 'using packages with versioned prefixes' do
-#             cached(:chef_run) do
-#               ChefSpec::SoloRunner.new(pltfrm.dup.merge(step_into: %w(osl_php_install))) do |node|
 #                 node['version'] = version
 #                 node['use_ius'] = true
 #                 node['php_packages'] = %w(devel cli)
-#               end.converge(described_recipe)
+
 #             end
 #             it 'converges successfully' do
 #               expect { chef_run }.to_not raise_error

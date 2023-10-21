@@ -125,7 +125,7 @@ action :install do
                     [prefix]
                   end
 
-  php_install 'packages' do
+  php_install 'all-packages' do
     packages all_packages
   end
 
