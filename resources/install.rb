@@ -141,10 +141,6 @@ action :install do
     package_name pear_pkg
   end
 
-  php_install 'default' do
-    packages all_packages
-  end
-
   osl_php_ini 'timezone' do
     options('date.timezone' => 'UTC')
   end
