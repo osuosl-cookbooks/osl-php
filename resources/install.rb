@@ -20,7 +20,7 @@ resource_name :osl_php_install
 provides :osl_php_install
 unified_mode true
 
-property :packages, [Array, nil], default: lazy { php_installation_packages }
+property :packages, [Array], default: lazy { php_installation_packages }
 property :php_packages, [Array, nil]
 property :use_ius, [true, false], default: false
 property :version, String, default: lazy { php_version }
@@ -29,7 +29,7 @@ property :use_remi, [true, false], default: false
 property :opcache_conf, Hash, default: lazy { opcache_conf }
 
 action :install do
-  # To avoid warnings about including recipes in a resource, do the same things these recipes do
+  # To avoid warnings about including recipes in a resource, do the same things these recipes do ---
   # include_recipe 'osl-selinux'
   selinux_install 'osl-selinux'
   selinux_state 'osl-selinux' do
@@ -38,8 +38,12 @@ action :install do
 
   # include_recipe 'osl-repos::epel'
   osl_repos_epel 'default'
+  #---
 
   all_packages = new_resource.packages
+  execute "echo #{all_packages}" do
+    live_stream true
+  end
   prefix = 'php'
 
   if new_resource.use_opcache
@@ -125,6 +129,10 @@ action :install do
                     [prefix]
                   end
 
+  execute "echo #{all_packages}" do
+    live_stream true
+  end
+
   php_install 'all-packages' do
     packages all_packages
   end
@@ -149,6 +157,7 @@ action :install do
     cookbook_file "/usr/local/bin/#{file}" do
       source file
       mode '755'
+      cookbook 'osl-php'
     end
   end
 end

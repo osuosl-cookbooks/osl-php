@@ -5,45 +5,47 @@ describe 'osl_php_install' do
   cached(:subject) { chef_run }
   step_into :osl_php_install
 
-  recipe do
-    osl_php_install 'default packages'
-  end
+  context 'default' do
+    recipe do
+      osl_php_install 'default packages'
+    end
 
-  it do
-    is_expected.to install_selinux_install('osl-selinux')
-    is_expected.to enforcing_selinux_state('osl-selinux')
-    is_expected.to add_osl_repos_epel('default')
-
-    is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear))
-    is_expected.to_not add_osl_php_ini('10-opcache')
-    # TODO: convert this recipe include to resources
-    is_expected.to_not include_recipe('osl-repos::centos')
-    is_expected.to_not add_osl_repos_centos('default')
-    is_expected.to_not add_osl_repos_alma('default')
-
-    # TODO: this should be in an integration test, not here
-    # %w(pear1 mod_php opcache pecl-imagick).each do |p|
-    # is_expected.to_not install_package(p)
-    # end
-    # is_expected.to add_osl_php_ini
-  end
-
-  context 'CentOS 7' do
-    platform 'centos', '7'
     it do
+      is_expected.to install_selinux_install('osl-selinux')
+      is_expected.to enforcing_selinux_state('osl-selinux')
+      is_expected.to add_osl_repos_epel('default')
+
       is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear))
+      is_expected.to_not add_osl_php_ini('10-opcache')
+      # TODO: convert this recipe include to resources
+      is_expected.to_not include_recipe('osl-repos::centos')
+      is_expected.to_not add_osl_repos_centos('default')
+      is_expected.to_not add_osl_repos_alma('default')
+
+      # TODO: this should be in an integration test, not here
+      # %w(pear1 mod_php opcache pecl-imagick).each do |p|
+      # is_expected.to_not install_package(p)
+      # end
+      # is_expected.to add_osl_php_ini
+    end
+
+    context 'CentOS 7' do
+      platform 'centos', '7'
+      it do
+        is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear))
+      end
     end
   end
 
-  context 'packages' do
+  context 'specific packages' do
     recipe do
       osl_php_install 'packages' do
-        packages %w(php-devel)
+        packages %w(pecl-imagick)
       end
     end
 
     it do
-      is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-pear))
+      is_expected.to install_php_install('all-packages').with(packages: %w(pecl-imagick))
       is_expected.not_to install_package('php-cli')
     end
   end
@@ -58,7 +60,15 @@ describe 'osl_php_install' do
         context 'CentOS 7' do
           prefix = "php#{version.delete('.')}#{version.to_f < 7.3 ? 'u' : ''}"
         end
+      end
+    end
+  end
 
+  context 'no unprefixed names' do
+    recipe do
+      osl_php_install 'no unprefixed names' do
+        packages nil
+        php_packages 'devel'
       end
     end
   end

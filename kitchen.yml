@@ -17,13 +17,23 @@ provisioner:
         - 'fpm'
         - 'gd'
         - 'pecl-imagick'
-    osl-selinux:
-      enforcing: true
+          # osl-selinux:
+          # enforcing: true
 
 suites:
   - name: default
     run_list:
-      - recipe[php_test::php_install]
+      - recipe[php_test::install]
+
+  - name: packages
+    run_list:
+    - recipe[php_test::packages]
+      # - recipe[php_test::phpinfo_apache]
+
+  - name: php_packages
+    run_list:
+    - recipe[php_test::php_packages]
+      # - recipe[php_test::phpinfo_apache]
 
   - name: helpers
     run_list:
@@ -40,20 +50,6 @@ suites:
 #  - name: composer
 #    run_list:
 #    - recipe[osl-php::composer]
-#
-#  - name: packages
-#    run_list:
-#    - recipe[osl-php::packages]
-#    - recipe[php_test::phpinfo_apache]
-#    attributes:
-#      osl-php:
-#        php_packages:
-#          - 'devel'
-#          - 'fpm'
-#          - 'gd'
-#    verifier:
-#      inputs:
-#        system_php: true
 #
 #  - name: packages-php-ius
 #    run_list:
