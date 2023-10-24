@@ -37,7 +37,7 @@ describe 'osl_php_install' do
     end
   end
 
-  context 'specific packages' do
+  context 'packages' do
     recipe do
       osl_php_install 'packages' do
         packages %w(pecl-imagick)
@@ -45,7 +45,7 @@ describe 'osl_php_install' do
     end
 
     it do
-      is_expected.to install_php_install('all-packages').with(packages: %w(pecl-imagick))
+      is_expected.to install_php_install('all-packages').with(packages: %w(php))
       is_expected.not_to install_package('php-cli')
     end
   end
