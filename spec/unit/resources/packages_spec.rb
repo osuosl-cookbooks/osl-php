@@ -40,13 +40,21 @@ describe 'osl_php_install' do
   context 'packages' do
     recipe do
       osl_php_install 'packages' do
-        packages %w(pecl-imagick)
+        packages %w(test)
       end
     end
 
     it do
-      is_expected.to install_php_install('all-packages').with(packages: %w(php))
+      is_expected.to install_php_install('all-packages').with(packages: %w(php pear test))
       is_expected.not_to install_package('php-cli')
+    end
+
+    context 'CentOS 7' do
+      platform 'centos', '7'
+      it do
+        is_expected.to install_php_install('all-packages').with(packages: %w(php pear test))
+        is_expected.not_to install_package('php-cli')
+      end
     end
   end
 
