@@ -45,9 +45,6 @@ action :install do
   #---
 
   all_packages = new_resource.packages
-  execute "echo #{all_packages}" do
-    live_stream true
-  end
   prefix = 'php'
 
   if new_resource.use_opcache
@@ -122,7 +119,7 @@ action :install do
 
   all_packages |= new_resource.php_packages.map { |p| "#{prefix}-#{p}" } unless new_resource.php_packages.nil?
 
-  # pecl-imagick is not available on EL 8
+  # pecl-imagick is not available on EL8
   all_packages.delete_if { |p| p.match? /pecl-imagick/ } if node['platform_version'].to_i >= 8 && system_php
 
   # add the mod_php package, which is 'mod_php' in IUS or just 'php' otherwise
@@ -135,10 +132,6 @@ action :install do
                   else
                     [prefix]
                   end
-
-  execute "echo #{all_packages}" do
-    live_stream true
-  end
 
   php_install 'all-packages' do
     packages all_packages

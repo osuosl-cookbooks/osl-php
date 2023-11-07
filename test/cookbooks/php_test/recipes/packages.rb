@@ -1,3 +1,3 @@
 osl_php_install 'packages' do
-  packages %w(pecl-imagick)
+  packages %w(graphviz-php)
 end
