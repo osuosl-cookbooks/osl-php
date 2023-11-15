@@ -50,7 +50,8 @@ action :install do
     channel 'pecl'
   end
 
-  php_ini 'APC' do
-    options options
+  osl_php_ini 'APC' do
+    action :add
+    options new_resource.options
   end
 end

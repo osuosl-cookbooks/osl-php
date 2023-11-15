@@ -28,14 +28,14 @@ module OslPhp
 
       def apc_conf
         {
-          'apc_extension' => 'apc.so',
-          'def apc_shm_size' => '128M',
-          'apc_user_ttl' => 7200,
-          'apc_enable_cli' => 0,
-          'apc_ttl' => 3600,
-          'apc_gc_ttl' => 3600,
-          'apc_max_file_size' => '1M',
-          'apc_stat' => 1,
+          'extension' => 'apc.so',
+          'apc.shm_size' => '128M',
+          'apc.user_ttl' => 7200,
+          'apc.enable_cli' => 0,
+          'apc.ttl' => 3600,
+          'apc.gc_ttl' => 3600,
+          'apc.max_file_size' => '1M',
+          'apc.stat' => 1,
          }
       end
 
