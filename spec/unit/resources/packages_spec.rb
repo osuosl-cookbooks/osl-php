@@ -7,7 +7,6 @@ describe 'osl_php_install' do
 
   recipe do
     osl_php_install 'default packages'
-    package 'test-package'
   end
 
   it do
