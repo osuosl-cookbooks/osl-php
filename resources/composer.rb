@@ -17,9 +17,20 @@
 # limitations under the License.
 #
 
-include_recipe 'osl-selinux::default'
+resource_name :osl_php_composer
+provides :osl_php_composer
+unified_mode true
 
-node.default['composer']['url'] = "https://getcomposer.org/download/#{node['osl-php']['composer_version']}/composer.phar"
+property :version, String, default: lazy { composer_version }
 
-php_install 'default'
-include_recipe 'composer::default'
+action :install do
+  # include_recipe 'osl-selinux'
+  selinux_install 'osl-selinux'
+  selinux_state 'osl-selinux' do
+    action :enforcing
+  end
+
+  php_install 'default'
+  node.default['composer']['url'] = "https://getcomposer.org/download/#{new_resource.version]}/composer.phar"
+  include_recipe 'composer::default'
+end
