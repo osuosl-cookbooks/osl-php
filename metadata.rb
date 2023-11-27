@@ -11,7 +11,6 @@ version          '6.4.3'
 supports         'almalinux', '~> 8.0'
 supports         'centos', '~> 7.0'
 
-depends          'composer', '~> 3.0'
 depends          'osl-repos'
 depends          'osl-selinux'
 depends          'php'

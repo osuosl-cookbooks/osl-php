@@ -39,14 +39,13 @@ suites:
     run_list:
       - recipe[php_test::php_helpers]
 
-#  - name: apc
-#    run_list:
-#      - recipe[osl-php::default]
-#      - recipe[osl-php::apc]
-#      - recipe[php_test::phpinfo_apache]
-#    excludes:
-#      - almalinux-8
-#
+  - name: apc
+    run_list:
+      - recipe[php_test::apc]
+      - recipe[php_test::phpinfo_apache]
+    excludes:
+      - almalinux-8
+
 #  - name: composer
 #    run_list:
 #    - recipe[osl-php::composer]

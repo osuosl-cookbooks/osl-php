@@ -31,6 +31,6 @@ action :install do
   end
 
   php_install 'default'
-  node.default['composer']['url'] = "https://getcomposer.org/download/#{new_resource.version]}/composer.phar"
+  node.default['composer']['url'] = "https://getcomposer.org/download/#{new_resource.version}/composer.phar"
   include_recipe 'composer::default'
 end

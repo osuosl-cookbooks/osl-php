@@ -15,6 +15,7 @@ describe 'osl_php_install' do
     is_expected.to add_osl_repos_epel('default')
 
     is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear))
+    is_expected.to_not install_package('php-pear')
     is_expected.to_not add_osl_php_ini('10-opcache')
     # TODO: convert this recipe include to resources
     is_expected.to_not include_recipe('osl-repos::centos')
@@ -28,183 +29,139 @@ describe 'osl_php_install' do
     # is_expected.to add_osl_php_ini
   end
 
+  context 'Using IUS' do
+    cached(:subject) { chef_run }
+    recipe do
+      osl_php_install 'defaults with ius' do
+        use_ius true
+      end
+    end
+    end
+    it do
+      is_expected.to_not include_recipe('yum-ius')
+    end
+  end
+
   context 'CentOS 7' do
     cached(:subject) { chef_run }
     platform 'centos', '7'
     it do
       is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear))
+      is_expected.to_not install_package('php-pear')
+    end
+
+    context 'Using IUS' do
+      cached(:subject) { chef_run }
+      recipe do
+        osl_php_install 'defaults with ius' do
+          use_ius true
+        end
+      end
+      end
+      it do
+        # TODO: add others
+        is_expected.to include_recipe('yum-centos')
+        is_expected.to include_recipe('yum-ius')
+      end
     end
   end
 
-  context 'packages' do
+  context 'using packages without prefixes' do
     cached(:subject) { chef_run }
+
     recipe do
       osl_php_install 'packages' do
-        packages %w(graphviz-php)
+        packages %w(graphviz-php pecl-imagick)
       end
     end
 
     it do
       is_expected.to install_php_install('all-packages').with(packages: %w(graphviz-php php))
-      is_expected.not_to install_package('php-cli')
+      is_expected.to install_package('php-pear')
+      is_expected.not_to install_package(%w(php-graphviz-php pecl-imagick php-cli php-devel))
     end
 
     context 'CentOS 7' do
       cached(:subject) { chef_run }
       platform 'centos', '7'
+
+      recipe do
+        osl_php_install 'packages' do
+          packages %w(graphviz-php pecl-imagick)
+        end
+      end
+
       it do
-        is_expected.to install_php_install('all-packages').with(packages: %w(graphviz-php php))
-        is_expected.not_to install_package('php-cli')
+        is_expected.to install_php_install('all-packages').with(packages: %w(graphviz-php pecl-imagick php))
+        is_expected.to install_package('php-pear')
+        is_expected.not_to install_package(%w(php-cli php-devel))
+      end
+
+      context 'using IUS' do
       end
     end
   end
 
   %w(5.6 7.2 7.4).each do |version|
-    context "using php #{version}" do
+    context "using packages with versioned prefixes: php #{version}" do
       cached(:subject) { chef_run }
-      platform 'centos', '7'
+      platform 'almalinux', '8'
+
+      recipe do
+        osl_php_install 'packages' do
+          packages []
+          php_packages %w(devel)
+          version version
+        end
+      end
+
       prefix = 'php'
 
-      context 'using packages with versioned prefixes' do
+      it do
+        is_expected.to install_php_install('all-packages').with(packages: "#{prefix}-devel, php")
+        is_expected.to install_package("#{prefix}-pear")
+        is_expected.to_not install_package(%w(pecl-imagick php-cli))
+      end
+
+      context 'CentOS 7' do
         cached(:subject) { chef_run }
+        platform 'centos', '7'
+
         recipe do
+          osl_php_install 'packages' do
+            packages []
+            php_packages %w(devel)
+            version version
+          end
         end
 
-        context 'CentOS 7' do
-          cached(:subject) { chef_run }
-          prefix = "php#{version.delete('.')}#{version.to_f < 7.3 ? 'u' : ''}"
+        prefix = 'php'
+      # prefix = "php#{version.delete('.')}#{version.to_f < 7.3 ? 'u' : ''}"
+
+        it do
+          is_expected.to install_php_install('all-packages').with(packages: "#{prefix}-devel, php")
+          is_expected.to install_package("#{prefix}-pear")
+          is_expected.to_not install_package("pecl-imagick #{prefix}-php-cli")
         end
       end
     end
-  end
 
-  context 'no unprefixed names' do
-    cached(:subject) { chef_run }
-    platform 'centos', '7'
-    recipe do
-      osl_php_install 'no unprefixed names' do
-        packages nil
-        php_packages 'devel'
+    context 'Using IUS' do
+      cached(:subject) { chef_run }
+      recipe do
+        osl_php_install 'packages' do
+          packages []
+          php_packages %w(devel)
+          version version
+          use_ius true
+        end
+      end
+      end
+      it do
+        # TODO: add others
+        is_expected.to include_recipe('yum-centos')
+        is_expected.to include_recipe('yum-ius')
       end
     end
   end
 end
-#                 node['version'] = version
-#                 node['use_ius'] = true
-#                 node['php_packages'] = %w(devel cli)
-
-#             end
-#             it 'converges successfully' do
-#               expect { chef_run }.to_not raise_error
-#             end
-#             it do
-#               php_pkg =
-#                 case pltfrm
-#                 when ALMA_8
-#                   prefix
-#                 else
-#                   version.to_f < 7 ? prefix : "mod_#{prefix}"
-#                 end
-#               expect(chef_run).to install_package(
-#                 "#{prefix}-devel, #{prefix}-cli, #{php_pkg}"
-#               )
-#             end
-#             it do
-#               expect(chef_run).to install_package('pear')
-#             end
-#             it do
-#               case pltfrm
-#               when ALMA_8
-#                 expect(chef_run).to_not create_yum_repository('ius')
-#               else
-#                 case version
-#                 when '7.2'
-#                   expect(chef_run).to create_yum_repository('ius').with(exclude: 'php73* php74*')
-#                 else
-#                   expect(chef_run).to_not create_yum_repository('ius').with(exclude: 'php73*')
-#                 end
-#               end
-#             end
-#             it do
-#               case pltfrm
-#               when ALMA_8
-#                 expect(chef_run).to_not create_yum_repository('ius-archive')
-#               when CENTOS_7
-#                 case version
-#                 when '5.6', '7.2', '7.4'
-#                   expect(chef_run).to create_yum_repository('ius-archive').with(enabled: true)
-#                 else
-#                   expect(chef_run).to create_yum_repository('ius-archive').with(enabled: false)
-#                 end
-#               end
-#             end
-#             case pltfrm
-#             when CENTOS_7
-#               it do
-#                 expect(chef_run).to include_recipe('osl-repos::centos')
-#               end
-#               it do
-#                 expect(chef_run).to include_recipe('yum-osuosl')
-#               end
-#               case version
-#               when '5.6'
-#                 it do
-#                   expect(chef_run).to create_yum_repository('base').with(exclude: 'ImageMagick*')
-#                 end
-#               else
-#                 it do
-#                   expect(chef_run).to_not create_yum_repository('base').with(exclude: 'ImageMagick*')
-#                 end
-#               end
-#             when ALMA_8
-#               next if version.to_f < 7.2
-#               shortver = version.to_s.delete('.')
-#               it { is_expected.to add_osl_repos_alma('default') }
-#               it { is_expected.to send(:"create_yum_remi_php#{shortver}", 'default') }
-#             end
-#           end
-#           context 'old method for backwards compatability' do
-#             cached(:chef_run) do
-#               ChefSpec::SoloRunner.new(pltfrm.dup.merge(step_into: %w(osl_php_install))) do |node|
-#                 node['version'] = version
-#                 node['packages'] = %w(devel cli).map { |p| "#{prefix}-#{p}" }
-#               end.converge(described_recipe)
-#             end
-#             it 'converges successfully' do
-#               expect { chef_run }.to_not raise_error
-#             end
-#             it do
-#               php_pkg =
-#                 case pltfrm
-#                 when ALMA_8
-#                   prefix
-#                 when CENTOS_7
-#                   version.to_f < 7 ? prefix : "mod_#{prefix}"
-#                 end
-#               expect(chef_run).to install_package(
-#                 "#{prefix}-devel, #{prefix}-cli, #{php_pkg}"
-#               )
-#             end
-#             it do
-#               expect(chef_run).to install_package('pear')
-#             end
-#             it do
-#               case pltfrm
-#               when ALMA_8
-#                 expect(chef_run).to_not create_yum_repository('ius')
-#               when CENTOS_7
-#                 if version == '7.2'
-#                   expect(chef_run).to create_yum_repository('ius').with(exclude: 'php73* php74*')
-#                 else
-#                   expect(chef_run).to_not create_yum_repository('ius').with(
-#                     exclude: 'php73*'
-#                   )
-#                 end
-#               end
-#             end
-#           end
-#         end
-#       end
-#     end
-#   end
-# end
