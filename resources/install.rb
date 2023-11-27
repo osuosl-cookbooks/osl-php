@@ -20,10 +20,12 @@ resource_name :osl_php_install
 provides :osl_php_install
 unified_mode true
 
-property :packages, [Array, nil], default: lazy { php_installation_packages }
-property :php_packages, [Array, nil]
+property :packages, Array
+property :php_packages, Array
 property :use_ius, [true, false], default: false
 property :version, String
+property :use_composer, [true, false], default: false
+property :composer_version, String
 property :use_opcache, [true, false], default: false
 property :use_remi, [true, false], default: false
 property :opcache_conf, Hash, default: lazy { opcache_conf }
@@ -44,11 +46,19 @@ action :install do
   osl_repos_epel 'default'
   #---
 
-  all_packages = new_resource.packages
+  all_packages = new_resource.packages.nil? ? php_installation_packages : new_resource.packages
   prefix = 'php'
 
+  if new_resource.use_composer
+    composer_url = "https://getcomposer.org/download/#{new_resource.composer_version}/composer.phar"
+
+    # install composer
+    all_packages << 'composer'
+
+  end
+
   if new_resource.use_opcache
-    if version < 5.5 || !new_resource.use_opcache
+    if version < 5.5 || !new_resource.use_ius
       raise 'Must use PHP >= 5.5 with ius enabled to use Zend Opcache.'
     end
 
@@ -117,7 +127,7 @@ action :install do
     declare_resource(:"yum_remi_php#{shortver}", 'default')
   end
 
-  all_packages |= new_resource.php_packages.map { |p| "#{prefix}-#{p}" } unless new_resource.php_packages.nil?
+  all_packages |= new_resource.php_packages.map { |p| "#{prefix}-#{p}" } unless !new_resource.php_packages
 
   # pecl-imagick is not available on EL8
   all_packages.delete_if { |p| p.match? /pecl-imagick/ } if node['platform_version'].to_i >= 8 && system_php
@@ -145,9 +155,7 @@ action :install do
              end
 
   # TODO: use pear resource?
-  package 'pear' do
-    package_name pear_pkg
-  end
+  package pear_pkg unless all_packages.find { |p| /pear/ =~ p }
 
   osl_php_ini 'timezone' do
     options('date.timezone' => 'UTC')
