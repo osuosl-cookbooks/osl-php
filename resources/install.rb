@@ -2,7 +2,7 @@
 # Cookbook:: osl-php
 # Recipe:: default
 #
-# Copyright:: 2013-2023, Oregon State University
+# Copyright:: 2013-2024, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ action :install do
   prefix = 'php'
 
   if new_resource.use_composer
-    composer_url = "https://getcomposer.org/download/#{new_resource.composer_version}/composer.phar"
+    # composer_url = "https://getcomposer.org/download/#{new_resource.composer_version}/composer.phar"
 
     # install composer
     all_packages << 'composer'
@@ -58,7 +58,7 @@ action :install do
   end
 
   if new_resource.use_opcache
-    if version < 5.5 || !new_resource.use_ius
+    if version.to_f < 5.5 || !new_resource.use_ius
       raise 'Must use PHP >= 5.5 with ius enabled to use Zend Opcache.'
     end
 
@@ -80,7 +80,7 @@ action :install do
                 # TODO: this is the original logic - check if it's still necessary to do this
               end
     # Enable IUS archive repo for archived versions
-    enable_ius_archive = ius_archive_versions.any? { |v| version == v }
+    enable_ius_archive = ius_archive_versions.include?(version)
     node.default['yum']['ius-archive']['enabled'] = enable_ius_archive
     node.default['yum']['ius-archive']['managed'] = true
 
@@ -88,7 +88,7 @@ action :install do
     include_recipe 'yum-osuosl'
 
     # CentOS 7.8 updated ImageMagick which broke installations from ius-archive for php versions 7.1 and below
-    if enable_ius_archive && node['platform_version'].to_i >= 7 && version <= 7.1
+    if enable_ius_archive && version.to_f <= 7.1
       # This is an annoying workaround since the resource doesn't show up properly using the osl_repos_centos resource. We
       # don't include this in metadata as it will mess up ordering but gets pulled in automatically with osl-repos
       include_recipe 'yum-centos'
@@ -105,7 +105,7 @@ action :install do
     include_recipe 'yum-ius'
 
     case version
-    when 7.2
+    when '7.2'
       r_a = resources(yum_repository: 'ius-archive')
       r_a.exclude = [r_a.exclude, 'php5* php71* php73* php74*'].compact.join(' ')
       r = resources(yum_repository: 'ius')
@@ -113,7 +113,7 @@ action :install do
     end
 
     # IUS has php versions as php72u-foo or php73-foo
-    prefix = "php#{shortver}#{'u' if version < 7.3}"
+    prefix = "php#{shortver}#{'u' if version.to_f < 7.3}"
   end
 
   # === use Remi dnf modules on EL8 ===
@@ -148,7 +148,7 @@ action :install do
   end
 
   # Include pear package (pear1 for PHP 7.1+ on C7)
-  pear_pkg = if !system_php && version >= 7.1 && node['platform_version'].to_i == 7
+  pear_pkg = if !system_php && version.to_f >= 7.1 && node['platform_version'].to_i == 7
                ['pear1']
              else
                ["#{prefix}-pear"]

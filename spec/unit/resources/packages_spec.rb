@@ -5,6 +5,8 @@ describe 'osl_php_install' do
   platform 'almalinux', '8'
   step_into :osl_php_install
 
+  # using packages with non-versioned prefixes
+
   recipe do
     osl_php_install 'default packages'
   end
@@ -36,7 +38,7 @@ describe 'osl_php_install' do
         use_ius true
       end
     end
-    end
+
     it do
       is_expected.to_not include_recipe('yum-ius')
     end
@@ -56,7 +58,6 @@ describe 'osl_php_install' do
         osl_php_install 'defaults with ius' do
           use_ius true
         end
-      end
       end
       it do
         # TODO: add others
@@ -118,7 +119,7 @@ describe 'osl_php_install' do
       prefix = 'php'
 
       it do
-        is_expected.to install_php_install('all-packages').with(packages: "#{prefix}-devel, php")
+        is_expected.to install_php_install('all-packages').with(packages: ["#{prefix}-devel", 'php'])
         is_expected.to install_package("#{prefix}-pear")
         is_expected.to_not install_package(%w(pecl-imagick php-cli))
       end
@@ -136,31 +137,37 @@ describe 'osl_php_install' do
         end
 
         prefix = 'php'
-      # prefix = "php#{version.delete('.')}#{version.to_f < 7.3 ? 'u' : ''}"
+        # prefix = "php#{version.delete('.')}#{version.to_f < 7.3 ? 'u' : ''}"
 
         it do
-          is_expected.to install_php_install('all-packages').with(packages: "#{prefix}-devel, php")
-          is_expected.to install_package("#{prefix}-pear")
+          if version.to_i == 7
+            is_expected.to install_php_install('all-packages').with(packages: ["#{prefix}-devel", 'mod_php'])
+            is_expected.to install_package('pear1')
+          else
+            is_expected.to install_php_install('all-packages').with(packages: ["#{prefix}-devel", 'php'])
+            is_expected.to install_package("#{prefix}-pear")
+          end
+
           is_expected.to_not install_package("pecl-imagick #{prefix}-php-cli")
         end
-      end
-    end
 
-    context 'Using IUS' do
-      cached(:subject) { chef_run }
-      recipe do
-        osl_php_install 'packages' do
-          packages []
-          php_packages %w(devel)
-          version version
-          use_ius true
+        context 'Using IUS' do
+          cached(:subject) { chef_run }
+          recipe do
+            osl_php_install 'packages' do
+              packages []
+              php_packages %w(devel)
+              version version
+              use_ius true
+            end
+          end
+          it do
+            # TODO: add others
+            is_expected.to include_recipe('osl-repos::centos')
+            is_expected.to include_recipe('yum-ius')
+            is_expected.to include_recipe('yum-centos') if version.to_f <= 7.1 && ius_archive_versions.include?(version)
+          end
         end
-      end
-      end
-      it do
-        # TODO: add others
-        is_expected.to include_recipe('yum-centos')
-        is_expected.to include_recipe('yum-ius')
       end
     end
   end

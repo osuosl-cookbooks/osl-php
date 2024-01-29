@@ -10,5 +10,7 @@ version          '0.1.0'
 
 depends          'osl-php'
 depends          'osl-apache'
+depends          'yum-ius'
+depends          'yum-osuosl'
 
 supports         'centos', '~> 7.0'
