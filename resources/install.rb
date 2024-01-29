@@ -84,7 +84,8 @@ action :install do
     node.default['yum']['ius-archive']['enabled'] = enable_ius_archive
     node.default['yum']['ius-archive']['managed'] = true
 
-    include_recipe 'osl-repos::centos'
+    # include_recipe 'osl-repos::centos'
+    osl_repos_centos 'default'
     include_recipe 'yum-osuosl'
 
     # CentOS 7.8 updated ImageMagick which broke installations from ius-archive for php versions 7.1 and below
