@@ -20,7 +20,7 @@ describe 'osl_php_install' do
     is_expected.to_not install_package('php-pear')
     is_expected.to_not add_osl_php_ini('10-opcache')
     # TODO: convert this recipe include to resources
-    is_expected.to_not include_recipe('osl-repos::centos')
+
     is_expected.to_not add_osl_repos_centos('default')
     is_expected.to_not add_osl_repos_alma('default')
 
@@ -61,7 +61,7 @@ describe 'osl_php_install' do
       end
       it do
         # TODO: add others
-        is_expected.to include_recipe('yum-centos')
+        is_expected.to_not include_recipe('yum-centos') # version = 7.4
         is_expected.to include_recipe('yum-ius')
       end
     end
@@ -163,9 +163,11 @@ describe 'osl_php_install' do
           end
           it do
             # TODO: add others
-            is_expected.to include_recipe('osl-repos::centos')
             is_expected.to include_recipe('yum-ius')
-            is_expected.to include_recipe('yum-centos') if version.to_f <= 7.1 && ius_archive_versions.include?(version)
+            is_expected.to include_recipe('yum-centos') if
+              version.to_i == 7 \
+              && version.to_f <= 7.1 \
+              && ius_archive_versions.include?(version)
           end
         end
       end

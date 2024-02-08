@@ -77,8 +77,8 @@ action :install do
     version = if system_php
                 system_php = false
                 '7.4'
-                # TODO: this is the original logic - check if it's still necessary to do this
               end
+
     # Enable IUS archive repo for archived versions
     enable_ius_archive = ius_archive_versions.include?(version)
     node.default['yum']['ius-archive']['enabled'] = enable_ius_archive
@@ -86,6 +86,7 @@ action :install do
 
     # include_recipe 'osl-repos::centos'
     osl_repos_centos 'default'
+
     include_recipe 'yum-osuosl'
 
     # CentOS 7.8 updated ImageMagick which broke installations from ius-archive for php versions 7.1 and below
