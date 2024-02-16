@@ -31,31 +31,6 @@ action :install do
   all_packages = new_resource.packages.nil? ? php_installation_packages : new_resource.packages
   prefix = 'php'
 
-  if new_resource.use_composer
-    # composer_url = "https://getcomposer.org/download/#{new_resource.composer_version}/composer.phar"
-
-    # install composer
-    # all_packages << 'composer'
-    #
-    # We used to call the Supermarket composer::default recipe here: https://github.com/djoos-cookbooks/composer/blob/master/recipes/global_configs.rb
-    # It runs the global_configs recipe (which does nothing because the default is no options)
-    # and the install recipe, which does
-    # remote_file "#{node['composer']['install_dir']}/composer" do
-    #   source node['composer']['url']
-    #   mode node['composer']['mask']
-    #   action :create_if_missing
-    # end
-    #
-    # Another thing is that the osl-php::default recipe is run _before_ this - so I guess this needs to be moved to the end; the composer recipes emphasize that php needs to be installed _before_ the composer recipe is run
-
-    remote_file '/usr/local/bin/composer' do
-      source composer_url
-      mode 0755
-      action :create_if_missing
-    end
-
-  end
-
   if new_resource.use_opcache
     if version.to_f < 5.5 || !new_resource.use_ius
       raise 'Must use PHP >= 5.5 with ius enabled to use Zend Opcache.'
@@ -167,6 +142,16 @@ action :install do
       source file
       mode '755'
       cookbook 'osl-php'
+    end
+  end
+
+  if new_resource.use_composer
+    composer_url = "https://getcomposer.org/download/#{new_resource.composer_version}/composer.phar"
+
+    remote_file '/usr/local/bin/composer' do
+      source composer_url
+      mode 0755
+      action :create_if_missing
     end
   end
 end
