@@ -7,8 +7,17 @@ provisioner:
   multiple_converge: 2
   enforce_idempotency: true
   # deprecations_as_errors: true # windows / composer cookbooks
-  # attributes:
-  # ['php_test']['something_idk']
+  attributes:
+    omnibus_updater:
+      disabled: true
+    php_test:
+      php_packages:
+        - 'devel'
+        - 'fpm'
+        - 'gd'
+        - 'pecl-imagick'
+    osl-selinux:
+      enforcing: true
 
 suites:
   - name: default
@@ -16,39 +25,48 @@ suites:
       - recipe[php_test::default]
       - recipe[php_test::php_helpers]
 
-  - name: php_packages
-    run_list:
-      - recipe[php_test::php_packages]
-      # - recipe[php_test::phpinfo_apache]
-
-  - name: helpers
-    run_list:
-      - recipe[php_test::php_helpers]
-
   - name: apc
     run_list:
+      - recipe[php_test::default]
       - recipe[php_test::apc]
       - recipe[php_test::phpinfo_apache]
     excludes:
       - almalinux-8
-      #  - name: composer
-      #    run_list:
-      #      - recipe[osl-php::composer]
-      #
-      #  - name: packages-php-ius
-      #    run_list:
-      #      - recipe[osl-php::packages]
-      #      - recipe[php_test::phpinfo_apache]
-      #    attributes:
-      #      osl-php:
-      #        use_ius: true
-      #    excludes:
-      #      - almalinux-8
-      #    verifier:
-      #      inspec_tests:
-      #        - test/integration/packages
-      #      inputs:
-      #        version: '7.4'
+
+  - name: composer
+    run_list:
+      - recipe[php_test::composer]
+    attributes:
+      composer_version: '2.2.18'
+
+  - name: packages
+    run_list:
+      - recipe[php_test::packages]
+      - recipe[php_test::phpinfo_apache]
+    attributes:
+      php-test:
+        php_packages:
+          - 'devel'
+          - 'fpm'
+          - 'gd'
+    verifier:
+      inputs:
+        system_php: true
+
+  - name: packages-php-ius
+    run_list:
+      - recipe[php_test::packages]
+      - recipe[php_test::phpinfo_apache]
+    attributes:
+      php_test:
+        use_ius: true
+    excludes:
+      - almalinux-8
+    verifier:
+      inspec_tests:
+        - test/integration/packages
+      inputs:
+        version: '7.4'
 
   - name: packages-php56
     run_list:
@@ -87,7 +105,6 @@ suites:
     attributes:
       php-test:
         use_ius: true
-      php:
         version: '7.4'
     verifier:
       inspec_tests:
@@ -184,3 +201,8 @@ suites:
         - test/integration/opcache
       inputs:
         version: '7.2'
+
+  - name: php_packages
+    run_list:
+      - recipe[php_test::php_packages]
+      - recipe[php_test::phpinfo_apache]

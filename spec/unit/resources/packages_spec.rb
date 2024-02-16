@@ -14,21 +14,13 @@ describe 'osl_php_install' do
   it do
     is_expected.to install_selinux_install('osl-selinux')
     is_expected.to enforcing_selinux_state('osl-selinux')
-    is_expected.to add_osl_repos_epel('default')
 
     is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear))
     is_expected.to_not install_package('php-pear')
     is_expected.to_not add_osl_php_ini('10-opcache')
-    # TODO: convert this recipe include to resources
 
     is_expected.to_not add_osl_repos_centos('default')
     is_expected.to_not add_osl_repos_alma('default')
-
-    # TODO: this should be in an integration test, not here
-    # %w(pear1 mod_php opcache pecl-imagick).each do |p|
-    # is_expected.to_not install_package(p)
-    # end
-    # is_expected.to add_osl_php_ini
   end
 
   context 'Using IUS' do
@@ -42,6 +34,17 @@ describe 'osl_php_install' do
     it do
       is_expected.to_not include_recipe('yum-ius')
     end
+  end
+
+  context 'Composer' do
+    cached(:subject) { chef_run }
+    recipe do
+      osl_php_install 'defaults with composer' do
+        use_composer true
+      end
+      it do
+        # TODO
+      end
   end
 
   context 'CentOS 7' do
