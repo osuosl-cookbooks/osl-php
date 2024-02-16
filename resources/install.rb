@@ -1,21 +1,3 @@
-#
-# Cookbook:: osl-php
-# Recipe:: default
-#
-# Copyright:: 2013-2024, Oregon State University
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
 resource_name :osl_php_install
 provides :osl_php_install
 unified_mode true
@@ -53,7 +35,24 @@ action :install do
     # composer_url = "https://getcomposer.org/download/#{new_resource.composer_version}/composer.phar"
 
     # install composer
-    all_packages << 'composer'
+    # all_packages << 'composer'
+    #
+    # We used to call the Supermarket composer::default recipe here: https://github.com/djoos-cookbooks/composer/blob/master/recipes/global_configs.rb
+    # It runs the global_configs recipe (which does nothing because the default is no options)
+    # and the install recipe, which does
+    # remote_file "#{node['composer']['install_dir']}/composer" do
+    #   source node['composer']['url']
+    #   mode node['composer']['mask']
+    #   action :create_if_missing
+    # end
+    #
+    # Another thing is that the osl-php::default recipe is run _before_ this - so I guess this needs to be moved to the end; the composer recipes emphasize that php needs to be installed _before_ the composer recipe is run
+
+    remote_file '/usr/local/bin/composer' do
+      source composer_url
+      mode 0755
+      action :create_if_missing
+    end
 
   end
 

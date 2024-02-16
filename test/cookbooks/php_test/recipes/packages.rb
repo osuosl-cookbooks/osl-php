@@ -1,3 +1,4 @@
 osl_php_install 'packages' do
-  packages %w(graphviz-php)
+  use_ius node['php-test']['use_ius']
+  version node['php-test']['version']
 end
