@@ -150,7 +150,7 @@ action :install do
 
     remote_file '/usr/local/bin/composer' do
       source composer_url
-      mode 0755
+      mode '755'
       action :create_if_missing
     end
   end

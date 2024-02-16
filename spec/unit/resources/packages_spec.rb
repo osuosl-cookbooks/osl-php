@@ -42,9 +42,10 @@ describe 'osl_php_install' do
       osl_php_install 'defaults with composer' do
         use_composer true
       end
-      it do
-        # TODO
-      end
+    end
+    it do
+      # TODO
+    end
   end
 
   context 'CentOS 7' do
