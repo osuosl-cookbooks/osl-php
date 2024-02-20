@@ -44,11 +44,12 @@ suites:
       - recipe[php_test::packages]
       - recipe[php_test::phpinfo_apache]
     attributes:
-      php-test:
+      php_test:
         php_packages:
           - 'devel'
           - 'fpm'
           - 'gd'
+        system_php: true
     verifier:
       inputs:
         system_php: true
@@ -60,6 +61,7 @@ suites:
     attributes:
       php_test:
         use_ius: true
+        version: '7.4'
     excludes:
       - almalinux-8
     verifier:
@@ -73,7 +75,7 @@ suites:
       - recipe[php_test::packages]
       - recipe[php_test::phpinfo_apache]
     attributes:
-      php-test:
+      php_test:
         use_ius: true
         version: '5.6'
     excludes:
@@ -89,7 +91,7 @@ suites:
       - recipe[php_test::packages]
       - recipe[php_test::phpinfo_apache]
     attributes:
-      php-test:
+      php_test:
         use_ius: true
         version: '7.2'
     verifier:
@@ -103,7 +105,7 @@ suites:
       - recipe[php_test::packages]
       - recipe[php_test::phpinfo_apache]
     attributes:
-      php-test:
+      php_test:
         use_ius: true
         version: '7.4'
     verifier:
@@ -117,7 +119,7 @@ suites:
       - recipe[php_test::packages]
       - recipe[php_test::phpinfo_apache]
     attributes:
-      php-test:
+      php_test:
         version: '8.0'
     verifier:
       inspec_tests:
@@ -132,7 +134,7 @@ suites:
       - recipe[php_test::packages]
       - recipe[php_test::phpinfo_apache]
     attributes:
-      php-test:
+      php_test:
         version: '8.1'
     verifier:
       inspec_tests:
@@ -154,10 +156,10 @@ suites:
 
   - name: opcache-php56
     run_list:
-      - recipe[php_test::default]
+      - recipe[php_test::packages]
       - recipe[php_test::phpinfo_apache]
     attributes:
-      php-test:
+      php_test:
         php_packages:
           - 'devel'
           - 'fpm'
@@ -165,7 +167,7 @@ suites:
           - 'opcache'
         use_ius: true
         use_opcache: true
-        opcache:
+        opcache_conf:
           opcache.enable_cli: 'true'
           opcache.memory_consumption: 1024
           opcache.max_accelerated_files: 1000
@@ -180,10 +182,10 @@ suites:
 
   - name: opcache-php72
     run_list:
-      - recipe[php_test::default]
+      - recipe[php_test::packages]
       - recipe[php_test::phpinfo_apache]
     attributes:
-      php-test:
+      php_test:
         php_packages:
           - 'devel'
           - 'fpm'

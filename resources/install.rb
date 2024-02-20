@@ -9,12 +9,12 @@ property :version, String
 property :use_composer, [true, false], default: false
 property :composer_version, String
 property :use_opcache, [true, false], default: false
-property :use_remi, [true, false], default: false
 property :opcache_conf, Hash, default: lazy { opcache_conf }
 
 action :install do
   system_php = new_resource.version.nil?
-  version = new_resource.version ||= php_version
+  version = new_resource.version
+  version ||= php_version
   shortver = version.delete('.') # version X.X -> XX
 
   # To avoid warnings about including recipes in a resource, do the same things these recipes do ---
@@ -31,6 +31,7 @@ action :install do
   all_packages = new_resource.packages.nil? ? php_installation_packages : new_resource.packages
   prefix = 'php'
 
+  # opcache
   if new_resource.use_opcache
     if version.to_f < 5.5 || !new_resource.use_ius
       raise 'Must use PHP >= 5.5 with ius enabled to use Zend Opcache.'
@@ -42,16 +43,17 @@ action :install do
       options new_resource.opcache_conf
     end
   end
+  # ---
 
   # include_recipe 'osl-php::packages' -------------------------------------------------------------------------------
 
   # === use IUS repo on EL7 ===
   if node['platform_version'].to_i == 7 && new_resource.use_ius
     # default to 7.4 if version not explicitly set
-    version = if system_php
-                system_php = false
-                '7.4'
-              end
+    if system_php
+      system_php = false
+      version = '7.4'
+    end
 
     # Enable IUS archive repo for archived versions
     enable_ius_archive = ius_archive_versions.include?(version)

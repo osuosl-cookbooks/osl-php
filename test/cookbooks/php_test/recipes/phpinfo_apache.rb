@@ -1,11 +1,11 @@
 apache2_install 'default'
 
 major_version =
-  if node['php']['system_php']
+  if node['php_test']['system_php']
     node['platform_version'].to_i == 7 ? '5' : '7'
-  elsif node['php']['version'].to_i < 8
+  elsif node['php_test']['version'].to_i < 8
     # PHP 8 in Remi does not have version in filename
-    node['php']['version'].to_i
+    node['php_test']['version'].to_i
   end
 
 apache2_module "php#{major_version}" do

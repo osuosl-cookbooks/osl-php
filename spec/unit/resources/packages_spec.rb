@@ -15,6 +15,9 @@ describe 'osl_php_install' do
     is_expected.to install_selinux_install('osl-selinux')
     is_expected.to enforcing_selinux_state('osl-selinux')
 
+    # elements from the spec for the old default recipe
+    is_expected.to add_osl_php_ini('timezone').with(options: { 'date.timezone' => 'UTC' })
+
     is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear))
     is_expected.to_not install_package('php-pear')
     is_expected.to_not add_osl_php_ini('10-opcache')
@@ -41,10 +44,14 @@ describe 'osl_php_install' do
     recipe do
       osl_php_install 'defaults with composer' do
         use_composer true
+        composer_version '2.2.18'
       end
     end
     it do
-      # TODO
+      is_expected.to create_if_missing_remote_file('/usr/local/bin/composer').with(
+        source: 'https://getcomposer.org/download/2.2.18/composer.phar',
+        mode: '755'
+      )
     end
   end
 
