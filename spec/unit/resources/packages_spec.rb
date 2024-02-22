@@ -18,7 +18,7 @@ describe 'osl_php_install' do
     # elements from the spec for the old default recipe
     is_expected.to add_osl_php_ini('timezone').with(options: { 'date.timezone' => 'UTC' })
 
-    is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear))
+    is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli))
     is_expected.to_not install_package('php-pear')
     is_expected.to_not add_osl_php_ini('10-opcache')
 
@@ -141,7 +141,6 @@ describe 'osl_php_install' do
 
         recipe do
           osl_php_install 'packages' do
-            packages []
             php_packages %w(devel)
             version version
           end
@@ -166,7 +165,6 @@ describe 'osl_php_install' do
           cached(:subject) { chef_run }
           recipe do
             osl_php_install 'packages' do
-              packages []
               php_packages %w(devel)
               version version
               use_ius true

@@ -37,7 +37,7 @@ action :install do
       raise 'Must use PHP >= 5.5 with ius enabled to use Zend Opcache.'
     end
 
-    all_php_packages << 'opcache'
+    all_php_packages <<= 'opcache'
 
     osl_php_ini '10-opcache' do
       options new_resource.opcache_conf

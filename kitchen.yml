@@ -164,13 +164,11 @@ suites:
           - 'devel'
           - 'fpm'
           - 'gd'
-          - 'opcache'
         use_ius: true
         use_opcache: true
-        opcache_conf:
-          opcache.enable_cli: 'true'
-          opcache.memory_consumption: 1024
-          opcache.max_accelerated_files: 1000
+          # opcache_conf: '{"opcache": {"enable_cli": true, "memory_consumption": 1024, "max_accelerated_files": 1000}}'
+          # opcache_conf: "{'enable_cli': true}"
+          # opcache_conf: '{"enable_cli": true}'
         version: '5.6'
     excludes:
       - almalinux-8
@@ -190,13 +188,12 @@ suites:
           - 'devel'
           - 'fpm'
           - 'gd'
-          - 'opcache'
         use_ius: true
         use_opcache: true
-        opcache:
-          opcache.enable_cli: 'true'
-          opcache.memory_consumption: 1024
-          opcache.max_accelerated_files: 1000
+          # opcache_conf:
+          # - ['opcache.enable_cli', 'true']
+          # - ['opcache.memory_consumption', 1024]
+          # - ['opcache.max_accelerated_files', 1000]
         version: '7.2'
     verifier:
       inspec_tests:
