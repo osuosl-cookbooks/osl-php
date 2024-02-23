@@ -15,8 +15,8 @@ action :install do
   system_php = new_resource.version.nil?
   version = new_resource.version.nil? ? php_version : new_resource.version
   shortver = version.delete('.') # version X.X -> XX
-  all_packages = new_resource.packages
-  all_php_packages = new_resource.php_packages
+  all_packages = new_resource.packages.to_a
+  all_php_packages = new_resource.php_packages.to_a
 
   # To avoid warnings about including recipes in a resource, do the same things these recipes do ---
   # include_recipe 'osl-selinux'
