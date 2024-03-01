@@ -61,25 +61,11 @@ action :install do
     node.default['yum']['ius-archive']['managed'] = true
 
     # include_recipe 'osl-repos::centos'
-    osl_repos_centos 'default'
-
-    include_recipe 'yum-osuosl'
-
-    # CentOS 7.8 updated ImageMagick which broke installations from ius-archive for php versions 7.1 and below
-    if enable_ius_archive && version.to_f <= 7.1
-      # This is an annoying workaround since the resource doesn't show up properly using the osl_repos_centos resource. We
-      # don't include this in metadata as it will mess up ordering but gets pulled in automatically with osl-repos
-      include_recipe 'yum-centos'
-
-      # Exclude all ImageMagick packages from the CentOS repos
-      node['yum-centos']['repos'].each do |repo|
-        next unless node['yum'][repo]['managed']
-        r = resources(yum_repository: repo)
-        # If we already have excludes, include them and append ImageMagick
-        r.exclude = [r.exclude, 'ImageMagick*'].flatten.compact.join(' ')
-      end
+    osl_repos_centos 'default' do
+      exclude 'ImageMagick*' if enable_ius_archive && version.to_f <= 7.1
     end
 
+    include_recipe 'yum-osuosl'
     include_recipe 'yum-ius'
 
     case version
