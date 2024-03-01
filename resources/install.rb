@@ -65,7 +65,15 @@ action :install do
       exclude 'ImageMagick*' if enable_ius_archive && version.to_f <= 7.1
     end
 
-    include_recipe 'yum-osuosl'
+    # include_recipe 'yum-osuosl'
+    yum_repository 'osuosl' do
+      repositoryid 'osuosl'
+      description 'OSUOSL repo $releasever - $basearch'
+      baseurl 'http://ftp.osuosl.org/pub/osl/repos/yum/$releasever/$basearch'
+      gpgkey 'http://ftp.osuosl.org/pub/osl/repos/yum/RPM-GPG-KEY-osuosl'
+      action :create
+    end
+
     include_recipe 'yum-ius'
 
     case version
