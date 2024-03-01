@@ -9,7 +9,7 @@ property :version, String
 property :use_composer, [true, false], default: false
 property :composer_version, String
 property :use_opcache, [true, false], default: false
-property :opcache_conf, Hash, default: lazy { opcache_conf }
+property :opcache_conf, Hash, default: lazy {}
 
 action :install do
   system_php = new_resource.version.nil?
@@ -40,7 +40,7 @@ action :install do
     all_php_packages <<= 'opcache'
 
     osl_php_ini '10-opcache' do
-      options new_resource.opcache_conf
+      options opcache_conf.merge!(new_resource.opcache_conf)
     end
   end
   # ---
