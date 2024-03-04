@@ -26,7 +26,9 @@ action :install do
   end
 
   # include_recipe 'osl-repos::epel'
-  osl_repos_epel 'default'
+  osl_repos_epel 'default' do
+    exclude %w(php73* php74*) if version == '7.2'
+  end
   #---
 
   prefix = 'php'
@@ -74,14 +76,21 @@ action :install do
       action :create
     end
 
+    case version.to_f
+    when 7.2
+      node.default['yum']['ius-archive']['exclude'] = 'php5* php71* php73* php74*'
+      node.default['yum']['ius']['exclude'] = 'php73* php74*'
+    end
     include_recipe 'yum-ius'
 
-    case version
-    when '7.2'
+    case version.to_f
+    when 7.2
       r_a = resources(yum_repository: 'ius-archive')
       r_a.exclude = [r_a.exclude, 'php5* php71* php73* php74*'].compact.join(' ')
       r = resources(yum_repository: 'ius')
       r.exclude = [r.exclude, 'php73* php74*'].compact.join(' ')
+      # r_e = resources(yum_repository: 'epel')
+      # r_e.exclude = [r_e.exclude, 'php73* php74*'].compact.join(' ')
     end
 
     # IUS has php versions as php72u-foo or php73-foo
