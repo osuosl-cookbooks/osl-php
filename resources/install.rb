@@ -64,7 +64,7 @@ action :install do
 
     # include_recipe 'osl-repos::centos'
     osl_repos_centos 'default' do
-      exclude 'ImageMagick*' if enable_ius_archive && version.to_f <= 7.1
+      exclude %w(ImageMagick*) if enable_ius_archive && version.to_f <= 7.1
     end
 
     # include_recipe 'yum-osuosl'

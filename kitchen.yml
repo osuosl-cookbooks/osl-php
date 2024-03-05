@@ -166,9 +166,6 @@ suites:
           - 'gd'
         use_ius: true
         use_opcache: true
-          # opcache_conf: '{"opcache": {"enable_cli": true, "memory_consumption": 1024, "max_accelerated_files": 1000}}'
-          # opcache_conf: "{'enable_cli': true}"
-          # opcache_conf: '{"enable_cli": true}'
         version: '5.6'
     excludes:
       - almalinux-8
@@ -190,18 +187,9 @@ suites:
           - 'gd'
         use_ius: true
         use_opcache: true
-          # opcache_conf:
-          # - ['opcache.enable_cli', 'true']
-          # - ['opcache.memory_consumption', 1024]
-          # - ['opcache.max_accelerated_files', 1000]
         version: '7.2'
     verifier:
       inspec_tests:
         - test/integration/opcache
       inputs:
         version: '7.2'
-
-  - name: php_packages
-    run_list:
-      - recipe[php_test::php_packages]
-      - recipe[php_test::phpinfo_apache]
