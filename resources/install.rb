@@ -83,16 +83,6 @@ action :install do
     end
     include_recipe 'yum-ius'
 
-    case version.to_f
-    when 7.2
-      r_a = resources(yum_repository: 'ius-archive')
-      r_a.exclude = [r_a.exclude, 'php5* php71* php73* php74*'].compact.join(' ')
-      r = resources(yum_repository: 'ius')
-      r.exclude = [r.exclude, 'php73* php74*'].compact.join(' ')
-      # r_e = resources(yum_repository: 'epel')
-      # r_e.exclude = [r_e.exclude, 'php73* php74*'].compact.join(' ')
-    end
-
     # IUS has php versions as php72u-foo or php73-foo
     prefix = "php#{shortver}#{'u' if version.to_f < 7.3}"
   end
