@@ -20,7 +20,7 @@ describe 'osl-php::composer' do
         expect(chef_run.node['composer']['url']).to eq('https://getcomposer.org/download/2.2.18/composer.phar')
       end
 
-      %w(php::default composer::default osl-selinux::default).each do |r|
+      %w(composer::default osl-selinux::default).each do |r|
         it do
           expect(chef_run).to include_recipe(r)
         end

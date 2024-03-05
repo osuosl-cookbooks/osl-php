@@ -34,7 +34,7 @@ describe 'osl-php::opcache' do
     context "on #{pltfrm[:platform]} #{pltfrm[:version]} with PHP5.4" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(pltfrm) do |node|
-          node.normal['php']['version'] = '5.4'
+          # node.normal['php']['version'] = '5.4'
           node.normal['osl-php']['use_opcache'] = true
         end.converge(described_recipe)
       end

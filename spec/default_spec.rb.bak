@@ -9,7 +9,7 @@ describe 'osl-php::default' do
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
       end
-      %w(osl-php::packages php::default osl-selinux::default).each do |r|
+      %w(osl-php::packages osl-selinux::default).each do |r|
         it do
           expect(chef_run).to include_recipe(r)
         end
@@ -30,7 +30,7 @@ describe 'osl-php::default' do
         context "on #{pltfrm[:platform]} #{pltfrm[:version]} with #{description}" do
           cached(:chef_run) do
             ChefSpec::SoloRunner.new(pltfrm) do |node|
-              node.normal['php']['version'] = php_v
+              # node.normal['php']['version'] = php_v
               node.normal['osl-php'].merge!(
                 'use_opcache' => use_opcache,
                 'php_packages' => []

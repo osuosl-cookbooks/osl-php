@@ -3,6 +3,7 @@ source 'https://supermarket.chef.io'
 solver :ruby, :required
 
 cookbook 'base', git: 'git@github.com:osuosl-cookbooks/base'
+cookbook 'php', git: 'git@github.com:ArtofBugs/php.git', branch: 'ArtofBugs/php-resources'
 cookbook 'osl-firewall', git: 'git@github.com:osuosl-cookbooks/osl-firewall'
 cookbook 'osl-apache', git: 'git@github.com:osuosl-cookbooks/osl-apache'
 cookbook 'osl-nrpe', git: 'git@github.com:osuosl-cookbooks/osl-nrpe'

@@ -1,8 +1,8 @@
 #
 # Cookbook:: osl-php
-# Recipe:: default
+# Recipe:: composer
 #
-# Copyright:: 2013-2023, Oregon State University
+# Copyright:: 2013-2024, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,19 +17,20 @@
 # limitations under the License.
 #
 
-include_recipe 'osl-selinux'
-include_recipe 'osl-repos::epel'
-include_recipe 'osl-php::opcache' if node['osl-php']['use_opcache']
-include_recipe 'osl-php::packages'
-include_recipe 'php::default'
+resource_name :osl_php_composer
+provides :osl_php_composer
+unified_mode true
 
-php_ini 'timezone' do
-  options('date.timezone' => 'UTC')
-end
+property :version, String, default: lazy { composer_version }
 
-%w(phpcheck phpshow).each do |file|
-  cookbook_file "/usr/local/bin/#{file}" do
-    source file
-    mode '755'
+action :install do
+  # include_recipe 'osl-selinux'
+  selinux_install 'osl-selinux'
+  selinux_state 'osl-selinux' do
+    action :enforcing
   end
+
+  php_install 'default'
+  node.default['composer']['url'] = "https://getcomposer.org/download/#{new_resource.version}/composer.phar"
+  include_recipe 'composer::default'
 end
