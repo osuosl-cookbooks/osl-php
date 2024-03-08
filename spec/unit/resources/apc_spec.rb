@@ -21,7 +21,7 @@ describe 'osl_php_apc' do
 
   it do
     is_expected.to install_php_pear('APC')
-    is_expected.to install_build_essential('APC')
+    # is_expected.to install_build_essential('APC')
     is_expected.to add_osl_php_ini('APC').with(
       options: {
         'extension' => 'apc.so',

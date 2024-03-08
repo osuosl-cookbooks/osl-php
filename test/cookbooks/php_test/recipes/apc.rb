@@ -1,3 +1,1 @@
-osl_php_apc 'apc' do
-  options 'test' => 'test_option'
-end
+osl_php_apc 'apc'

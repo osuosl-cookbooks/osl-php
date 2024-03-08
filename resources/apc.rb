@@ -24,7 +24,7 @@ action :install do
     end
   end
 
-  build_essential 'APC'
+  # build_essential 'APC'  <-- the php_pear resource does this already
 
   php_pear 'APC' do
     action :install
@@ -33,7 +33,6 @@ action :install do
   end
 
   osl_php_ini 'APC' do
-    action :add
     options new_resource.options
   end
 end
