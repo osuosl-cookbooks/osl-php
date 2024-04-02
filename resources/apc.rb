@@ -29,7 +29,7 @@ action :install do
   php_pear 'APC' do
     action :install
     # Use channel 'pecl' since APC is not available on the default channel
-    channel 'pecl'
+    channel 'pecl.php.net'
   end
 
   osl_php_ini 'APC' do
