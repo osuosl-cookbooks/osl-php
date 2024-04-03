@@ -13,10 +13,8 @@ describe 'osl_php_apc' do
     is_expected.to install_selinux_install('osl-selinux')
   end
 
-  %w(httpd-devel pcre pcre-devel).each do |pkg|
-    it do
-      is_expected.to install_package(pkg)
-    end
+  it do
+    is_expected.to install_package(%w(httpd-devel pcre pcre-devel))
   end
 
   it do

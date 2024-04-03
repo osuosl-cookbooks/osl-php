@@ -18,11 +18,7 @@ action :install do
     action :enforcing
   end
 
-  %w(httpd-devel pcre pcre-devel).each do |pkg|
-    package pkg do
-      action :install
-    end
-  end
+  package %w(httpd-devel pcre pcre-devel)
 
   # build_essential 'APC'  <-- the php_pear resource does this already
 
