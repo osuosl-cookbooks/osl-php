@@ -13,7 +13,7 @@ property :opcache_conf, Hash, default: lazy {}
 
 action :install do
   system_php = new_resource.version.nil?
-  version = new_resource.version.nil? ? php_version : new_resource.version
+  version = new_resource.version || php_version
   shortver = version.delete('.') # version X.X -> XX
   all_packages = new_resource.packages.to_a
   all_php_packages = new_resource.php_packages.to_a
@@ -116,8 +116,12 @@ action :install do
                      end
   end
 
+  if all_packages.empty?
+    all_packages = php_installation_packages
+  end
+
   php_install 'all-packages' do
-    packages all_packages.empty? ? php_installation_packages : all_packages
+    packages all_packages
   end
 
   # Include pear package (pear1 for PHP 7.1+ on C7)
