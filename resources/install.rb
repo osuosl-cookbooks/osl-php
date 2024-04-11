@@ -39,8 +39,6 @@ action :install do
       raise 'Must use PHP >= 5.5 with ius enabled to use Zend Opcache.'
     end
 
-    all_php_packages <<= 'opcache'
-
     osl_php_ini '10-opcache' do
       options opcache_conf.merge!(new_resource.opcache_conf)
     end
@@ -104,7 +102,6 @@ action :install do
   all_packages.delete_if { |p| p.match? /pecl-imagick/ } if node['platform_version'].to_i >= 8 && system_php
 
   # add the mod_php package, which is 'mod_php' in IUS or just 'php' otherwise
-  # TODO: original logic checks if `packages` is empty first - check if that's necessary here
   if all_packages.any?
     all_packages <<= if node['platform_version'].to_i == 7 && version.to_i >= 7 && !system_php
                        # When installing the main PHP (>= 7.0) package directly, like
@@ -119,6 +116,11 @@ action :install do
   if all_packages.empty?
     all_packages = php_installation_packages
   end
+
+  if new_resource.use_opcache
+    all_packages <<= "#{prefix}-opcache"
+  end
+
 
   php_install 'all-packages' do
     packages all_packages
