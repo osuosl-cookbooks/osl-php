@@ -15,6 +15,9 @@ describe 'osl_php_install' do
     is_expected.to install_selinux_install('osl-selinux')
     is_expected.to enforcing_selinux_state('osl-selinux')
 
+    # php_version is 7.2 by default for RHEL
+    is_expected.to add_osl_repos_epel('default').with(exclude: %w(php73* php74*))
+
     # elements from the spec for the old default recipe
     is_expected.to add_osl_php_ini('timezone').with(options: { 'date.timezone' => 'UTC' })
     is_expected.to_not add_osl_php_ini('10-opcache')
@@ -32,6 +35,10 @@ describe 'osl_php_install' do
       osl_php_install 'defaults with opcache' do
         use_opcache true
       end
+    end
+
+    it do
+      expect { chef_run }.to raise_error RuntimeError
     end
   end
 
@@ -81,8 +88,33 @@ describe 'osl_php_install' do
       end
       it do
         # TODO: add others
-        is_expected.to_not include_recipe('yum-centos') # version = 7.4
+        is_expected.to add_osl_repos_centos('default').with(exclude: []) # version = 7.4
         is_expected.to include_recipe('yum-ius')
+      end
+    end
+
+    context 'Using OPCache' do
+      cached(:subject) { chef_run }
+      recipe do
+        osl_php_install 'defaults with opcache' do
+          use_opcache true
+          use_ius true
+          opcache_conf('foo' => 'bar')
+        end
+      end
+      it do
+        is_expected.to add_osl_php_ini('10-opcache').with(
+          options: {
+            'foo' => 'bar',
+            'opcache.blacklist_filename' => '/etc/php.d/opcache*.blacklist',
+            'opcache.enable' => 1,
+            'opcache.interned_strings_buffer' => 8,
+            'opcache.max_accelerated_files' => 4000,
+            'opcache.memory_consumption' => 128,
+            'zend_extension' => 'opcache.so',
+          }
+        )
+        is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear php72-opcache))
       end
     end
   end
@@ -92,14 +124,14 @@ describe 'osl_php_install' do
 
     recipe do
       osl_php_install 'packages' do
-        packages %w(graphviz-php pecl-imagick)
+        packages %w(graphviz-php pecl-imagick php-cli)
       end
     end
 
     it do
-      is_expected.to install_php_install('all-packages').with(packages: %w(graphviz-php php))
+      is_expected.to install_php_install('all-packages').with(packages: %w(graphviz-php php-cli php))
       is_expected.to install_package('php-pear')
-      is_expected.not_to install_package(%w(php-graphviz-php pecl-imagick php-cli php-devel))
+      is_expected.not_to install_package(%w(php-graphviz-php php-pecl-imagick php-php-cli php-devel))
     end
 
     context 'CentOS 7' do
@@ -108,14 +140,14 @@ describe 'osl_php_install' do
 
       recipe do
         osl_php_install 'packages' do
-          packages %w(graphviz-php pecl-imagick)
+          packages %w(graphviz-php pecl-imagick php-cli)
         end
       end
 
       it do
-        is_expected.to install_php_install('all-packages').with(packages: %w(graphviz-php pecl-imagick php))
+        is_expected.to install_php_install('all-packages').with(packages: %w(graphviz-php pecl-imagick php-cli php))
         is_expected.to install_package('php-pear')
-        is_expected.not_to install_package(%w(php-cli php-devel))
+        is_expected.not_to install_package(%w(php-graphviz-php php-pecl-imagick php-php-cli php-devel))
       end
 
       context 'using IUS' do
@@ -139,6 +171,9 @@ describe 'osl_php_install' do
       prefix = 'php'
 
       it do
+        is_expected.to add_osl_repos_epel('default').with(exclude: []) if version != '7.2'
+        is_expected.to add_osl_repos_epel('default').with(exclude: %w(php73* php74*)) if version == '7.2'
+
         is_expected.to install_php_install('all-packages').with(packages: ["#{prefix}-devel", 'php'])
         is_expected.to install_package("#{prefix}-pear")
         is_expected.to_not install_package(%w(pecl-imagick php-cli))
@@ -156,7 +191,6 @@ describe 'osl_php_install' do
         end
 
         prefix = 'php'
-        # prefix = "php#{version.delete('.')}#{version.to_f < 7.3 ? 'u' : ''}"
 
         it do
           if version.to_i == 7
@@ -180,12 +214,11 @@ describe 'osl_php_install' do
             end
           end
           it do
+            prefix = "php#{version.delete('.')}#{version.to_f < 7.3 ? 'u' : ''}"
             # TODO: add others
             is_expected.to include_recipe('yum-ius')
-            is_expected.to include_recipe('yum-centos') if
-              version.to_i == 7 \
-              && version.to_f <= 7.1 \
-              && ius_archive_versions.include?(version)
+            is_expected.to add_osl_repos_centos('default').with(exclude: %w(ImageMagick*)) if version.to_f <= 7.1
+            is_expected.to add_osl_repos_centos('default').with(exclude: []) if version.to_f > 7.1
           end
         end
       end
