@@ -1,6 +1,3 @@
-# Chef::Log.info("opcache_conf = #{node.default['php_test']['opcache_conf']}")
-# options = JSON.parse(node.default['php_test']['opcache_conf'])
-# options = node.default['php_test']['opcache_conf'].to_h()
 options = {
   'opcache.enable_cli': true,
   'opcache.memory_consumption': 1024,

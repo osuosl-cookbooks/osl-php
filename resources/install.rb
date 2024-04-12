@@ -9,7 +9,7 @@ property :version, String
 property :use_composer, [true, false], default: false
 property :composer_version, String
 property :use_opcache, [true, false], default: false
-property :opcache_conf, Hash, default: lazy {}
+property :opcache_conf, Hash, default: {}
 
 action :install do
   system_php = new_resource.version.nil?
@@ -35,8 +35,13 @@ action :install do
 
   # opcache
   if new_resource.use_opcache
-    if version.to_f < 5.5 || !new_resource.use_ius
-      raise 'Must use PHP >= 5.5 with ius enabled to use Zend Opcache.'
+    if version.to_f < 5.5 || (node['platform_version'].to_i == 7 && !new_resource.use_ius)
+      err = 'Must use PHP >= 5.5 '
+      if node['platform_version'].to_i == 7 && !new_resource.use_ius
+        err += 'with IUS enabled '
+      end
+      err += 'to use OPcache.'
+      raise err
     end
 
     osl_php_ini '10-opcache' do
@@ -48,7 +53,7 @@ action :install do
   # include_recipe 'osl-php::packages' -------------------------------------------------------------------------------
 
   # === use IUS repo on EL7 ===
-  if node['platform_version'].to_i == 7 && new_resource.use_ius
+  if new_resource.use_ius && node['platform_version'].to_i == 7
     # default to 7.4 if version not explicitly set
     if system_php
       system_php = false
@@ -86,7 +91,7 @@ action :install do
   end
 
   # === use Remi dnf modules on EL8 ===
-  if node['platform_version'] >= 8 && !system_php
+  if !system_php && node['platform_version'] >= 8
     # enable powertools repo for libedit-devel
     osl_repos_centos 'default' if platform?('centos')
     osl_repos_alma 'default' if platform?('almalinux')
@@ -120,7 +125,6 @@ action :install do
   if new_resource.use_opcache
     all_packages <<= "#{prefix}-opcache"
   end
-
 
   php_install 'all-packages' do
     packages all_packages

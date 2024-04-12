@@ -29,19 +29,6 @@ describe 'osl_php_install' do
     is_expected.to_not add_osl_repos_alma('default')
   end
 
-  context 'OPcache' do
-    cached(:subject) { chef_run }
-    recipe do
-      osl_php_install 'defaults with opcache' do
-        use_opcache true
-      end
-    end
-
-    it do
-      expect { chef_run }.to raise_error RuntimeError
-    end
-  end
-
   context 'Using IUS' do
     cached(:subject) { chef_run }
     recipe do
@@ -52,6 +39,33 @@ describe 'osl_php_install' do
 
     it do
       is_expected.to_not include_recipe('yum-ius')
+    end
+  end
+
+  context 'Using OPcache' do
+    cached(:subject) { chef_run }
+    recipe do
+      osl_php_install 'opcache' do
+        use_opcache true
+      end
+    end
+
+    it do
+      is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear php-opcache))
+    end
+  end
+
+  context 'Fail OPcache due to version' do
+    cached(:subject) { chef_run }
+    recipe do
+      osl_php_install 'fail opcache' do
+        use_opcache true
+        version '5.4'
+      end
+    end
+
+    it do
+      expect { chef_run }.to raise_error RuntimeError
     end
   end
 
@@ -99,22 +113,40 @@ describe 'osl_php_install' do
         osl_php_install 'defaults with opcache' do
           use_opcache true
           use_ius true
-          opcache_conf('foo' => 'bar')
+          opcache_conf(
+            'opcache.memory_consumption' => 256,
+            'opcache.enable_cli' => 1,
+            'opcache.taco salad' => 'without the shell, please.'
+          )
         end
       end
       it do
         is_expected.to add_osl_php_ini('10-opcache').with(
           options: {
-            'foo' => 'bar',
             'opcache.blacklist_filename' => '/etc/php.d/opcache*.blacklist',
             'opcache.enable' => 1,
+            'opcache.enable_cli' => 1,
             'opcache.interned_strings_buffer' => 8,
             'opcache.max_accelerated_files' => 4000,
-            'opcache.memory_consumption' => 128,
+            'opcache.memory_consumption' => 256,
+            'opcache.taco salad' => 'without the shell, please.',
             'zend_extension' => 'opcache.so',
           }
         )
         is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear php72-opcache))
+      end
+    end
+
+    context 'Fail OPcache due to no IUS' do
+      cached(:subject) { chef_run }
+      recipe do
+        osl_php_install 'fail opcache' do
+          use_opcache true
+        end
+      end
+
+      it do
+        expect { chef_run }.to raise_error RuntimeError
       end
     end
   end

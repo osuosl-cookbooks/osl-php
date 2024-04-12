@@ -49,7 +49,6 @@ suites:
           - 'devel'
           - 'fpm'
           - 'gd'
-        system_php: true
     verifier:
       inputs:
         system_php: true
@@ -193,3 +192,22 @@ suites:
         - test/integration/opcache
       inputs:
         version: '7.2'
+  - name: opcache-php81
+    run_list:
+      - recipe[php_test::packages]
+      - recipe[php_test::phpinfo_apache]
+    attributes:
+      php_test:
+        php_packages:
+          - 'devel'
+          - 'fpm'
+          - 'gd'
+        use_opcache: true
+        version: '8.1'
+    verifier:
+      inspec_tests:
+        - test/integration/opcache
+      inputs:
+        version: '8.1'
+    excludes:
+      - centos-7

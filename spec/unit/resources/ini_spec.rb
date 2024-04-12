@@ -7,7 +7,7 @@ describe 'osl_php_ini' do
 
   recipe do
     osl_php_ini 'default' do
-      options data: {'test' => 'test'}
+      options data: { 'test' => 'test' }
     end
   end
 
@@ -53,7 +53,7 @@ describe 'osl_php_ini' do
 
     it do
       is_expected.to create_template('/etc/php.d/with_sections.ini').with(
-        variables: {:data => with_sections}
+        variables: { data: with_sections }
       )
     end
   end
