@@ -148,7 +148,7 @@ describe 'osl_php_install' do
     context 'Using OPCache' do
       cached(:subject) { chef_run }
       recipe do
-        osl_php_install 'defaults with opcache conf' do
+        osl_php_install 'defaults with opcache' do
           use_opcache true
           use_ius true
         end
@@ -202,35 +202,18 @@ describe 'osl_php_install' do
         is_expected.not_to install_package(%w(php-graphviz-php php-pecl-imagick php-php-cli php-devel))
       end
 
-      context 'using IUS' do
+      context 'Using IUS' do
       end
 
-      context 'using opcache' do
+      context 'Using OPcache' do
         cached(:subject) { chef_run }
         recipe do
           osl_php_install 'defaults with opcache' do
             use_opcache true
             use_ius true
-            opcache_conf(
-              'opcache.memory_consumption' => 256,
-              'opcache.enable_cli' => 1,
-              'opcache.taco salad' => 'without the shell, please.'
-            )
           end
         end
         it do
-          is_expected.to add_osl_php_ini('10-opcache').with(
-            options: {
-              'opcache.blacklist_filename' => '/etc/php.d/opcache*.blacklist',
-              'opcache.enable' => 1,
-              'opcache.enable_cli' => 1,
-              'opcache.interned_strings_buffer' => 8,
-              'opcache.max_accelerated_files' => 4000,
-              'opcache.memory_consumption' => 256,
-              'opcache.taco salad' => 'without the shell, please.',
-              'zend_extension' => 'opcache.so',
-            }
-          )
           is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear php72-opcache))
         end
       end
@@ -250,14 +233,12 @@ describe 'osl_php_install' do
         end
       end
 
-      prefix = 'php'
-
       it do
         is_expected.to add_osl_repos_epel('default').with(exclude: []) if version != '7.2'
         is_expected.to add_osl_repos_epel('default').with(exclude: %w(php73* php74*)) if version == '7.2'
 
-        is_expected.to install_php_install('all-packages').with(packages: ["#{prefix}-devel", 'php'])
-        is_expected.to install_package("#{prefix}-pear")
+        is_expected.to install_php_install('all-packages').with(packages: ['php-devel', 'php'])
+        is_expected.to install_package('php-pear')
         is_expected.to_not install_package(%w(pecl-imagick php-cli))
       end
 
@@ -276,14 +257,14 @@ describe 'osl_php_install' do
 
         it do
           if version.to_i == 7
-            is_expected.to install_php_install('all-packages').with(packages: ["#{prefix}-devel", 'mod_php'])
+            is_expected.to install_php_install('all-packages').with(packages: ['php-devel', 'mod_php'])
             is_expected.to install_package('pear1')
           else
-            is_expected.to install_php_install('all-packages').with(packages: ["#{prefix}-devel", 'php'])
-            is_expected.to install_package("#{prefix}-pear")
+            is_expected.to install_php_install('all-packages').with(packages: ['php-devel', 'php'])
+            is_expected.to install_package('php-pear')
           end
 
-          is_expected.to_not install_package("pecl-imagick #{prefix}-php-cli")
+          is_expected.to_not install_package('pecl-imagick php-php-cli')
         end
 
         context 'Using IUS' do
@@ -301,6 +282,26 @@ describe 'osl_php_install' do
             is_expected.to include_recipe('yum-ius')
             is_expected.to add_osl_repos_centos('default').with(exclude: %w(ImageMagick*)) if version.to_f <= 7.1
             is_expected.to add_osl_repos_centos('default').with(exclude: []) if version.to_f > 7.1
+          end
+        end
+
+        context 'Using OPcache' do
+          cached(:subject) { chef_run }
+          recipe do
+            osl_php_install 'packages' do
+              php_packages %w(devel)
+              version version
+              use_ius true
+              use_opcache true
+            end
+          end
+          it do
+            prefix = "php#{version.delete('.')}#{version.to_f < 7.3 ? 'u' : ''}"
+            if version.to_i == 7
+              is_expected.to install_php_install('all-packages').with(packages: ["#{prefix}-devel", "mod_#{prefix}", "#{prefix}-opcache"])
+            else
+              is_expected.to install_php_install('all-packages').with(packages: ["#{prefix}-devel", "#{prefix}", "#{prefix}-opcache"])
+            end
           end
         end
       end
