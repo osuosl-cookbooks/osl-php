@@ -7,7 +7,7 @@ property :php_packages, Array, default: []
 property :use_ius, [true, false], default: false
 property :version, String
 property :use_composer, [true, false], default: false
-property :composer_version, String
+property :composer_version, String, default: '2.2.18'
 property :use_opcache, [true, false], default: false
 property :opcache_conf, Hash, default: {}
 
@@ -58,6 +58,7 @@ action :install do
     if system_php
       system_php = false
       version = '7.4'
+      shortver = version.delete('.')
     end
 
     # Enable IUS archive repo for archived versions

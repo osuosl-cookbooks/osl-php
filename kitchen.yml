@@ -60,7 +60,6 @@ suites:
     attributes:
       php_test:
         use_ius: true
-        version: '7.4'
     excludes:
       - almalinux-8
     verifier:

@@ -23,7 +23,22 @@ describe 'osl_php_install' do
     is_expected.to_not add_osl_php_ini('10-opcache')
 
     is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear))
+    is_expected.to_not install_package(%w(pecl-imagick mod_php php-opcache pear1))
+    # Don't install php-pear twice since it's already part of default packages
     is_expected.to_not install_package('php-pear')
+
+    is_expected.to create_cookbook_file('/usr/local/bin/phpcheck').with(
+      path: '/usr/local/bin/phpcheck',
+      source: 'phpcheck',
+      mode: '755',
+      cookbook: 'osl-php'
+    )
+    is_expected.to create_cookbook_file('/usr/local/bin/phpshow').with(
+      path: '/usr/local/bin/phpshow',
+      source: 'phpshow',
+      mode: '755',
+      cookbook: 'osl-php'
+    )
 
     is_expected.to_not add_osl_repos_centos('default')
     is_expected.to_not add_osl_repos_alma('default')
@@ -112,7 +127,6 @@ describe 'osl_php_install' do
     recipe do
       osl_php_install 'defaults with composer' do
         use_composer true
-        composer_version '2.2.18'
       end
     end
     it do
@@ -121,13 +135,30 @@ describe 'osl_php_install' do
         mode: '755'
       )
     end
+
+    context 'Composer version' do
+      cached(:subject) { chef_run }
+      recipe do
+        osl_php_install 'defaults with composer version' do
+          use_composer true
+          composer_version '2.2.17'
+        end
+      end
+      it do
+        is_expected.to create_if_missing_remote_file('/usr/local/bin/composer').with(
+          source: 'https://getcomposer.org/download/2.2.17/composer.phar',
+        )
+      end
+    end
   end
 
   context 'CentOS 7' do
     cached(:subject) { chef_run }
     platform 'centos', '7'
     it do
+      is_expected.to add_osl_repos_epel('default').with(exclude: %w(php73* php74*))
       is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear))
+      # Don't install php-pear twice since it's already part of default packages
       is_expected.to_not install_package('php-pear')
     end
 
@@ -139,9 +170,10 @@ describe 'osl_php_install' do
         end
       end
       it do
-        # TODO: add others
         is_expected.to add_osl_repos_centos('default').with(exclude: []) # version = 7.4
+        is_expected.to create_yum_repository('osuosl')
         is_expected.to include_recipe('yum-ius')
+        is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear))
       end
     end
 
@@ -154,7 +186,7 @@ describe 'osl_php_install' do
         end
       end
       it do
-        is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear php72-opcache))
+        is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear php74-opcache))
       end
 
       context 'Fail OPcache due to no IUS' do
@@ -214,7 +246,7 @@ describe 'osl_php_install' do
           end
         end
         it do
-          is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear php72-opcache))
+          is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear php74-opcache))
         end
       end
     end
@@ -237,7 +269,7 @@ describe 'osl_php_install' do
         is_expected.to add_osl_repos_epel('default').with(exclude: []) if version != '7.2'
         is_expected.to add_osl_repos_epel('default').with(exclude: %w(php73* php74*)) if version == '7.2'
 
-        is_expected.to install_php_install('all-packages').with(packages: ['php-devel', 'php'])
+        is_expected.to install_php_install('all-packages').with(packages: %w(php-devel php))
         is_expected.to install_package('php-pear')
         is_expected.to_not install_package(%w(pecl-imagick php-cli))
       end
@@ -257,10 +289,10 @@ describe 'osl_php_install' do
 
         it do
           if version.to_i == 7
-            is_expected.to install_php_install('all-packages').with(packages: ['php-devel', 'mod_php'])
+            is_expected.to install_php_install('all-packages').with(packages: %w(php-devel mod_php))
             is_expected.to install_package('pear1')
           else
-            is_expected.to install_php_install('all-packages').with(packages: ['php-devel', 'php'])
+            is_expected.to install_php_install('all-packages').with(packages: %w(php-devel php))
             is_expected.to install_package('php-pear')
           end
 
