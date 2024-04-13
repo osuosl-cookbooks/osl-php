@@ -146,7 +146,7 @@ describe 'osl_php_install' do
       end
       it do
         is_expected.to create_if_missing_remote_file('/usr/local/bin/composer').with(
-          source: 'https://getcomposer.org/download/2.2.17/composer.phar',
+          source: 'https://getcomposer.org/download/2.2.17/composer.phar'
         )
       end
     end
@@ -214,8 +214,22 @@ describe 'osl_php_install' do
 
     it do
       is_expected.to install_php_install('all-packages').with(packages: %w(graphviz-php php-cli php))
+      is_expected.to_not install_package('pecl-imagick')
       is_expected.to install_package('php-pear')
       is_expected.not_to install_package(%w(php-graphviz-php php-pecl-imagick php-php-cli php-devel))
+    end
+
+    context 'Using OPcache' do
+      cached(:subject) { chef_run }
+      recipe do
+        osl_php_install 'non-prefixed packages with opcache' do
+          packages %w(graphviz-php pecl-imagick php-cli)
+          use_opcache true
+        end
+      end
+      it do
+        is_expected.to install_php_install('all-packages').with(packages: %w(graphviz-php php-cli php php-opcache))
+      end
     end
 
     context 'CentOS 7' do
@@ -234,19 +248,17 @@ describe 'osl_php_install' do
         is_expected.not_to install_package(%w(php-graphviz-php php-pecl-imagick php-php-cli php-devel))
       end
 
-      context 'Using IUS' do
-      end
-
       context 'Using OPcache' do
         cached(:subject) { chef_run }
         recipe do
-          osl_php_install 'defaults with opcache' do
-            use_opcache true
+          osl_php_install 'non-prefixed packages with opcache' do
+            packages %w(graphviz-php pecl-imagick php-cli)
             use_ius true
+            use_opcache true
           end
         end
         it do
-          is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear php74-opcache))
+          is_expected.to install_php_install('all-packages').with(packages: %w(graphviz-php pecl-imagick php-cli mod_php74 php74-opcache))
         end
       end
     end
