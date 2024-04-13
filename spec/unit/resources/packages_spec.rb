@@ -278,8 +278,21 @@ describe 'osl_php_install' do
       end
 
       it do
-        is_expected.to add_osl_repos_epel('default').with(exclude: []) if version != '7.2'
-        is_expected.to add_osl_repos_epel('default').with(exclude: %w(php73* php74*)) if version == '7.2'
+        if version == '7.2'
+          is_expected.to add_osl_repos_epel('default').with(exclude: %w(php73* php74*))
+        else
+          is_expected.to add_osl_repos_epel('default').with(exclude: [])
+        end
+
+        is_expected.to add_osl_repos_alma('default')
+        case version
+        when '5.6'
+          is_expected.to create_yum_remi_php56('default')
+        when '7.2'
+          is_expected.to create_yum_remi_php72('default')
+        when '7.4'
+          is_expected.to create_yum_remi_php74('default')
+        end
 
         is_expected.to install_php_install('all-packages').with(packages: %w(php-devel php))
         is_expected.to install_package('php-pear')
@@ -289,7 +302,6 @@ describe 'osl_php_install' do
       context 'CentOS 7' do
         cached(:subject) { chef_run }
         platform 'centos', '7'
-
         recipe do
           osl_php_install 'packages' do
             php_packages %w(devel)
@@ -297,10 +309,8 @@ describe 'osl_php_install' do
           end
         end
 
-        prefix = 'php'
-
         it do
-          if version.to_i == 7
+          if version.to_i >= 7
             is_expected.to install_php_install('all-packages').with(packages: %w(php-devel mod_php))
             is_expected.to install_package('pear1')
           else
@@ -308,7 +318,7 @@ describe 'osl_php_install' do
             is_expected.to install_package('php-pear')
           end
 
-          is_expected.to_not install_package('pecl-imagick php-php-cli')
+          is_expected.to_not install_package('pecl-imagick php-cli')
         end
 
         context 'Using IUS' do
@@ -322,10 +332,19 @@ describe 'osl_php_install' do
           end
           it do
             prefix = "php#{version.delete('.')}#{version.to_f < 7.3 ? 'u' : ''}"
-            # TODO: add others
-            is_expected.to include_recipe('yum-ius')
+
             is_expected.to add_osl_repos_centos('default').with(exclude: %w(ImageMagick*)) if version.to_f <= 7.1
             is_expected.to add_osl_repos_centos('default').with(exclude: []) if version.to_f > 7.1
+
+            is_expected.to include_recipe('yum-ius')
+
+            if version.to_f >= 7
+              is_expected.to install_php_install('all-packages').with(packages: ["#{prefix}-devel", "mod_#{prefix}"])
+              is_expected.to install_package('pear1')
+            else
+              is_expected.to install_php_install('all-packages').with(packages: ["#{prefix}-devel", "#{prefix}"])
+              is_expected.to install_package("#{prefix}-pear")
+            end
           end
         end
 
