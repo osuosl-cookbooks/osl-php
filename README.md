@@ -88,7 +88,7 @@ This is not compatible with PHP packages from IUS Community repos, so an excepti
 ## Resources
 
 ### osl\_php\_install
-This resource is used to install php packages.
+This resource is used to install PHP packages. It will also add an ini file to set the timezone to UTC and install phpcheck and phpshow by default.
 
 #### Actions
 * `:install` - Default action. Installs the given packages using the given properties.
@@ -106,41 +106,62 @@ This resource is used to install php packages.
   <tr>
     <td>packages</td>
     <td align="center">Array</td>
-     <td align="center">`osl_php_installation_packages` helper</td>
+     <td align="center">`[]`; if both `packages` and `php_packages` are empty, the`php_installation_packages` helper determines what is installed.</td>
     <td>Full names of specific packages to install. The primary PHP and PEAR packages will be installed automatically, so they don't need to be specified here.</td>
     <td>false</td>
   </tr>
   <tr>
     <td>php_packages</td>
     <td align="center">Array</td>
-    <td align="center"></td>
+    <td align="center">`[]`; if both `packages` and `php_packages` are empty, the `php_installation_packages` helper determines what is installed.</td>
     <td>List of names of packages that should be installed with prefixed names(`phpX.X-` or `phpX.Xu-`), specified without the prefixes. The resource will add the appropriate prefixes to these names and install the packages.</td>
     <td>false</td>
   </tr>
   <tr>
     <td>version</td>
     <td align="center">String</td>
-    <td align="center">`osl_php_version()` helper</td>
-    <td>Php version to install.</td>
+    <td align="center">`nil`; when `nil`, the `php_version()` helper determines what version is installed.</td>
+    <td>PHP version to install.</td>
     <td>false</td>
   </tr>
   <tr>
     <td>use_ius</td>
     <td align="center">[true, false]</td>
     <td align="center">false</td>
-    <td>Whether to install from IUS (Inline with Upstream Stable) repositories..</td>
+    <td>Whether to install from IUS (Inline with Upstream Stable) repositories.</td>
+    <td>false</td>
+  </tr>
+  <tr>
+    <td>use_composer</td>
+    <td align="center">[true, false]</td>
+    <td align="center">false</td>
+    <td>Whether to install Composer.</td>
+    <td>false</td>
+  </tr>
+  <tr>
+    <td>composer_version</td>
+    <td align="center">String</td>
+    <td align="center">'2.2.18'</td>
+    <td>Composer version to install.</td>
     <td>false</td>
   </tr>
   <tr>
     <td>use_opcache</td>
     <td align="center">[true, false]</td>
     <td align="center">false</td>
-    <td>Whether to install PHP OPcache and configure Zend OPcache using an ini file.</td>
+    <td>Whether to install PHP OPcache (and configure Zend OPcache with an ini file).</td>
+    <td>false</td>
+  </tr>
+  <tr>
+    <td>opcache_conf</td>
+    <td align="center">Hash</td>
+    <td align="center">{}</td>
+    <td>Configuration to add to a `10-opcache` ini file. The options in the `opcache_conf` helper are added by default. Any options set in this property override repeats in the helper.</td>
     <td>false</td>
   </tr>
 </table>
 
-### php\_ini
+### osl\_php\_ini
 This resource is used to create ini files for PHP configuration.
 
 #### Actions
@@ -168,7 +189,7 @@ This resource is used to create ini files for PHP configuration.
   <tr>
     <td>options</td>
     <td align="center">Hash</td>
-    <td align="center">{ }</td>
+    <td align="center">{}</td>
     <td>A hash for configuring the ini file. A basic hash with keys and values of type string will render the file with 'key'='value'. Nesting a basic hash so the key is string and the value is another hash will create a section with the string as the name, and the hash value will render with 'key'='value'</td>
     <td>true</td>
   </tr>
@@ -176,7 +197,7 @@ This resource is used to create ini files for PHP configuration.
     <td>mode</td>
     <td align="center">String</td>
     <td align="center">'0644'</td>
-    <td>Unix file mode of .ini file</td>
+    <td>Unix file mode of ini file</td>
     <td>false</td>
   </tr>
 </table>
