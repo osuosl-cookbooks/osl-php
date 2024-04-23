@@ -106,21 +106,21 @@ This resource is used to install PHP packages. It will also add an ini file to s
   <tr>
     <td>packages</td>
     <td align="center">Array</td>
-     <td align="center">`[]`; if both `packages` and `php_packages` are empty, the`php_installation_packages` helper determines what is installed.</td>
+    <td align="center"><code>[]</code><br>If both <code>packages</code> and <code>php_packages</code> are empty, the <code>php_installation_packages</code> helper determines what is installed.</td>
     <td>Full names of specific packages to install. The primary PHP and PEAR packages will be installed automatically, so they don't need to be specified here.</td>
     <td>false</td>
   </tr>
   <tr>
     <td>php_packages</td>
     <td align="center">Array</td>
-    <td align="center">`[]`; if both `packages` and `php_packages` are empty, the `php_installation_packages` helper determines what is installed.</td>
-    <td>List of names of packages that should be installed with prefixed names(`phpX.X-` or `phpX.Xu-`), specified without the prefixes. The resource will add the appropriate prefixes to these names and install the packages.</td>
+    <td align="center"><code>[]</code><br>If both <code>packages</code> and <code>php_packages</code> are empty, the <code>php_installation_packages</code> helper determines what is installed.</td>
+    <td>List of names of packages that should be installed with prefixed names (<code>phpX.X-</code> or <code>phpX.Xu-</code>), specified without the prefixes. The resource will add the appropriate prefixes to these names and install the packages.</td>
     <td>false</td>
   </tr>
   <tr>
     <td>version</td>
     <td align="center">String</td>
-    <td align="center">`nil`; when `nil`, the `php_version()` helper determines what version is installed.</td>
+    <td align="center"><code>nil</code><br>When <code>nil</code>, the <code>php_version()</code> helper determines what version is installed.</td>
     <td>PHP version to install.</td>
     <td>false</td>
   </tr>
@@ -155,8 +155,8 @@ This resource is used to install PHP packages. It will also add an ini file to s
   <tr>
     <td>opcache_conf</td>
     <td align="center">Hash</td>
-    <td align="center">{}</td>
-    <td>Configuration to add to a `10-opcache` ini file. The options in the `opcache_conf` helper are added by default. Any options set in this property override repeats in the helper.</td>
+    <td align="center"><code>{}</code></td>
+    <td>Configuration to add to a <code>10-opcache.ini</code> file. The options in the <code>opcache_conf</code> helper are added by default. Any options set in this property override duplicates in the helper.</td>
     <td>false</td>
   </tr>
 </table>
@@ -189,7 +189,7 @@ This resource is used to create ini files for PHP configuration.
   <tr>
     <td>options</td>
     <td align="center">Hash</td>
-    <td align="center">{}</td>
+    <td align="center"><code>{}</code></td>
     <td>A hash for configuring the ini file. A basic hash with keys and values of type string will render the file with 'key'='value'. Nesting a basic hash so the key is string and the value is another hash will create a section with the string as the name, and the hash value will render with 'key'='value'</td>
     <td>true</td>
   </tr>
