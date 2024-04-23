@@ -18,6 +18,7 @@ action :install do
   all_packages = new_resource.packages.to_a
   all_php_packages = new_resource.php_packages.to_a
 
+  node.default['osl-selinux']['enforcing'] = true
   include_recipe 'osl-selinux'
 
   # include_recipe 'osl-repos::epel'
