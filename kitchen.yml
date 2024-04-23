@@ -191,6 +191,7 @@ suites:
         - test/integration/opcache
       inputs:
         version: '7.2'
+
   - name: opcache-php81
     run_list:
       - recipe[php_test::packages]
