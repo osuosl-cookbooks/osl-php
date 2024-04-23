@@ -18,12 +18,7 @@ action :install do
   all_packages = new_resource.packages.to_a
   all_php_packages = new_resource.php_packages.to_a
 
-  # To avoid warnings about including recipes in a resource, do the same things these recipes do ---
-  # include_recipe 'osl-selinux'
-  selinux_install 'osl-selinux'
-  selinux_state 'osl-selinux' do
-    action :enforcing
-  end
+  include_recipe 'osl-selinux'
 
   # include_recipe 'osl-repos::epel'
   osl_repos_epel 'default' do
@@ -71,14 +66,7 @@ action :install do
       exclude %w(ImageMagick*) if enable_ius_archive && version.to_f <= 7.1
     end
 
-    # include_recipe 'yum-osuosl'
-    yum_repository 'osuosl' do
-      repositoryid 'osuosl'
-      description 'OSUOSL repo $releasever - $basearch'
-      baseurl 'http://ftp.osuosl.org/pub/osl/repos/yum/$releasever/$basearch'
-      gpgkey 'http://ftp.osuosl.org/pub/osl/repos/yum/RPM-GPG-KEY-osuosl'
-      action :create
-    end
+    include_recipe 'yum-osuosl'
 
     case version.to_f
     when 7.2
@@ -94,8 +82,8 @@ action :install do
   # === use Remi dnf modules on EL8 ===
   if !system_php && node['platform_version'] >= 8
     # enable powertools repo for libedit-devel
-    osl_repos_centos 'default' if platform?('centos')
-    osl_repos_alma 'default' if platform?('almalinux')
+    include_recipe 'osl_repos::centos' if platform?('centos')
+    include_recipe 'osl_repos::alma' if platform?('almalinux')
 
     # use Remi PHP module to override stock php
     # programatically define resource as to not have a bit long case/when

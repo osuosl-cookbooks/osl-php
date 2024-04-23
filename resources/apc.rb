@@ -12,11 +12,7 @@ action :install do
     only_if { node['platform_version'].to_i >= 8 }
   end
 
-  # include_recipe 'osl-selinux'
-  selinux_install 'osl-selinux'
-  selinux_state 'osl-selinux' do
-    action :enforcing
-  end
+  include_recipe 'osl-selinux'
 
   package %w(httpd-devel pcre pcre-devel)
 
