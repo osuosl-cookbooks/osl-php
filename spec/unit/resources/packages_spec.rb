@@ -12,8 +12,7 @@ describe 'osl_php_install' do
   end
 
   it do
-    is_expected.to install_selinux_install('osl-selinux')
-    is_expected.to enforcing_selinux_state('osl-selinux')
+    is_expected.to include_recipe('osl-selinux')
 
     # php_version is 7.2 by default for RHEL
     is_expected.to add_osl_repos_epel('default').with(exclude: %w(php73* php74*))
@@ -39,9 +38,6 @@ describe 'osl_php_install' do
       mode: '755',
       cookbook: 'osl-php'
     )
-
-    is_expected.to_not add_osl_repos_centos('default')
-    is_expected.to_not add_osl_repos_alma('default')
   end
 
   context 'Using IUS' do

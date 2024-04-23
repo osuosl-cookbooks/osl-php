@@ -10,7 +10,7 @@ describe 'osl_php_apc' do
   end
 
   it do
-    is_expected.to install_selinux_install('osl-selinux')
+    is_expected.to include_recipe('osl-selinux')
   end
 
   it do
