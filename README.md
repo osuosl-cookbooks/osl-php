@@ -5,44 +5,9 @@ Attributes
 * `node['osl-php']['ius_archive_versions']` - A list tracking versions of PHP that have moved into IUS's archive repo. The recipe should be updated when new versions on this list reach EOL: https://ius.io/LifeCycle/#php
 * `node['osl-php']['use_ius']` - Use PHP packages from [IUS Community](https://ius.io/) repositories when true. Defaults
   to false.
-* `node['osl-php']['use_opcache']` - Use [Zend Opcache](http://files.zend.com/help/Zend-Server/content/working_with_opcache.htm)
-  to cache compiled PHP scritps. Defaults to false.
-* `node['osl-php']['packages']` - PHP packages to install that don't begin with a PHP prefix ("php-", "php56u-",
-  "php71u-", etc.). Prefixed packages should be put in the `php_packages` attribute instead.
-* `node['osl-php']['php_packages']` - PHP packages to install with prefixed names ("php-", "php56u-", "php71u-", etc.),
-  specified without these prefixes. Packages with this naming convention should be specified here instead of the
-  `packages` attribute. See Usage for details.
 
 Usage
 -----
-### osl-php::default
-Installs PHP packages (see below), updates upstream's default pear channels, and creates a `php.ini` configuration.
-This recipe will also install Zend Opcache if`use_opcache` is true, and the php is compatible (5.5 or greater).
-Use the `node['osl-php']['opcache']` hash to set parameters for Zend Opcache.
-
-### osl-php::opcache
-Adds Opcache package to `node['osl-php']['php_packages']` and configures Zend Opcache's ini. Don't include this recipe
-directly, it gets included by the default recipe. `use_opcache` should be set to true to enable Zend Opcache.
-If true, php must be v5.5 or greater. Include `osl-php::default` after setting the proper attributes.
-
-### osl-php::apc
-Installs APC using the hash `node['osl-php']['apc']` to configure it's ini in the exact same manner as opcache.
-This is not compatible with PHP packages from IUS Community repos, so an exception will be raised if
-`node['osl-php']['use_ius']` is true.
-
-### osl-php::packages
-The packages recipe uses three of the four attributes described above (`use_ius`, `packages`, and `php_packages`).
-`use_ius` should be set to true or false depending on whether PHP packages from IUS Community repos should be used.
-
-The primary PHP package and pear package are installed by this recipe automatically, and do not have to be specified in
-attributes. The `packages` and `php_packages` attributes are for additional PHP packages.
-
-Most PHP packages have a prefix in their names, like "php-memcached".  Packages from IUS have versioned prefixes, like
-"php56u-memcached" or "php71u-memcached".  Packages that have these prefixes should be added to `php_packages` without
-the prefix.  Instead of adding "php-memcached" or "php71u-memcached", "memcached" would be added.  The recipe will
-handle adding the proper prefixes, depending on `node['php']['version']` (when using IUS).
-
-PHP-related packages that don't have this prefix should be placed in the `packages` attribute.
 
 #### Examples
 
@@ -149,7 +114,7 @@ This resource is used to install PHP packages. It also adds an ini file to set t
     <td>use_opcache</td>
     <td align="center">[true, false]</td>
     <td align="center">false</td>
-    <td>Whether to install PHP OPcache (and configure Zend OPcache with an ini file).</td>
+    <td>Whether to install PHP OPcache (and configure it with an ini file). Not compatible with PHP < 5.5.</td>
     <td>false</td>
   </tr>
   <tr>
@@ -162,7 +127,7 @@ This resource is used to install PHP packages. It also adds an ini file to set t
 </table>
 
 ### osl\_php\_apc
-This resource is used to install APC from the PECL channel.
+This resource is used to install APC from the PECL channel. Not compatible with EL >= 8.
 
 #### Actions
 * `:install` - Default action. Installs APC and creates an ini file with the specified configuration.
