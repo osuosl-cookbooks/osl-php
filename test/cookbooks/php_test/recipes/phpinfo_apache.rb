@@ -3,7 +3,7 @@ apache2_install 'default'
 system_php = node['php_test']['version'].nil?
 major_version =
   if system_php
-    if node['platform_version'] == 8
+    if node['platform_version'].to_i >= 8
       '7'
     else
       node['php_test']['use_ius'] ? '7' : '5'
