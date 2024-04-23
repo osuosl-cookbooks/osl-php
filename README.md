@@ -88,7 +88,7 @@ This is not compatible with PHP packages from IUS Community repos, so an excepti
 ## Resources
 
 ### osl\_php\_install
-This resource is used to install PHP packages. It will also add an ini file to set the timezone to UTC and install phpcheck and phpshow by default.
+This resource is used to install PHP packages. It also adds an ini file to set the timezone to UTC and install phpcheck and phpshow by default.
 
 #### Actions
 * `:install` - Default action. Installs the given packages using the given properties.
@@ -106,21 +106,21 @@ This resource is used to install PHP packages. It will also add an ini file to s
   <tr>
     <td>packages</td>
     <td align="center">Array</td>
-    <td align="center"><code>[]</code><br>If both <code>packages</code> and <code>php_packages</code> are empty, the <code>php_installation_packages</code> helper determines what is installed.</td>
+    <td align="center"><code>[]</code><br><br>If both <code>packages</code> and <code>php_packages</code> are empty, the <code>php_installation_packages</code> helper determines what is installed.</td>
     <td>Full names of specific packages to install. The primary PHP and PEAR packages will be installed automatically, so they don't need to be specified here.</td>
     <td>false</td>
   </tr>
   <tr>
     <td>php_packages</td>
     <td align="center">Array</td>
-    <td align="center"><code>[]</code><br>If both <code>packages</code> and <code>php_packages</code> are empty, the <code>php_installation_packages</code> helper determines what is installed.</td>
+    <td align="center"><code>[]</code><br><br>If both <code>packages</code> and <code>php_packages</code> are empty, the <code>php_installation_packages</code> helper determines what is installed.</td>
     <td>List of names of packages that should be installed with prefixed names (<code>phpX.X-</code> or <code>phpX.Xu-</code>), specified without the prefixes. The resource will add the appropriate prefixes to these names and install the packages.</td>
     <td>false</td>
   </tr>
   <tr>
     <td>version</td>
     <td align="center">String</td>
-    <td align="center"><code>nil</code><br>When <code>nil</code>, the <code>php_version()</code> helper determines what version is installed.</td>
+    <td align="center"><code>nil</code><br>When <code>nil</code>, the <code>php_version</code> helper determines what version is installed.</td>
     <td>PHP version to install.</td>
     <td>false</td>
   </tr>
@@ -158,6 +158,31 @@ This resource is used to install PHP packages. It will also add an ini file to s
     <td align="center"><code>{}</code></td>
     <td>Configuration to add to a <code>10-opcache.ini</code> file. The options in the <code>opcache_conf</code> helper are added by default. Any options set in this property override duplicates in the helper.</td>
     <td>false</td>
+  </tr>
+</table>
+
+### osl\_php\_apc
+This resource is used to install APC from the PECL channel.
+
+#### Actions
+* `:install` - Default action. Installs APC and creates an ini file with the specified configuration.
+
+#### Properties
+
+<table style="width:80%">
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Default</th>
+    <th>Description</th>
+    <th>Required?</th>
+  </tr>
+  <tr>
+    <td>options</td>
+    <td align="center">Hash</td>
+     <td align="center"><code>apc_conf</code> helper</td>
+    <td>Configuration to add to ini file.</td>
+    <td>true</td>
   </tr>
 </table>
 
