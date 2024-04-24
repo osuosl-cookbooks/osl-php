@@ -83,8 +83,8 @@ action :install do
   # === use Remi dnf modules on EL8 ===
   if !system_php && node['platform_version'] >= 8
     # enable powertools repo for libedit-devel
-    include_recipe 'osl_repos::centos' if platform?('centos')
-    include_recipe 'osl_repos::alma' if platform?('almalinux')
+    include_recipe 'osl-repos::centos' if platform?('centos')
+    include_recipe 'osl-repos::alma' if platform?('almalinux')
 
     # use Remi PHP module to override stock php
     # programatically define resource as to not have a bit long case/when
