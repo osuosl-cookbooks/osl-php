@@ -3,8 +3,6 @@
 Attributes
 ----------
 * `node['osl-php']['ius_archive_versions']` - A list tracking versions of PHP that have moved into IUS's archive repo. The recipe should be updated when new versions on this list reach EOL: https://ius.io/LifeCycle/#php
-* `node['osl-php']['use_ius']` - Use PHP packages from [IUS Community](https://ius.io/) repositories when true. Defaults
-  to false.
 
 Usage
 -----
@@ -93,7 +91,7 @@ This resource is used to install PHP packages. It also adds an ini file to set t
     <td>use_ius</td>
     <td align="center">[true, false]</td>
     <td align="center">false</td>
-    <td>Whether to install from IUS (Inline with Upstream Stable) repositories.</td>
+    <td>Whether to install from IUS (<a href='https://ius.io/'>Inline with Upstream Stable</a>) repositories.</td>
     <td>false</td>
   </tr>
   <tr>
@@ -155,8 +153,8 @@ This resource is used to install APC from the PECL channel. Not compatible with 
 This resource is used to create ini files for PHP configuration.
 
 #### Actions
-* `:create` - Default action. Creates an ini file at the location specified by the name property with the configuration
-  passed to the options property, while applying other properties.
+* `:add` - Default action. Creates an ini file at the location specified by the name property with the configuration
+  passed to the options property.
 * `:remove` - Removes an ini file at the location specified by the name property.
 
 #### Properties
@@ -173,21 +171,21 @@ This resource is used to create ini files for PHP configuration.
     <td>path</td>
     <td align="center">String</td>
      <td align="center">Name</td>
-    <td>Path to place ini file</td>
+    <td>Path to place ini file.</td>
     <td>true</td>
   </tr>
   <tr>
     <td>options</td>
     <td align="center">Hash</td>
     <td align="center"><code>{}</code></td>
-    <td>A hash for configuring the ini file. A basic hash with keys and values of type string will render the file with 'key'='value'. Nesting a basic hash so the key is string and the value is another hash will create a section with the string as the name, and the hash value will render with 'key'='value'</td>
+    <td>A hash for configuring the ini file. A basic hash with keys and values of type String will be rendered as <code>'key'='value'</code> in the file. Nesting a basic hash so the key is type String and the value is another hash will create a section with the key as the name and the value as the section contents, still in the <code>'subkey'='subvalue'</code> format.</td>
     <td>true</td>
   </tr>
   <tr>
     <td>mode</td>
     <td align="center">String</td>
     <td align="center">'0644'</td>
-    <td>Unix file mode of ini file</td>
+    <td>Unix file mode of ini file.</td>
     <td>false</td>
   </tr>
 </table>
