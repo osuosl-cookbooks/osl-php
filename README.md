@@ -3,47 +3,6 @@
 ## Attributes
 * `node['osl-php']['ius_archive_versions']` - A list tracking versions of PHP that have moved into IUS's archive repo. The recipe should be updated when new versions on this list reach EOL: https://ius.io/LifeCycle/#php
 
-## Usage Examples
-
-```ruby
-osl_php_install 'example' do
-  php_packages %w(devel cli)
-end
-```
-will install `php`, `php-devel`, `php-cli`, and `php-pear`.
-
-```ruby
-options = {
-  'opcache.enable_cli' => true,
-  'opcache.memory_consumption' => 512
-}
-osl_php_install 'example' do
-  version '5.6'
-  use_ius true
-  use_opcache true
-  opcache_conf options
-end
-```
-will install `php56u` and `php56u-opcache`, and add `opcache.enable_cli=true` and `opcache.memory_consumption=512` to the `10-opcache.ini` file.
-
-```ruby
-osl_php_install 'example' do
-  version '5.6'
-  use_ius true
-  php_packages %w(devel cli)
-end
-```
-will install `php56u`, `php56u-devel`, `php56u-cli`, and `php56u-pear`.
-
-```ruby
-osl_php_install 'example' do
-  version '7.1'
-  use_ius true
-  php_packages %w(devel cli)
-end
-```
-will install `php71u`, `php71u-devel`, `php71u-cli`, and `pear1`.
-
 ## Resources
 
 ### osl\_php\_install
@@ -185,3 +144,44 @@ This resource is used to create ini files for PHP configuration.
     <td>false</td>
   </tr>
 </table>
+
+## Usage Examples
+
+```ruby
+osl_php_install 'example' do
+  php_packages %w(devel cli)
+end
+```
+will install `php`, `php-devel`, `php-cli`, and `php-pear`.
+
+```ruby
+options = {
+  'opcache.enable_cli' => true,
+  'opcache.memory_consumption' => 512
+}
+osl_php_install 'example' do
+  version '5.6'
+  use_ius true
+  use_opcache true
+  opcache_conf options
+end
+```
+will install `php56u` and `php56u-opcache`, and add `opcache.enable_cli=true` and `opcache.memory_consumption=512` to the `10-opcache.ini` file.
+
+```ruby
+osl_php_install 'example' do
+  version '5.6'
+  use_ius true
+  php_packages %w(devel cli)
+end
+```
+will install `php56u`, `php56u-devel`, `php56u-cli`, and `php56u-pear`.
+
+```ruby
+osl_php_install 'example' do
+  version '7.1'
+  use_ius true
+  php_packages %w(devel cli)
+end
+```
+will install `php71u`, `php71u-devel`, `php71u-cli`, and `pear1`.
