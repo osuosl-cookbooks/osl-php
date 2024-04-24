@@ -1,8 +1,5 @@
 # osl-php Cookbook
 
-## Attributes
-* `node['osl-php']['ius_archive_versions']` - A list tracking versions of PHP that have moved into IUS's archive repo. The recipe should be updated when new versions on this list reach EOL: https://ius.io/LifeCycle/#php
-
 ## Resources
 
 ### osl\_php\_install
@@ -46,7 +43,7 @@ This resource is used to install PHP packages. It also adds an ini file to set t
     <td>use_ius</td>
     <td align="center">[true, false]</td>
     <td align="center">false</td>
-    <td>Whether to install from IUS (<a href='https://ius.io/'>Inline with Upstream Stable</a>) repositories.</td>
+    <td>Whether to install from IUS (<a href='https://ius.io/'>Inline with Upstream Stable</a>) repositories. Uses IUS archive repo if the PHP version is part of the `ius_archive_versions` helper list. This helper should be updated based on IUS's list of EOL'd packages: https://github.com/iusrepo/packaging/wiki/End-Of-Life-Dates#php</td>
     <td>false</td>
   </tr>
   <tr>
