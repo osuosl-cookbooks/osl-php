@@ -127,7 +127,6 @@ action :install do
                "#{prefix}-pear"
              end
 
-  # TODO: use pear resource?
   package 'pear' do
     package_name pear_pkg
   end unless all_packages.any? { |p| /pear/ =~ p }
