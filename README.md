@@ -1,52 +1,48 @@
 # osl-php Cookbook
 
-Attributes
-----------
+## Attributes
 * `node['osl-php']['ius_archive_versions']` - A list tracking versions of PHP that have moved into IUS's archive repo. The recipe should be updated when new versions on this list reach EOL: https://ius.io/LifeCycle/#php
 
-Usage
------
-
-#### Examples
+## Usage Examples
 
 ```ruby
-node.default['osl-php']['use_ius'] = false
-node.default['osl-php']['php_packages'] = %w(devel cli)
-include_recipe 'osl-php::packages'
+osl_php_install 'example' do
+  php_packages %w(devel cli)
+end
 ```
 will install `php`, `php-devel`, `php-cli`, and `php-pear`.
 
 ```ruby
-node.default['php']['version'] = '5.6'
-node.default['osl-php']['use_ius'] = true
-node.default['osl-php']['use_opcache'] = true
-node.default['osl-php']['opcache']['opcache.enable_cli'] = 'true'
-node.default['osl-php']['opcache']['opcache.memory_consumption'] = 512
-include_recipe 'osl-php'
+options = {
+  'opcache.enable_cli' => true,
+  'opcache.memory_consumption' => 512
+}
+osl_php_install 'example' do
+  version '5.6'
+  use_ius true
+  use_opcache true
+  opcache_conf options
+end
 ```
-will install `php56u`, `php56u-opcache`, and add `opcache.enable_cli=true`, `opcache.memory_consumption=512` to the
-opcache's ini file.
+will install `php56u` and `php56u-opcache`, and add `opcache.enable_cli=true` and `opcache.memory_consumption=512` to the `10-opcache.ini` file.
 
 ```ruby
-node.default['php']['version'] = '5.6'
-node.default['osl-php']['use_ius'] = true
-node.default['osl-php']['php_packages'] = %w(devel cli)
-include_recipe 'osl-php::packages'
+osl_php_install 'example' do
+  version '5.6'
+  use_ius true
+  php_packages %w(devel cli)
+end
 ```
 will install `php56u`, `php56u-devel`, `php56u-cli`, and `php56u-pear`.
 
 ```ruby
-node.default['php']['version'] = '7.1'
-node.default['osl-php']['use_ius'] = true
-node.default['osl-php']['php_packages'] = %w(devel cli)
-include_recipe 'osl-php::packages'
+osl_php_install 'example' do
+  version '7.1'
+  use_ius true
+  php_packages %w(devel cli)
+end
 ```
-will install `php71u`, `php71u-devel`, `php71u-cli`, and `pear1u`.
-
-### osl-php::apc
-Installs APC.
-This is not compatible with PHP packages from IUS Community repos, so an exception will be raised if
-`node['osl-php']['use_ius']` is true.
+will install `php71u`, `php71u-devel`, `php71u-cli`, and `pear1`.
 
 ## Resources
 
