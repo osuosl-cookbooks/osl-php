@@ -20,7 +20,6 @@ action :install do
 
   node.default['osl-selinux']['enforcing'] = true
   include_recipe 'osl-selinux'
-
   include_recipe 'osl-repos::epel'
 
   prefix = 'php'

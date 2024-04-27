@@ -13,9 +13,7 @@ describe 'osl_php_install' do
 
   it do
     is_expected.to include_recipe('osl-selinux')
-
-    # php_version is 7.2 by default for RHEL
-    is_expected.to add_osl_repos_epel('default').with(exclude: %w(php73* php74*))
+    is_expected.to include_recipe('osl-repos::epel')
 
     # elements from the spec for the old default recipe
     is_expected.to add_osl_php_ini('timezone').with(options: { 'date.timezone' => 'UTC' })
@@ -152,7 +150,6 @@ describe 'osl_php_install' do
     cached(:subject) { chef_run }
     platform 'centos', '7'
     it do
-      is_expected.to add_osl_repos_epel('default').with(exclude: %w(php73* php74*))
       is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear))
       # Don't install php-pear twice since it's already part of default packages
       is_expected.to_not install_package('php-pear')
@@ -274,12 +271,6 @@ describe 'osl_php_install' do
       end
 
       it do
-        if version == '7.2'
-          is_expected.to add_osl_repos_epel('default').with(exclude: %w(php73* php74*))
-        else
-          is_expected.to add_osl_repos_epel('default').with(exclude: [])
-        end
-
         is_expected.to add_osl_repos_alma('default')
         case version
         when '5.6'
