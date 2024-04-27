@@ -60,13 +60,13 @@ suites:
     attributes:
       php_test:
         use_ius: true
-    excludes:
-      - almalinux-8
     verifier:
       inspec_tests:
         - test/integration/packages
       inputs:
         version: '7.4'
+    excludes:
+      - almalinux-8
 
   - name: packages-php56
     run_list:
@@ -76,13 +76,13 @@ suites:
       php_test:
         use_ius: true
         version: '5.6'
-    excludes:
-      - almalinux-8
     verifier:
       inspec_tests:
         - test/integration/packages
       inputs:
         version: '5.6'
+    excludes:
+      - almalinux-8
 
   - name: packages-php72
     run_list:
@@ -165,13 +165,13 @@ suites:
         use_ius: true
         use_opcache: true
         version: '5.6'
-    excludes:
-      - almalinux-8
     verifier:
       inspec_tests:
         - test/integration/opcache
       inputs:
         version: '5.6'
+    excludes:
+      - almalinux-8
 
   - name: opcache-php72
     run_list:

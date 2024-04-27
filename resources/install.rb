@@ -21,11 +21,7 @@ action :install do
   node.default['osl-selinux']['enforcing'] = true
   include_recipe 'osl-selinux'
 
-  # include_recipe 'osl-repos::epel'
-  osl_repos_epel 'default' do
-    exclude %w(php73* php74*) if version == '7.2'
-  end
-  #---
+  include_recipe 'osl-repos::epel'
 
   prefix = 'php'
 

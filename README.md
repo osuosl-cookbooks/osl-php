@@ -35,7 +35,7 @@ This resource is used to install PHP packages. It also adds an ini file to set t
   <tr>
     <td>version</td>
     <td align="center">String</td>
-    <td align="center"><code>nil</code><br>When <code>nil</code>, the <code>php_version</code> helper determines what version is installed.</td>
+    <td align="center"><code>nil</code><br><br>When <code>nil</code>, the <code>php_version</code> helper determines what version is installed.</td>
     <td>PHP version to install.</td>
     <td>false</td>
   </tr>
