@@ -75,8 +75,17 @@ describe 'osl_php_apc' do
   end
 
   context 'EL 8' do
-    cached(:subject) { chef_run }
     platform 'almalinux', '8'
+    cached(:chef_run) do
+      chef_runner.converge('php_test::blank') do
+        recipe = Chef::Recipe.new('test', '_test', chef_runner.run_context)
+
+        recipe.instance_exec do
+          osl_php_apc 'default'
+        end
+      end
+    end
+
     it do
       is_expected.to run_ruby_block('raise_el8_exception')
     end
