@@ -86,7 +86,7 @@ action :install do
 
   # install default packages if no packages were specified, but wait to select the mod_php and pear packages
   if all_packages.empty? && all_php_packages.empty?
-    all_php_packages = php_installation_packages.map { |p| p[/^php[0-9u]*-(.*)/, 1] } - ['pear'] - [nil]
+    all_php_packages = (php_installation_packages.map { |p| p[/^php[0-9u]*-(.*)/, 1] } - ['pear'] - [nil])
   end
 
   all_packages += all_php_packages.map { |p| "#{prefix}-#{p}" }
