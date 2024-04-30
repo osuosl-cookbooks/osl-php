@@ -20,9 +20,9 @@ describe 'osl_php_install' do
   it { is_expected.to include_recipe 'osl-repos::epel' }
   it { is_expected.to add_osl_php_ini('timezone').with(options: { 'date.timezone' => 'UTC' }) }
   it { is_expected.to_not add_osl_php_ini '10-opcache' }
-  it { is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear)) }
+  it { is_expected.to install_php_install('all-packages').with(packages: %w(php-devel php-cli php)) }
   it { is_expected.to_not install_package(%w(pecl-imagick mod_php php-opcache pear1)) }
-  it { is_expected.to_not install_package('php-pear') }
+  it { is_expected.to install_package('php-pear') }
 
   it do
     is_expected.to create_cookbook_file('/usr/local/bin/phpcheck').with(
@@ -84,7 +84,7 @@ describe 'osl_php_install' do
           'zend_extension' => 'opcache.so',
         }
       )
-      is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear php-opcache))
+      is_expected.to install_php_install('all-packages').with(packages: %w(php-devel php-cli php php-opcache))
     end
 
     context 'OPCache with conf' do
@@ -191,8 +191,8 @@ describe 'osl_php_install' do
         end
       end
     end
-    it { is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear)) }
-    it { is_expected.to_not install_package('php-pear') }
+    it { is_expected.to install_php_install('all-packages').with(packages: %w(php-devel php-cli php)) }
+    it { is_expected.to install_package('php-pear') }
 
     context 'Using IUS' do
       cached(:chef_run) do
@@ -209,7 +209,8 @@ describe 'osl_php_install' do
       it { is_expected.to add_osl_repos_centos('default').with(exclude: []) }
       it { is_expected.to create_yum_repository 'osuosl' }
       it { is_expected.to include_recipe 'yum-ius' }
-      it { is_expected.to install_php_install('all-packages').with(packages: %w(php php-devel php-cli php-pear)) }
+      it { is_expected.to install_php_install('all-packages').with(packages: %w(php74-devel php74-cli mod_php74)) }
+      it { is_expected.to install_package('pear1') }
     end
 
     context 'Using OPCache' do
@@ -227,7 +228,7 @@ describe 'osl_php_install' do
       end
       it do
         is_expected.to install_php_install('all-packages').with(
-          packages: %w(php php-devel php-cli php-pear php74-opcache)
+          packages: %w(php74-devel php74-cli mod_php74 php74-opcache)
         )
       end
 
