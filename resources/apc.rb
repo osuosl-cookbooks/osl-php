@@ -12,15 +12,11 @@ action :install do
     only_if { node['platform_version'].to_i >= 8 }
   end
 
-  node.default['osl-selinux']['enforcing'] = true
   include_recipe 'osl-selinux'
 
   package %w(httpd-devel pcre pcre-devel)
 
-  # build_essential 'APC'  <-- the php_pear resource does this already
-
   php_pear 'APC' do
-    action :install
     # Use channel 'pecl' since APC is not available on the default channel
     channel 'pecl.php.net'
   end

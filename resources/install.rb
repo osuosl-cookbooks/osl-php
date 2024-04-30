@@ -18,7 +18,6 @@ action :install do
   all_packages = new_resource.packages.to_a
   all_php_packages = new_resource.php_packages.to_a
 
-  node.default['osl-selinux']['enforcing'] = true
   include_recipe 'osl-selinux'
   include_recipe 'osl-repos::epel'
 
@@ -39,9 +38,6 @@ action :install do
       options opcache_conf.merge!(new_resource.opcache_conf)
     end
   end
-  # ---
-
-  # include_recipe 'osl-php::packages' -------------------------------------------------------------------------------
 
   # === use IUS repo on EL7 ===
   if new_resource.use_ius && node['platform_version'].to_i == 7
@@ -57,8 +53,9 @@ action :install do
     node.default['yum']['ius-archive']['enabled'] = enable_ius_archive
     node.default['yum']['ius-archive']['managed'] = true
 
-    # include_recipe 'osl-repos::centos'
-    osl_repos_centos 'default' do
+    include_recipe 'osl-repos::centos'
+
+    edit_resource(:osl_repos_centos, 'default') do
       exclude %w(ImageMagick*) if enable_ius_archive && version.to_f <= 7.1
     end
 
@@ -69,6 +66,7 @@ action :install do
       node.default['yum']['ius-archive']['exclude'] = 'php5* php71* php73* php74*'
       node.default['yum']['ius']['exclude'] = 'php73* php74*'
     end
+
     include_recipe 'yum-ius'
 
     # IUS has php versions as php72u-foo or php73-foo
