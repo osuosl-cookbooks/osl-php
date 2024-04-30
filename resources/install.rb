@@ -84,26 +84,25 @@ action :install do
     declare_resource(:"yum_remi_php#{shortver}", 'default')
   end
 
+  # install default packages if no packages were specified, but wait to select the mod_php and pear packages
+  if all_packages.empty? and all_php_packages.empty?
+    all_php_packages = php_installation_packages.map{ |p| p[/^php[0-9u]*-(.*)/, 1]} - ['pear']
+  end
+
   all_packages += all_php_packages.map { |p| "#{prefix}-#{p}" }
 
   # pecl-imagick is not available on EL8
   all_packages.delete_if { |p| p.match? /pecl-imagick/ } if node['platform_version'].to_i >= 8 && system_php
 
   # add the mod_php package, which is 'mod_php' in IUS or just 'php' otherwise
-  if all_packages.any?
-    all_packages <<= if node['platform_version'].to_i == 7 && version.to_i >= 7 && !system_php
-                       # When installing the main PHP (>= 7.0) package directly, like
-                       # php72u, it's actually installing the mod_php package, so we
-                       # explicitly do that here.
-                       "mod_#{prefix}"
-                     else
-                       prefix
-                     end
-  end
-
-  if all_packages.empty?
-    all_packages = php_installation_packages
-  end
+  all_packages <<= if node['platform_version'].to_i == 7 && version.to_i >= 7 && !system_php
+                     # When installing the main PHP (>= 7.0) package directly, like
+                     # php72u, it's actually installing the mod_php package, so we
+                     # explicitly do that here.
+                     "mod_#{prefix}"
+                   else
+                     prefix
+                   end
 
   if new_resource.use_opcache
     all_packages <<= "#{prefix}-opcache"
