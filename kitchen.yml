@@ -24,6 +24,9 @@ suites:
     run_list:
       - recipe[php_test::default]
       - recipe[php_test::php_helpers]
+    attributes:
+      php_test:
+        php_packages: []
 
   - name: apc
     run_list:
