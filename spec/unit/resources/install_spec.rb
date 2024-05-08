@@ -320,7 +320,6 @@ describe 'osl_php_install' do
 
           recipe.instance_exec do
             osl_php_install 'packages' do
-              packages []
               php_packages %w(devel)
               version version
             end
@@ -362,11 +361,11 @@ describe 'osl_php_install' do
 
         if version.to_i >= 7
           it { is_expected.to install_php_install('all-packages').with(packages: %w(php-devel mod_php)) }
-          it { is_expected.to install_package('pear1') }
         else
           it { is_expected.to install_php_install('all-packages').with(packages: %w(php-devel php)) }
-          it { is_expected.to install_package('php-pear') }
         end
+
+        it { is_expected.to install_package('php-pear') }
 
         it { is_expected.to_not install_package('pecl-imagick php-cli') }
 
