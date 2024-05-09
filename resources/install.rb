@@ -10,6 +10,7 @@ property :use_composer, [true, false], default: false
 property :composer_version, String, default: '2.2.18'
 property :use_opcache, [true, false], default: false
 property :opcache_conf, Hash, default: {}
+property :directives, Hash, default: {}
 
 action :install do
   system_php = new_resource.version.nil?
@@ -110,6 +111,7 @@ action :install do
 
   php_install 'all-packages' do
     packages all_packages
+    directives new_resource.directives
   end
 
   # Include pear package (pear1 for PHP 7.1+ on C7)
