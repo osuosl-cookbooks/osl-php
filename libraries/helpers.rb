@@ -75,6 +75,10 @@ module OslPhp
         }
       end
     end
+
+    def default_packages_without_prefixes
+      (php_installation_packages.map { |p| p[/^php[0-9u]*-(.*)/, 1] } - ['pear'] - [nil])
+    end
   end
 end
 Chef::DSL::Recipe.include ::OslPhp::Cookbook::Helpers
