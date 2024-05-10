@@ -74,6 +74,7 @@ module OslPhp
           'max_spare_servers' => max_spare_servers,
         }
       end
+
       def php_installation_packages_without_prefixes
         (php_installation_packages.map { |p| p[/^php[0-9u]*-(.*)/, 1] } - ['pear'] - [nil])
       end
