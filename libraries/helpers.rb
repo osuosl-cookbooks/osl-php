@@ -22,7 +22,7 @@ module OslPhp
         %w(5.6 7.1 7.2 7.4)
       end
 
-      def composer_version
+      def default_composer_version
         '2.2.18'
       end
 
@@ -74,10 +74,9 @@ module OslPhp
           'max_spare_servers' => max_spare_servers,
         }
       end
-    end
-
-    def default_packages_without_prefixes
-      (php_installation_packages.map { |p| p[/^php[0-9u]*-(.*)/, 1] } - ['pear'] - [nil])
+      def php_installation_packages_without_prefixes
+        (php_installation_packages.map { |p| p[/^php[0-9u]*-(.*)/, 1] } - ['pear'] - [nil])
+      end
     end
   end
 end

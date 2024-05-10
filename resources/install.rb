@@ -7,7 +7,7 @@ property :php_packages, Array, default: []
 property :use_ius, [true, false], default: false
 property :version, String
 property :use_composer, [true, false], default: false
-property :composer_version, String, default: '2.2.18'
+property :composer_version, String, default: lazy { default_composer_version }
 property :use_opcache, [true, false], default: false
 property :opcache_conf, Hash, default: {}
 property :directives, Hash, default: {}
@@ -87,7 +87,7 @@ action :install do
 
   # install default packages if no packages were specified, but wait to select the mod_php and pear packages
   if all_packages.empty? && all_php_packages.empty?
-    all_php_packages = default_packages_without_prefixes
+    all_php_packages = php_installation_packages_without_prefixes
   end
 
   all_packages += all_php_packages.map { |p| "#{prefix}-#{p}" }
