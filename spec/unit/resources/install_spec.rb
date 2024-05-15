@@ -20,7 +20,7 @@ describe 'osl_php_install' do
   it { is_expected.to include_recipe 'osl-repos::epel' }
   it { is_expected.to add_osl_php_ini('timezone').with(options: { 'date.timezone' => 'UTC' }) }
   it { is_expected.to_not add_osl_php_ini '10-opcache' }
-  it { is_expected.to install_php_install('all-packages').with(packages: %w(php-devel php-cli php)) }
+  it { is_expected.to install_php_install('default packages all packages').with(packages: %w(php-devel php-cli php)) }
   it { is_expected.to_not install_package(%w(pecl-imagick mod_php php-opcache pear1)) }
   it { is_expected.to install_package('php-pear') }
 
@@ -84,7 +84,7 @@ describe 'osl_php_install' do
           'zend_extension' => 'opcache.so',
         }
       )
-      is_expected.to install_php_install('all-packages').with(packages: %w(php-devel php-cli php php-opcache))
+      is_expected.to install_php_install('defaults with opcache all packages').with(packages: %w(php-devel php-cli php php-opcache))
     end
 
     context 'OPCache with conf' do
@@ -191,7 +191,7 @@ describe 'osl_php_install' do
         end
       end
     end
-    it { is_expected.to install_php_install('all-packages').with(packages: %w(php-devel php-cli php)) }
+    it { is_expected.to install_php_install('default packages all packages').with(packages: %w(php-devel php-cli php)) }
     it { is_expected.to install_package('php-pear') }
 
     context 'Using IUS' do
@@ -209,7 +209,7 @@ describe 'osl_php_install' do
       it { is_expected.to add_osl_repos_centos('default').with(exclude: []) }
       it { is_expected.to create_yum_repository 'osuosl' }
       it { is_expected.to include_recipe 'yum-ius' }
-      it { is_expected.to install_php_install('all-packages').with(packages: %w(php74-devel php74-cli mod_php74)) }
+      it { is_expected.to install_php_install('defaults with ius all packages').with(packages: %w(php74-devel php74-cli mod_php74)) }
       it { is_expected.to install_package('pear1') }
     end
 
@@ -227,7 +227,7 @@ describe 'osl_php_install' do
         end
       end
       it do
-        is_expected.to install_php_install('all-packages').with(
+        is_expected.to install_php_install('defaults with opcache all packages').with(
           packages: %w(php74-devel php74-cli mod_php74 php74-opcache)
         )
       end
@@ -265,7 +265,7 @@ describe 'osl_php_install' do
       end
     end
 
-    it { is_expected.to install_php_install('all-packages').with(packages: %w(graphviz-php php-cli php)) }
+    it { is_expected.to install_php_install('packages all packages').with(packages: %w(graphviz-php php-cli php)) }
     it { is_expected.to_not install_package('pecl-imagick') }
     it { is_expected.to install_package('php-pear') }
     it { is_expected.not_to install_package(%w(php-graphviz-php php-pecl-imagick php-php-cli php-devel)) }
@@ -284,7 +284,7 @@ describe 'osl_php_install' do
         end
       end
       it do
-        is_expected.to install_php_install('all-packages').with(packages: %w(graphviz-php php-cli php php-opcache))
+        is_expected.to install_php_install('non-prefixed packages with opcache all packages').with(packages: %w(graphviz-php php-cli php php-opcache))
       end
     end
 
@@ -304,7 +304,7 @@ describe 'osl_php_install' do
         end
       end
       it do
-        is_expected.to install_php_install('all-packages').with(
+        is_expected.to install_php_install('non-prefixed packages with opcache all packages').with(
           packages: %w(graphviz-php pecl-imagick php-cli mod_php74 php74-opcache)
         )
       end
@@ -340,7 +340,7 @@ describe 'osl_php_install' do
         end
       end
 
-      it { is_expected.to install_php_install('all-packages').with(packages: %w(php-devel php)) }
+      it { is_expected.to install_php_install('packages all packages').with(packages: %w(php-devel php)) }
       it { is_expected.to install_package('php-pear') }
       it { is_expected.to_not install_package(%w(pecl-imagick php-cli)) }
 
@@ -360,9 +360,9 @@ describe 'osl_php_install' do
         end
 
         if version.to_i >= 7
-          it { is_expected.to install_php_install('all-packages').with(packages: %w(php-devel mod_php)) }
+          it { is_expected.to install_php_install('packages all packages').with(packages: %w(php-devel mod_php)) }
         else
-          it { is_expected.to install_php_install('all-packages').with(packages: %w(php-devel php)) }
+          it { is_expected.to install_php_install('packages all packages').with(packages: %w(php-devel php)) }
         end
 
         it { is_expected.to install_package('php-pear') }
@@ -391,12 +391,12 @@ describe 'osl_php_install' do
 
           if version.to_f >= 7
             it do
-              is_expected.to install_php_install('all-packages').with(packages: ["#{prefix}-devel", "mod_#{prefix}"])
+              is_expected.to install_php_install('packages all packages').with(packages: ["#{prefix}-devel", "mod_#{prefix}"])
             end
             it { is_expected.to install_package('pear1') }
           else
             it do
-              is_expected.to install_php_install('all-packages').with(packages: ["#{prefix}-devel", "#{prefix}"])
+              is_expected.to install_php_install('packages all packages').with(packages: ["#{prefix}-devel", "#{prefix}"])
             end
             it { is_expected.to install_package("#{prefix}-pear") }
           end
@@ -420,9 +420,9 @@ describe 'osl_php_install' do
           it do
             prefix = "php#{version.delete('.')}#{version.to_f < 7.3 ? 'u' : ''}"
             if version.to_i == 7
-              is_expected.to install_php_install('all-packages').with(packages: ["#{prefix}-devel", "mod_#{prefix}", "#{prefix}-opcache"])
+              is_expected.to install_php_install('packages all packages').with(packages: ["#{prefix}-devel", "mod_#{prefix}", "#{prefix}-opcache"])
             else
-              is_expected.to install_php_install('all-packages').with(packages: ["#{prefix}-devel", "#{prefix}", "#{prefix}-opcache"])
+              is_expected.to install_php_install('packages all packages').with(packages: ["#{prefix}-devel", "#{prefix}", "#{prefix}-opcache"])
             end
           end
         end

@@ -109,7 +109,7 @@ action :install do
     all_packages <<= "#{prefix}-opcache"
   end
 
-  php_install 'all-packages' do
+  php_install "#{new_resource.name} all packages" do
     packages all_packages
     directives new_resource.directives
   end
