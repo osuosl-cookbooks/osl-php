@@ -9,8 +9,6 @@ description      'Installs/Configures php_test'
 version          '0.1.0'
 
 depends          'osl-php'
-depends          'osl-apache'
-depends          'yum-ius'
-depends          'yum-osuosl'
 
 supports         'centos', '~> 7.0'
+supports         'almalinux', '~> 8.0'
