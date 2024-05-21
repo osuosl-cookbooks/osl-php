@@ -26,10 +26,6 @@ action :install do
 
   # opcache
   if new_resource.use_opcache
-    if node['platform_version'].to_i == 7 && !new_resource.use_ius
-      raise 'Must enable IUS to use OPcache.'
-    end
-
     osl_php_ini '10-opcache' do
       options osl_php_opcache_conf.merge!(new_resource.opcache_conf)
     end

@@ -212,24 +212,6 @@ describe 'osl_php_install' do
           packages: %w(php74-devel php74-cli mod_php74 php74-opcache)
         )
       end
-
-      context 'Fail OPcache due to no IUS' do
-        cached(:chef_run) do
-          chef_runner.converge('php_test::blank') do
-            recipe = Chef::Recipe.new('test', '_test', chef_runner.run_context)
-
-            recipe.instance_exec do
-              osl_php_install 'fail opcache' do
-                use_opcache true
-              end
-            end
-          end
-        end
-
-        it do
-          expect { chef_run }.to raise_error(RuntimeError, /Must enable IUS to use OPcache./)
-        end
-      end
     end
   end
 
