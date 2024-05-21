@@ -2,15 +2,15 @@ resource_name :osl_php_install
 provides :osl_php_install
 unified_mode true
 
+property :composer_version, String, default: lazy { default_composer_version }
+property :directives, Hash, default: {}
+property :opcache_conf, Hash, default: {}
 property :packages, Array, default: []
 property :php_packages, Array, default: []
-property :use_ius, [true, false], default: false
-property :version, String
 property :use_composer, [true, false], default: false
-property :composer_version, String, default: lazy { default_composer_version }
+property :use_ius, [true, false], default: false
 property :use_opcache, [true, false], default: false
-property :opcache_conf, Hash, default: {}
-property :directives, Hash, default: {}
+property :version, String
 
 action :install do
   system_php = new_resource.version.nil?
