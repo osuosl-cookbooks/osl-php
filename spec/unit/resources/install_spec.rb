@@ -119,25 +119,6 @@ describe 'osl_php_install' do
         )
       end
     end
-
-    context 'Fail OPcache due to version' do
-      cached(:chef_run) do
-        chef_runner.converge('php_test::blank') do
-          recipe = Chef::Recipe.new('test', '_test', chef_runner.run_context)
-
-          recipe.instance_exec do
-            osl_php_install 'fail opcache' do
-              use_opcache true
-              version '5.4'
-            end
-          end
-        end
-      end
-
-      it do
-        expect { chef_run }.to raise_error(RuntimeError, /Must use PHP >= 5.5 to use OPcache./)
-      end
-    end
   end
 
   context 'Composer' do
@@ -246,7 +227,7 @@ describe 'osl_php_install' do
         end
 
         it do
-          expect { chef_run }.to raise_error(RuntimeError, /Must use PHP >= 5.5 with IUS enabled to use OPcache./)
+          expect { chef_run }.to raise_error(RuntimeError, /Must enable IUS to use OPcache./)
         end
       end
     end
