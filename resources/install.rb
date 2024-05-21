@@ -16,8 +16,8 @@ action :install do
   system_php = new_resource.version.nil?
   version = new_resource.version || php_version
   shortver = version.delete('.') # version X.X -> XX
-  all_packages = new_resource.packages.to_a
-  all_php_packages = new_resource.php_packages.to_a
+  all_packages = new_resource.packages
+  all_php_packages = new_resource.php_packages
 
   include_recipe 'osl-selinux'
   include_recipe 'osl-repos::epel'
