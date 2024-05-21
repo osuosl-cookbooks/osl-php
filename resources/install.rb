@@ -2,7 +2,7 @@ resource_name :osl_php_install
 provides :osl_php_install
 unified_mode true
 
-property :composer_version, String, default: lazy { default_composer_version }
+property :composer_version, String, default: lazy { osl_php_default_composer_version }
 property :directives, Hash, default: {}
 property :opcache_conf, Hash, default: {}
 property :packages, Array, default: []
@@ -36,7 +36,7 @@ action :install do
     end
 
     osl_php_ini '10-opcache' do
-      options opcache_conf.merge!(new_resource.opcache_conf)
+      options osl_php_opcache_conf.merge!(new_resource.opcache_conf)
     end
   end
 
@@ -50,7 +50,7 @@ action :install do
     end
 
     # Enable IUS archive repo for archived versions
-    enable_ius_archive = ius_archive_versions.include?(version)
+    enable_ius_archive = osl_php_ius_archive_versions.include?(version)
     node.default['yum']['ius-archive']['enabled'] = enable_ius_archive
     node.default['yum']['ius-archive']['managed'] = true
 
@@ -87,7 +87,7 @@ action :install do
 
   # install default packages if no packages were specified, but wait to select the mod_php and pear packages
   if all_packages.empty? && all_php_packages.empty?
-    all_php_packages = php_installation_packages_without_prefixes
+    all_php_packages = osl_php_default_installation_packages_without_prefixes
   end
 
   all_packages += all_php_packages.map { |p| "#{prefix}-#{p}" }

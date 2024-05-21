@@ -43,7 +43,7 @@ This resource is used to install PHP packages. It also adds an ini file to set t
     <td>use_ius</td>
     <td align="center">[true, false]</td>
     <td align="center">false</td>
-    <td>Whether to install from IUS (<a href='https://ius.io/'>Inline with Upstream Stable</a>) repositories. Uses IUS archive repo if the PHP version is part of the `ius_archive_versions` helper list. This helper should be updated based on IUS's list of EOL'd packages: https://github.com/iusrepo/packaging/wiki/End-Of-Life-Dates#php</td>
+    <td>Whether to install from IUS (<a href='https://ius.io/'>Inline with Upstream Stable</a>) repositories. Uses IUS archive repo if the PHP version is part of the `osl_php_ius_archive_versions` helper list. This helper should be updated based on IUS's list of EOL'd packages: https://github.com/iusrepo/packaging/wiki/End-Of-Life-Dates#php</td>
     <td>false</td>
   </tr>
   <tr>
@@ -71,7 +71,7 @@ This resource is used to install PHP packages. It also adds an ini file to set t
     <td>opcache_conf</td>
     <td align="center">Hash</td>
     <td align="center"><code>{}</code></td>
-    <td>Configuration to add to a <code>10-opcache.ini</code> file. The options in the <code>opcache_conf</code> helper are added by default. Any options set in this property override duplicates in the helper.</td>
+    <td>Configuration to add to a <code>10-opcache.ini</code> file. The options in the <code>osl_php_opcache_conf</code> helper are added by default. Any options set in this property override duplicates in the helper.</td>
     <td>false</td>
   </tr>
 </table>
@@ -95,7 +95,7 @@ This resource is used to install APC from the PECL channel. Not compatible with 
   <tr>
     <td>options</td>
     <td align="center">Hash</td>
-     <td align="center"><code>apc_conf</code> helper</td>
+     <td align="center"><code>osl_php_apc_conf</code> helper</td>
     <td>Configuration to add to ini file.</td>
     <td>true</td>
   </tr>

@@ -2,7 +2,7 @@ resource_name :osl_php_apc
 provides :osl_php_apc
 unified_mode true
 
-property :options, Hash, default: lazy { apc_conf }
+property :options, Hash, default: lazy { osl_php_apc_conf }
 
 action :install do
   ruby_block 'raise_el8_exception' do
