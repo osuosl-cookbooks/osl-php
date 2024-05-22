@@ -249,27 +249,27 @@ describe 'osl_php_install' do
       it do
         is_expected.to install_php_install('non-prefixed packages with opcache all packages').with(packages: %w(graphviz-php php-cli php php-opcache))
       end
-    end
 
-    context 'Using OPcache' do
-      platform 'centos', '7'
-      cached(:chef_run) do
-        chef_runner.converge('php_test::blank') do
-          recipe = Chef::Recipe.new('test', '_test', chef_runner.run_context)
+      context 'CentOS 7' do
+        platform 'centos', '7'
+        cached(:chef_run) do
+          chef_runner.converge('php_test::blank') do
+            recipe = Chef::Recipe.new('test', '_test', chef_runner.run_context)
 
-          recipe.instance_exec do
-            osl_php_install 'non-prefixed packages with opcache' do
-              packages %w(graphviz-php pecl-imagick php-cli)
-              use_ius true
-              use_opcache true
+            recipe.instance_exec do
+              osl_php_install 'non-prefixed packages with opcache' do
+                packages %w(graphviz-php pecl-imagick php-cli)
+                use_ius true
+                use_opcache true
+              end
             end
           end
         end
-      end
-      it do
-        is_expected.to install_php_install('non-prefixed packages with opcache all packages').with(
-          packages: %w(graphviz-php pecl-imagick php-cli mod_php74 php74-opcache)
-        )
+        it do
+          is_expected.to install_php_install('non-prefixed packages with opcache all packages').with(
+            packages: %w(graphviz-php pecl-imagick php-cli mod_php74 php74-opcache)
+          )
+        end
       end
     end
   end
