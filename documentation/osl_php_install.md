@@ -13,10 +13,10 @@ This resource is used to install PHP packages. It also adds an ini file to set t
 | opcache_conf     | Hash            | `{}`        | Configuration options for `10-opcache.ini` file. | false       |
 | packages         | Array           | `[]`<br><br>If both `packages` and `php_packages` are empty, the `php_installation_packages` helper determines what is installed. | Full names of specific packages to install. The primary PHP and PEAR packages will be installed automatically, so they don't need to be specified here. | false       |
 | php_packages     | Array           | `[]`<br><br>If both `packages` and `php_packages` are empty, the `php_installation_packages` helper determines what is installed. | List of names of packages that should be installed with prefixed names (`phpX.X-` or `phpX.Xu-`), specified without the prefixes. The resource will add the appropriate prefixes to these names and install the packages. | false       |
-| version          | String          | `nil`<br><br>When `nil`, the `php_version` helper determines what version is installed. Leave as `nil` to install from system packages. | PHP version to install.                          | false       |
-| use_ius          | `[true, false]` | false       | Whether to install from [IUS](https://ius.io/) repositories. Uses IUS archive repo if the PHP version is part of the `osl_php_ius_archive_versions` helper list. This helper should be updated based on IUS's [list of EOL'd packages](https://github.com/iusrepo/packaging/wiki/End-Of-Life-Dates#php). | false       |
 | use_composer     | `[true, false]` | false       | Whether to install Composer.                     | false       |
+| use_ius          | `[true, false]` | false       | Whether to install from [IUS](https://ius.io/) repositories. Uses IUS archive repo if the PHP version is part of the `osl_php_ius_archive_versions` helper list. This helper should be updated based on IUS's [list of EOL'd packages](https://github.com/iusrepo/packaging/wiki/End-Of-Life-Dates#php). | false       |
 | use_opcache      | `[true, false]` | false       | Whether to install and configure OPcache.        | false       |
+| version          | String          | `nil`<br><br>When `nil`, the `php_version` helper determines what version is installed. Leave as `nil` to install from system packages. | PHP version to install.                          | false       |
 
 ## Examples
 
