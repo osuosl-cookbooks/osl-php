@@ -1,5 +1,5 @@
 # osl\_php\_install
-This resource is used to install PHP packages. It also adds an ini file to set the timezone to UTC and install phpcheck and phpshow by default.
+This resource is installs PHP packages. It also adds an ini file to set the timezone to UTC and installs phpcheck and phpshow by default.
 
 ## Actions
 * `:install` - Default action. Installs the given packages using the given properties.
@@ -8,11 +8,11 @@ This resource is used to install PHP packages. It also adds an ini file to set t
 
 |  Name            |  Type           |  Default    |  Description                                     |  Required?  |
 | :--------------- | :-------------: | :---------: | :----------------------------------------------- | :---------- |
-| composer_version | String          | 2.2.18      | Version of composer to install.                  | false       |
-| directives       | Hash            | `{}`        | Directives to pass to `php_install` resource.    | false       |
-| opcache_conf     | Hash            | `{}`        | Configuration options for `10-opcache.ini` file. | false       |
-| packages         | Array           | `[]`<br><br>If both `packages` and `php_packages` are empty, the `php_installation_packages` helper determines what is installed. | Full names of specific packages to install. The primary PHP and PEAR packages will be installed automatically, so they don't need to be specified here. | false       |
-| php_packages     | Array           | `[]`<br><br>If both `packages` and `php_packages` are empty, the `php_installation_packages` helper determines what is installed. | List of names of packages that should be installed with prefixed names (`phpX.X-` or `phpX.Xu-`), specified without the prefixes. The resource will add the appropriate prefixes to these names and install the packages. | false       |
+| composer_version | String          | 2.2.18      | Version of Composer to install.                  | false       |
+| directives       | Hash            | `{}`        | Directives to pass to `php_install` resource for ini configuration. | false       |
+| opcache_conf     | Hash            | `{}`<br><br>Options in `osl_php_opcache_conf` helper are added by default. Any options set in this property override duplicates in the helper. | Configuration to add to a `10-opcache.ini` file. | false       |
+| packages         | Array           | `[]`<br><br>If both `packages` and `php_packages` are empty, the `osl_php_installation_packages_without_prefixes` helper determines what is installed. | Full names of specific packages to install. The primary PHP and PEAR packages will be installed automatically, so they don't need to be specified here. | false       |
+| php_packages     | Array           | `[]`<br><br>If both `packages` and `php_packages` are empty, the `osl_php_installation_packages_without_prefixes` helper determines what is installed. | Names of packages that should be installed with prefixed names (`phpX.X-` or `phpX.Xu-`), specified without the prefixes. The resource will add the appropriate prefixes to these names before installing the packages. | false       |
 | use_composer     | `[true, false]` | false       | Whether to install Composer.                     | false       |
 | use_ius          | `[true, false]` | false       | Whether to install from [IUS](https://ius.io/) repositories. Uses IUS archive repo if the PHP version is part of the `osl_php_ius_archive_versions` helper list. This helper should be updated based on IUS's [list of EOL'd packages](https://github.com/iusrepo/packaging/wiki/End-Of-Life-Dates#php). | false       |
 | use_opcache      | `[true, false]` | false       | Whether to install and configure OPcache.        | false       |
