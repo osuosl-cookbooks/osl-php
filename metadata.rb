@@ -13,7 +13,7 @@ supports         'centos', '~> 7.0'
 
 depends          'osl-repos'
 depends          'osl-selinux'
-depends          'php'
+depends          'php', '~> 10.0.0'
 depends          'yum-ius'
 depends          'yum-osuosl'
 depends          'yum-remi-chef', '>= 6.1.0'
