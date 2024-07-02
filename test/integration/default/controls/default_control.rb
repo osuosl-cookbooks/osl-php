@@ -5,9 +5,8 @@ control 'php_packages' do
   title 'Verify that the php packages are installed and configured'
 
   %w(php
+     php-cli
      php-devel
-     php-fpm
-     php-gd
      php-pear).each do |pkg|
     describe package(pkg) do
       it { should be_installed }

@@ -1,11 +1,16 @@
 apache2_install 'default'
 
+system_php = node['php_test']['version'].nil?
 major_version =
-  if system_php?
-    node['platform_version'].to_i == 7 ? '5' : '7'
-  elsif node['php']['version'].to_i < 8
+  if system_php
+    if node['platform_version'].to_i >= 8
+      '7'
+    else
+      node['php_test']['use_ius'] ? '7' : '5'
+    end
+  elsif node['php_test']['version'].to_i < 8
     # PHP 8 in Remi does not have version in filename
-    node['php']['version'].to_i
+    node['php_test']['version'].to_i
   end
 
 apache2_module "php#{major_version}" do
@@ -36,7 +41,7 @@ end
 apache2_service 'default' do
   action [:enable, :start]
   subscribes :restart, 'apache2_install[default]'
-  subscribes :reload, "apache2_module[php#{major_version}]"
-  subscribes :reload, 'apache2_conf[opcache_vhost]'
-  subscribes :reload, 'apache2_site[localhost]'
+  subscribes :restart, "apache2_module[php#{major_version}]"
+  subscribes :restart, 'apache2_conf[opcache_vhost]'
+  subscribes :restart, 'apache2_site[localhost]'
 end

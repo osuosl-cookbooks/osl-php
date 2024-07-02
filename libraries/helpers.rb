@@ -1,11 +1,6 @@
 module OslPhp
   module Cookbook
     module Helpers
-      def system_php?
-        # If didn't change this to 7.2 or 7.3, etc then let's assume we're using the system php package
-        node['php']['version'].match?(/\d+\.\d+\.\d+/)
-      end
-
       def osl_php_available_ram
         total_ram = (node['memory']['total'].split('kB')[0].to_i / 1024) # in MB
         reserved_ram = 1024
@@ -21,12 +16,47 @@ module OslPhp
         end
       end
 
+      # List PHP versions that require IUS archive repo: https://github.com/iusrepo/packaging/wiki/End-Of-Life-Dates#php
+      # Also see https://github.com/orgs/iusrepo/repositories?q=&type=archived&language=&sort=
+      def osl_php_ius_archive_versions
+        %w(5.6 7.1 7.2 7.4)
+      end
+
+      def osl_php_default_composer_version
+        '2.2.18'
+      end
+
+      def osl_php_apc_conf
+        {
+          'extension' => 'apc.so',
+          'apc.shm_size' => '128M',
+          'apc.user_ttl' => 7200,
+          'apc.enable_cli' => 0,
+          'apc.ttl' => 3600,
+          'apc.gc_ttl' => 3600,
+          'apc.max_file_size' => '1M',
+          'apc.stat' => 1,
+         }
+      end
+
+      # defaults from php72u-opcache package on CentOS 7
+      def osl_php_opcache_conf
+        {
+          'zend_extension' => 'opcache.so',
+          'opcache.blacklist_filename' => '/etc/php.d/opcache*.blacklist',
+          'opcache.enable' => 1,
+          'opcache.interned_strings_buffer' => 8,
+          'opcache.max_accelerated_files' => 4000,
+          'opcache.memory_consumption' => 128,
+        }
+      end
+
       # process_size: in MB
       def osl_php_fpm_settings(process_size)
         # https://chrismoore.ca/2018/10/finding-the-correct-pm-max-children-settings-for-php-fpm/
         # https://github.com/spot13/pmcalculator
 
-        # Run the following to figure the RSS size of php-fpm: ps -ylC php-fpm
+        # Run the following to figure out the RSS size of php-fpm: ps -ylC php-fpm
         # [Available RAM for PHP] / [Average Process Size] = [max_children]
         max_children = (osl_php_available_ram / process_size).floor
 
@@ -43,6 +73,10 @@ module OslPhp
           'min_spare_servers' => min_spare_servers,
           'max_spare_servers' => max_spare_servers,
         }
+      end
+
+      def osl_php_default_installation_packages_without_prefixes
+        (php_installation_packages.map { |p| p[/^php[0-9u]*-(.*)/, 1] } - ['pear'] - [nil])
       end
     end
   end

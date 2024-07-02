@@ -10,7 +10,7 @@ provisioner:
   attributes:
     omnibus_updater:
       disabled: true
-    osl-php:
+    php_test:
       php_packages:
         - 'devel'
         - 'fpm'
@@ -22,27 +22,32 @@ provisioner:
 suites:
   - name: default
     run_list:
-      - recipe[osl-php::default]
+      - recipe[php_test::default]
       - recipe[php_test::php_helpers]
+    attributes:
+      php_test:
+        php_packages: []
 
   - name: apc
     run_list:
-      - recipe[osl-php::default]
-      - recipe[osl-php::apc]
+      - recipe[php_test::default]
+      - recipe[php_test::apc]
       - recipe[php_test::phpinfo_apache]
     excludes:
       - almalinux-8
 
   - name: composer
     run_list:
-    - recipe[osl-php::composer]
+      - recipe[php_test::composer]
+    attributes:
+      composer_version: '2.2.18'
 
   - name: packages
     run_list:
-    - recipe[osl-php::packages]
-    - recipe[php_test::phpinfo_apache]
+      - recipe[php_test::packages]
+      - recipe[php_test::phpinfo_apache]
     attributes:
-      osl-php:
+      php_test:
         php_packages:
           - 'devel'
           - 'fpm'
@@ -53,44 +58,42 @@ suites:
 
   - name: packages-php-ius
     run_list:
-    - recipe[osl-php::packages]
-    - recipe[php_test::phpinfo_apache]
+      - recipe[php_test::packages]
+      - recipe[php_test::phpinfo_apache]
     attributes:
-      osl-php:
+      php_test:
         use_ius: true
-    excludes:
-      - almalinux-8
     verifier:
       inspec_tests:
         - test/integration/packages
       inputs:
         version: '7.4'
+    excludes:
+      - almalinux-8
 
   - name: packages-php56
     run_list:
-    - recipe[osl-php::packages]
-    - recipe[php_test::phpinfo_apache]
+      - recipe[php_test::packages]
+      - recipe[php_test::phpinfo_apache]
     attributes:
-      osl-php:
+      php_test:
         use_ius: true
-      php:
         version: '5.6'
-    excludes:
-      - almalinux-8
     verifier:
       inspec_tests:
         - test/integration/packages
       inputs:
         version: '5.6'
+    excludes:
+      - almalinux-8
 
   - name: packages-php72
     run_list:
-    - recipe[osl-php::packages]
-    - recipe[php_test::phpinfo_apache]
+      - recipe[php_test::packages]
+      - recipe[php_test::phpinfo_apache]
     attributes:
-      osl-php:
+      php_test:
         use_ius: true
-      php:
         version: '7.2'
     verifier:
       inspec_tests:
@@ -100,12 +103,11 @@ suites:
 
   - name: packages-php74
     run_list:
-    - recipe[osl-php::packages]
-    - recipe[php_test::phpinfo_apache]
+      - recipe[php_test::packages]
+      - recipe[php_test::phpinfo_apache]
     attributes:
-      osl-php:
+      php_test:
         use_ius: true
-      php:
         version: '7.4'
     verifier:
       inspec_tests:
@@ -115,10 +117,10 @@ suites:
 
   - name: packages-php80
     run_list:
-    - recipe[osl-php::packages]
-    - recipe[php_test::phpinfo_apache]
+      - recipe[php_test::packages]
+      - recipe[php_test::phpinfo_apache]
     attributes:
-      php:
+      php_test:
         version: '8.0'
     verifier:
       inspec_tests:
@@ -130,10 +132,10 @@ suites:
 
   - name: packages-php81
     run_list:
-    - recipe[osl-php::packages]
-    - recipe[php_test::phpinfo_apache]
+      - recipe[php_test::packages]
+      - recipe[php_test::phpinfo_apache]
     attributes:
-      php:
+      php_test:
         version: '8.1'
     verifier:
       inspec_tests:
@@ -143,9 +145,9 @@ suites:
     excludes:
       - centos-7
 
-  - name: php_ini
+  - name: osl_php_ini
     run_list:
-    - recipe[php_test::php_ini]
+      - recipe[php_test::php_ini]
     provisioner:
       enforce_idempotency: false
       multiple_converge: 1
@@ -155,52 +157,60 @@ suites:
 
   - name: opcache-php56
     run_list:
-    - recipe[osl-php::default]
-    - recipe[php_test::phpinfo_apache]
+      - recipe[php_test::packages]
+      - recipe[php_test::phpinfo_apache]
     attributes:
-      osl-php:
+      php_test:
         php_packages:
           - 'devel'
           - 'fpm'
           - 'gd'
-          - 'opcache'
         use_ius: true
         use_opcache: true
-        opcache:
-          opcache.enable_cli: 'true'
-          opcache.memory_consumption: 1024
-          opcache.max_accelerated_files: 1000
-      php:
+        version: '5.6'
+    verifier:
+      inspec_tests:
+        - test/integration/opcache
+      inputs:
         version: '5.6'
     excludes:
       - almalinux-8
-    verifier:
-      inspec_tests:
-        - test/integration/opcache
-      inputs:
-        version: '5.6'
 
   - name: opcache-php72
     run_list:
-    - recipe[osl-php::default]
-    - recipe[php_test::phpinfo_apache]
+      - recipe[php_test::packages]
+      - recipe[php_test::phpinfo_apache]
     attributes:
-      osl-php:
+      php_test:
         php_packages:
           - 'devel'
           - 'fpm'
           - 'gd'
-          - 'opcache'
         use_ius: true
         use_opcache: true
-        opcache:
-          opcache.enable_cli: 'true'
-          opcache.memory_consumption: 1024
-          opcache.max_accelerated_files: 1000
-      php:
         version: '7.2'
     verifier:
       inspec_tests:
         - test/integration/opcache
       inputs:
         version: '7.2'
+
+  - name: opcache-php81
+    run_list:
+      - recipe[php_test::packages]
+      - recipe[php_test::phpinfo_apache]
+    attributes:
+      php_test:
+        php_packages:
+          - 'devel'
+          - 'fpm'
+          - 'gd'
+        use_opcache: true
+        version: '8.1'
+    verifier:
+      inspec_tests:
+        - test/integration/opcache
+      inputs:
+        version: '8.1'
+    excludes:
+      - centos-7
