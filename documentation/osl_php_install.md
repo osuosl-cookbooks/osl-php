@@ -14,7 +14,6 @@ This resource is installs PHP packages. It also adds an ini file to set the time
 | packages         | Array           | `[]`<br><br>If both `packages` and `php_packages` are empty, the `osl_php_installation_packages_without_prefixes` helper determines what is installed. | Full names of specific packages to install. The primary PHP and PEAR packages will be installed automatically, so they don't need to be specified here. | false       |
 | php_packages     | Array           | `[]`<br><br>If both `packages` and `php_packages` are empty, the `osl_php_installation_packages_without_prefixes` helper determines what is installed. | Names of packages that should be installed with prefixed names (`phpX.X-` or `phpX.Xu-`), specified without the prefixes. The resource will add the appropriate prefixes to these names before installing the packages. | false       |
 | use_composer     | `[true, false]` | false       | Whether to install Composer.                     | false       |
-| use_ius          | `[true, false]` | false       | Whether to install from [IUS](https://ius.io/) repositories. Uses IUS archive repo if the PHP version is part of the `osl_php_ius_archive_versions` helper list. This helper should be updated based on IUS's [list of EOL'd packages](https://github.com/iusrepo/packaging/wiki/End-Of-Life-Dates#php). | false       |
 | use_opcache      | `[true, false]` | false       | Whether to install and configure OPcache.        | false       |
 | version          | String          | `nil`<br><br>When `nil`, the `php_version` helper determines what version is installed. Leave as `nil` to install from system packages. | PHP version to install.                          | false       |
 
@@ -32,34 +31,31 @@ osl_php_install 'example' do
 end
 ```
 
-Install `php56u`, `php56u-devel`, `php56u-cli`, `php56u-pear`, and `php56u-opcache`, and add `opcache.enable_cli=true` and `opcache.memory_consumption=512` to the `10-opcache.ini` file.
+Install `php`, `php-devel`, `php-cli`, `php-pear`, and `php-opcache`, and add `opcache.enable_cli=true` and `opcache.memory_consumption=512` to the `10-opcache.ini` file.
 ```ruby
 options = {
   'opcache.enable_cli' => true,
   'opcache.memory_consumption' => 512
 }
 osl_php_install 'example' do
-  version '5.6'
-  use_ius true
+  version '8.1'
   use_opcache true
   opcache_conf options
 end
 ```
 
-Install `php56u`, `php56u-fpm`, and `php56u-pear`.
+Install `php`, `php-fpm`, and `php-pear`.
 ```ruby
 osl_php_install 'example' do
-  version '5.6'
-  use_ius true
+  version '8.1'
   php_packages %w(fpm)
 end
 ```
 
-Install `php71u`, `php71u-fpm`, `php71u-cli`, and `pear1`.
+Install `php`, `php-fpm`, `php-cli`, and `php-pear`.
 ```ruby
 osl_php_install 'example' do
   version '7.1'
-  use_ius true
   php_packages %w(fpm cli)
 end
 ```
