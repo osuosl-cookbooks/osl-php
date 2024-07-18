@@ -16,27 +16,8 @@ module OslPhp
         end
       end
 
-      # List PHP versions that require IUS archive repo: https://github.com/iusrepo/packaging/wiki/End-Of-Life-Dates#php
-      # Also see https://github.com/orgs/iusrepo/repositories?q=&type=archived&language=&sort=
-      def osl_php_ius_archive_versions
-        %w(5.6 7.1 7.2 7.4)
-      end
-
       def osl_php_default_composer_version
         '2.2.18'
-      end
-
-      def osl_php_apc_conf
-        {
-          'extension' => 'apc.so',
-          'apc.shm_size' => '128M',
-          'apc.user_ttl' => 7200,
-          'apc.enable_cli' => 0,
-          'apc.ttl' => 3600,
-          'apc.gc_ttl' => 3600,
-          'apc.max_file_size' => '1M',
-          'apc.stat' => 1,
-         }
       end
 
       # defaults from php72u-opcache package on CentOS 7

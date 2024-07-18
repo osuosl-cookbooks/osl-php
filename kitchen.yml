@@ -15,7 +15,6 @@ provisioner:
         - 'devel'
         - 'fpm'
         - 'gd'
-        - 'pecl-imagick'
     osl-selinux:
       enforcing: true
 
@@ -27,14 +26,6 @@ suites:
     attributes:
       php_test:
         php_packages: []
-
-  - name: apc
-    run_list:
-      - recipe[php_test::default]
-      - recipe[php_test::apc]
-      - recipe[php_test::phpinfo_apache]
-    excludes:
-      - almalinux-8
 
   - name: composer
     run_list:
@@ -56,44 +47,12 @@ suites:
       inputs:
         system_php: true
 
-  - name: packages-php-ius
-    run_list:
-      - recipe[php_test::packages]
-      - recipe[php_test::phpinfo_apache]
-    attributes:
-      php_test:
-        use_ius: true
-    verifier:
-      inspec_tests:
-        - test/integration/packages
-      inputs:
-        version: '7.4'
-    excludes:
-      - almalinux-8
-
-  - name: packages-php56
-    run_list:
-      - recipe[php_test::packages]
-      - recipe[php_test::phpinfo_apache]
-    attributes:
-      php_test:
-        use_ius: true
-        version: '5.6'
-    verifier:
-      inspec_tests:
-        - test/integration/packages
-      inputs:
-        version: '5.6'
-    excludes:
-      - almalinux-8
-
   - name: packages-php72
     run_list:
       - recipe[php_test::packages]
       - recipe[php_test::phpinfo_apache]
     attributes:
       php_test:
-        use_ius: true
         version: '7.2'
     verifier:
       inspec_tests:
@@ -107,7 +66,6 @@ suites:
       - recipe[php_test::phpinfo_apache]
     attributes:
       php_test:
-        use_ius: true
         version: '7.4'
     verifier:
       inspec_tests:
@@ -127,8 +85,6 @@ suites:
         - test/integration/packages
       inputs:
         version: '8.0'
-    excludes:
-      - centos-7
 
   - name: packages-php81
     run_list:
@@ -142,8 +98,6 @@ suites:
         - test/integration/packages
       inputs:
         version: '8.1'
-    excludes:
-      - centos-7
 
   - name: osl_php_ini
     run_list:
@@ -155,27 +109,6 @@ suites:
       inspec_tests:
         - test/integration/php-ini
 
-  - name: opcache-php56
-    run_list:
-      - recipe[php_test::packages]
-      - recipe[php_test::phpinfo_apache]
-    attributes:
-      php_test:
-        php_packages:
-          - 'devel'
-          - 'fpm'
-          - 'gd'
-        use_ius: true
-        use_opcache: true
-        version: '5.6'
-    verifier:
-      inspec_tests:
-        - test/integration/opcache
-      inputs:
-        version: '5.6'
-    excludes:
-      - almalinux-8
-
   - name: opcache-php72
     run_list:
       - recipe[php_test::packages]
@@ -186,7 +119,6 @@ suites:
           - 'devel'
           - 'fpm'
           - 'gd'
-        use_ius: true
         use_opcache: true
         version: '7.2'
     verifier:
@@ -212,5 +144,3 @@ suites:
         - test/integration/opcache
       inputs:
         version: '8.1'
-    excludes:
-      - centos-7
