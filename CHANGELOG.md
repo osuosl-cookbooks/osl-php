@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+7.1.0 (2024-07-18)
+------------------
+- Remove support for CentOS 7
+
 7.0.0 (2024-07-02)
 ------------------
 - Convert to Resource-Based
