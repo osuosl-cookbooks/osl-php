@@ -23,11 +23,11 @@ control 'site' do
   end
 end
 
-control 'packages c8' do
-  title 'Verify the correct packages are installed on RHEL 8 family'
+control 'packages RHEL 8+' do
+  title 'Verify the correct packages are installed on RHEL 8+ family'
 
-  only_if 'not on RHEL 8 family' do
-    os.release.to_i == 8
+  only_if 'not on RHEL 8+ family' do
+    os.release.to_i >= 8
   end
 
   if version.to_f > 7.2
