@@ -12,3 +12,4 @@ depends          'osl-php'
 depends          'apache2'
 
 supports         'almalinux', '~> 8.0'
+supports         'almalinux', '~> 9.0'
