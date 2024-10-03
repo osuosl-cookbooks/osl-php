@@ -3,7 +3,11 @@ apache2_install 'default'
 system_php = node['php_test']['version'].nil?
 major_version =
   if system_php
-    '7'
+    if node['platform_version'].to_i >= 9
+      8
+    else
+      7
+    end
   elsif node['php_test']['version'].to_i < 8
     # PHP 8 in Remi does not have version in filename
     node['php_test']['version'].to_i
