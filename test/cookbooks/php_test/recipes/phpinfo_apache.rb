@@ -15,7 +15,8 @@ major_version =
 
 apache2_module "php#{major_version}" do
   mod_name "libphp#{major_version}.so"
-end
+end unless node['platform_version'].to_i >= 9 and system_php
+# System PHP on AlmaLinux 9 does not create a module
 
 apache2_conf 'opcache_vhost' do
   template_cookbook 'php_test'
