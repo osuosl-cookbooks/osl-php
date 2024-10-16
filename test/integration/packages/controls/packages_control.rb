@@ -8,7 +8,7 @@ control 'version' do
   title 'Verify that PHP is the correct version'
 
   only_if 'version is not given' do
-    !version.nil?
+    version != ''
   end
 
   describe command('php --version') do
