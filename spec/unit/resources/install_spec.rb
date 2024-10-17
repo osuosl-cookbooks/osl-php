@@ -1,7 +1,7 @@
 require_relative '../../spec_helper'
 
 describe 'osl_php_install' do
-  platform 'almalinux', '8'
+  platform 'almalinux', '9'
   step_into :osl_php_install
 
   cached(:chef_run) do
@@ -39,6 +39,25 @@ describe 'osl_php_install' do
       mode: '755',
       cookbook: 'osl-php'
     )
+  end
+
+  context 'Almalinux 8' do
+    platform 'almalinux', '8'
+    step_into :osl_php_install
+
+    cached(:chef_run) do
+      chef_runner.converge('php_test::blank') do
+        recipe = Chef::Recipe.new('test', '_test', chef_runner.run_context)
+
+        recipe.instance_exec do
+          osl_php_install 'default packages'
+        end
+      end
+    end
+
+    # using packages with non-versioned prefixes
+    it { is_expected.to install_php_install('default packages all packages').with(packages: %w(php-devel php-cli php)) }
+    it { is_expected.to install_package('php-pear') }
   end
 
   context 'Using OPcache' do
@@ -144,7 +163,7 @@ describe 'osl_php_install' do
 
   %w(7.2 7.4 8.0 8.1).each do |version|
     context "using packages with versioned prefixes: php #{version}" do
-      platform 'almalinux', '8'
+      platform 'almalinux', '9'
       cached(:chef_run) do
         chef_runner.converge('php_test::blank') do
           recipe = Chef::Recipe.new('test', '_test', chef_runner.run_context)
@@ -168,6 +187,27 @@ describe 'osl_php_install' do
           is_expected.to create_yum_remi_php72('default')
         when '7.4'
           is_expected.to create_yum_remi_php74('default')
+        end
+      end
+
+      it { is_expected.to install_php_install('packages all packages').with(packages: %w(php-devel php)) }
+      it { is_expected.to install_package('php-pear') }
+    end
+
+    context 'Almalinux 8' do
+      platform 'almalinux', '8'
+      step_into :osl_php_install
+
+      cached(:chef_run) do
+        chef_runner.converge('php_test::blank') do
+          recipe = Chef::Recipe.new('test', '_test', chef_runner.run_context)
+
+          recipe.instance_exec do
+            osl_php_install 'packages' do
+              php_packages %w(devel)
+              version version
+            end
+          end
         end
       end
 

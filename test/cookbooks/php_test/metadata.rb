@@ -8,7 +8,9 @@ source_url       'https://github.com/osuosl-cookbooks/osl-php'
 description      'Installs/Configures php_test'
 version          '0.1.0'
 
+depends          'osl-apache'
 depends          'osl-php'
 depends          'apache2'
 
 supports         'almalinux', '~> 8.0'
+supports         'almalinux', '~> 9.0'

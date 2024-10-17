@@ -9,6 +9,7 @@ description      'Installs/Configures osl-php'
 version          '7.1.0'
 
 supports         'almalinux', '~> 8.0'
+supports         'almalinux', '~> 9.0'
 
 depends          'osl-repos'
 depends          'osl-selinux'
