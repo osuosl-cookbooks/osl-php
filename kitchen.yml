@@ -59,6 +59,8 @@ suites:
         - test/integration/packages
       inputs:
         version: '7.2'
+    excludes:
+      - almalinux-9
 
   - name: packages-php74
     run_list:
@@ -126,6 +128,8 @@ suites:
         - test/integration/opcache
       inputs:
         version: '7.2'
+    excludes:
+      - almalinux-9
 
   - name: opcache-php81
     run_list:

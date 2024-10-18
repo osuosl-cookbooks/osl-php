@@ -7,6 +7,7 @@ This is the osl-php cookbook for managing PHP for the OSL.
 The following platforms and versions are tested and supported using [test-kitchen](http://kitchen.ci/):
 
 - AlmaLinux 8
+- AlmaLinux 9
 
 ## Resources
 

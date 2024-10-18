@@ -2,7 +2,7 @@ require_relative '../../spec_helper'
 
 describe 'osl_php_ini' do
   cached(:subject) { chef_run }
-  platform 'almalinux', '8'
+  platform 'almalinux'
   step_into :osl_php_ini
 
   recipe do

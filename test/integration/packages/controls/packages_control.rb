@@ -2,12 +2,13 @@
 include_controls 'selinux'
 
 version = input('version', value: '')
+system_php = input('system_php', value: false)
 
 control 'version' do
   title 'Verify that PHP is the correct version'
 
   only_if 'version is not given' do
-    !version.nil?
+    version != ''
   end
 
   describe command('php --version') do
@@ -15,19 +16,39 @@ control 'version' do
   end
 end
 
-control 'site' do
+control 'mod_php' do
   title 'Verify mod_php works'
+
+  only_if 'on RHEL 9+ family with system PHP' do
+    os.release.to_i <= 8 || !system_php
+  end
 
   describe command('curl localhost') do
     its('stdout') { should match /PHP Version #{version}/ }
   end
 end
 
-control 'packages c8' do
-  title 'Verify the correct packages are installed on RHEL 8 family'
+control 'php-fpm' do
+  title 'Verify php-fpm works'
 
-  only_if 'not on RHEL 8 family' do
-    os.release.to_i == 8
+  only_if 'not on RHEL 9+ family or using non-system PHP' do
+    os.release.to_i >= 9 && system_php
+  end
+
+  describe http(
+    'http://127.0.0.1',
+    headers: { 'Host' => 'php_test' }
+  ) do
+    its('status') { should cmp 200 }
+    its('body') { should match /PHP Version #{version}/ }
+  end
+end
+
+control 'packages RHEL 8+' do
+  title 'Verify the correct packages are installed on RHEL 8+ family'
+
+  only_if 'not on RHEL 8+ family' do
+    os.release.to_i >= 8
   end
 
   if version.to_f > 7.2
