@@ -101,6 +101,45 @@ suites:
       inputs:
         version: '8.1'
 
+  - name: packages-php82
+    run_list:
+      - recipe[php_test::packages]
+      - recipe[php_test::phpinfo_apache]
+    attributes:
+      php_test:
+        version: '8.2'
+    verifier:
+      inspec_tests:
+        - test/integration/packages
+      inputs:
+        version: '8.2'
+
+  - name: packages-php83
+    run_list:
+      - recipe[php_test::packages]
+      - recipe[php_test::phpinfo_apache]
+    attributes:
+      php_test:
+        version: '8.3'
+    verifier:
+      inspec_tests:
+        - test/integration/packages
+      inputs:
+        version: '8.3'
+
+  - name: packages-php84
+    run_list:
+      - recipe[php_test::packages]
+      - recipe[php_test::phpinfo_apache]
+    attributes:
+      php_test:
+        version: '8.4'
+    verifier:
+      inspec_tests:
+        - test/integration/packages
+      inputs:
+        version: '8.4'
+
   - name: osl_php_ini
     run_list:
       - recipe[php_test::php_ini]
@@ -148,3 +187,57 @@ suites:
         - test/integration/opcache
       inputs:
         version: '8.1'
+
+  - name: opcache-php82
+    run_list:
+      - recipe[php_test::packages]
+      - recipe[php_test::phpinfo_apache]
+    attributes:
+      php_test:
+        php_packages:
+          - 'devel'
+          - 'fpm'
+          - 'gd'
+        use_opcache: true
+        version: '8.2'
+    verifier:
+      inspec_tests:
+        - test/integration/opcache
+      inputs:
+        version: '8.2'
+
+  - name: opcache-php83
+    run_list:
+      - recipe[php_test::packages]
+      - recipe[php_test::phpinfo_apache]
+    attributes:
+      php_test:
+        php_packages:
+          - 'devel'
+          - 'fpm'
+          - 'gd'
+        use_opcache: true
+        version: '8.3'
+    verifier:
+      inspec_tests:
+        - test/integration/opcache
+      inputs:
+        version: '8.3'
+
+  - name: opcache-php84
+    run_list:
+      - recipe[php_test::packages]
+      - recipe[php_test::phpinfo_apache]
+    attributes:
+      php_test:
+        php_packages:
+          - 'devel'
+          - 'fpm'
+          - 'gd'
+        use_opcache: true
+        version: '8.4'
+    verifier:
+      inspec_tests:
+        - test/integration/opcache
+      inputs:
+        version: '8.4'
