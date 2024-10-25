@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+7.3.0 (2024-10-25)
+------------------
+- Add support for PHP 8.2/8.3/8.4
+
 7.2.0 (2024-10-18)
 ------------------
 - Add AlmaLinux 9
