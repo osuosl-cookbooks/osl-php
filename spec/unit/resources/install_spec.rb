@@ -161,7 +161,7 @@ describe 'osl_php_install' do
     end
   end
 
-  %w(7.2 7.4 8.0 8.1).each do |version|
+  %w(7.2 7.4 8.0 8.1 8.2 8.3 8.4).each do |version|
     context "using packages with versioned prefixes: php #{version}" do
       platform 'almalinux', '9'
       cached(:chef_run) do
@@ -181,8 +181,6 @@ describe 'osl_php_install' do
 
       it do
         case version
-        when '5.6'
-          is_expected.to create_yum_remi_php56('default')
         when '7.2'
           is_expected.to create_yum_remi_php72('default')
         when '7.4'
