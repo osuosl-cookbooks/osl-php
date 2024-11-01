@@ -87,6 +87,7 @@ action :install do
   end
 
   directory '/etc/httpd/conf.modules.d' do
+    recursive true
     action :delete
   end
 end
