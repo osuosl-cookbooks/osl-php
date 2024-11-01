@@ -19,8 +19,8 @@ end
 control 'mod_php' do
   title 'Verify mod_php works'
 
-  only_if 'on RHEL 9+ family with system PHP' do
-    os.release.to_i <= 8 || !system_php
+  only_if 'on RHEL 9+ family' do
+    os.release.to_i <= 8
   end
 
   describe command('curl localhost') do
@@ -31,8 +31,8 @@ end
 control 'php-fpm' do
   title 'Verify php-fpm works'
 
-  only_if 'not on RHEL 9+ family or using non-system PHP' do
-    os.release.to_i >= 9 && system_php
+  only_if 'not on RHEL 9+ family' do
+    os.release.to_i >= 9
   end
 
   describe http(
