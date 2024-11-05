@@ -85,4 +85,9 @@ action :install do
       action :create_if_missing
     end
   end
+
+  directory '/etc/httpd/conf.modules.d' do
+    recursive true
+    action :delete
+  end
 end

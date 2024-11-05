@@ -41,6 +41,8 @@ describe 'osl_php_install' do
     )
   end
 
+  it { is_expected.to delete_directory('/etc/httpd/conf.modules.d') }
+
   context 'Almalinux 8' do
     platform 'almalinux', '8'
     step_into :osl_php_install
