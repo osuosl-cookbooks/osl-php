@@ -3,7 +3,7 @@ driver:
   name: dokken
   privileged: true  # because Docker and SystemD/Upstart
   chef_image: cincproject/cinc
-  chef_version: <%= ENV['CHEF_VERSION'] || 'latest' %>
+  chef_version: <%= ENV['CHEF_VERSION'] || '18' %>
   pull_chef_image: false
   pull_platform_image: false
 
