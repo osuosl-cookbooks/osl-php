@@ -2,7 +2,6 @@
 include_controls 'selinux'
 
 version = input('version', value: '')
-system_php = input('system_php', value: false)
 
 control 'version' do
   title 'Verify that PHP is the correct version'
