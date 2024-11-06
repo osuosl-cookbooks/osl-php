@@ -6,7 +6,7 @@ issues_url       'https://github.com/osuosl-cookbooks/osl-php/issues'
 license          'Apache-2.0'
 chef_version     '>= 16.0'
 description      'Installs/Configures osl-php'
-version          '7.3.2'
+version          '7.3.3'
 
 supports         'almalinux', '~> 8.0'
 supports         'almalinux', '~> 9.0'

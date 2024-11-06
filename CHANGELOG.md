@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+7.3.3 (2024-11-06)
+------------------
+- Remove `conf.d` directory after installing
+
 7.3.2 (2024-11-06)
 ------------------
 - Also test php-fpm on non-system PHP
