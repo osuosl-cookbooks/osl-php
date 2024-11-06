@@ -26,7 +26,7 @@ file '/var/www/php_test/index.php' do
   group 'apache'
 end
 
-if node['platform_version'].to_i >= 9 && system_php
+if node['platform_version'].to_i >= 9
   node.default['osl-apache']['behind_loadbalancer'] = true
 
   include_recipe 'osl-apache'

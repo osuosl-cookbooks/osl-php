@@ -6,7 +6,7 @@ version = input('version')
 control 'opcache' do
   title 'Verify opcache package is installed and configured'
 
-  ['echo "<?php phpinfo(); ?>" | php', 'curl localhost'].each do |cmd|
+  ['echo "<?php phpinfo(); ?>" | php', 'curl -H "Host: php_test" localhost'].each do |cmd|
     describe command cmd do
       its('stdout') { should match /PHP Version.*#{version}/ }
       its('stdout') { should match /opcache\.memory_consumption.+1024/ }
