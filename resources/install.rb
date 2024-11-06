@@ -90,4 +90,9 @@ action :install do
     recursive true
     action :delete
   end
+
+  directory '/etc/httpd/conf.d' do
+    recursive true
+    action :delete
+  end
 end
