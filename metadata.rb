@@ -10,9 +10,10 @@ version          '7.3.3'
 
 supports         'almalinux', '~> 8.0'
 supports         'almalinux', '~> 9.0'
+supports         'almalinux', '~> 10.0'
 
 depends          'osl-repos'
 depends          'osl-selinux'
 depends          'php', '~> 10.0.0'
 depends          'yum-osuosl'
-depends          'yum-remi-chef', '>= 8.0.0'
+depends          'yum-remi-chef', '>= 8.1.0'
