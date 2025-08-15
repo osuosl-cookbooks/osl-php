@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+7.4.0 (2025-08-15)
+------------------
+- Add support for AlmaLinux 10
+
 7.3.3 (2024-11-06)
 ------------------
 - Remove `conf.d` directory after installing
