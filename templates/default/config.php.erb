@@ -14,7 +14,13 @@ define( 'YOURLS_LANG', '<%= @language %>' );
 define( 'YOURLS_UNIQUE_URLS', <%= @unique_urls %> );
 define( 'YOURLS_PRIVATE', <%= @private%> );
 define( 'YOURLS_COOKIEKEY', '<%= @cookiekey %>'  );
-$yourls_user_passwords = <%= @user_passwords %>;
+$yourls_user_passwords = [
+<% @user_passwords.each do |user_hash| -%>
+<%   user_hash.each do |username, password| -%>
+  '<%= username %>' => '<%= password %>',
+<%   end -%>
+<% end -%>
+];
 define( 'YOURLS_URL_CONVERT', <%= @url_convert %> );
 define( 'YOURLS_DEBUG', false );
 $yourls_reserved_URL = <%= @reserved_urls %>;

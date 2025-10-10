@@ -12,6 +12,7 @@ supports         'almalinux', '~> 8.0'
 supports         'almalinux', '~> 9.0'
 supports         'almalinux', '~> 10.0'
 
+depends          'ark'
 depends          'osl-resources'
 depends          'osl-repos'
 depends          'osl-selinux'

@@ -9,6 +9,7 @@ description      'Installs/Configures php_test'
 version          '0.1.0'
 
 depends          'osl-apache'
+depends          'osl-mysql'
 depends          'osl-php'
 depends          'apache2'
 
