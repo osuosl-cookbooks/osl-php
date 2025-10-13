@@ -1,3 +1,12 @@
+osl_mysql_test 'yourls' do
+  username 'yourls_owner'
+  password 'yourls_password'
+end
+
+node.default['osl-apache']['mpm'] = 'event'
+node.default['osl-selinux']['enforcing'] = false
+
+include_recipe 'osl-selinux'
 include_recipe 'osl-apache'
 
 # package 'php-mysqlnd'
@@ -31,11 +40,6 @@ end
 
 yourls_webroot = '/var/www/yourls.example.com/yourls'
 
-osl_mysql_test 'yourls' do
-  username 'yourls_owner'
-  password 'yourls_password'
-end
-
 osl_php_yourls 'yourls.example.com' do
   version '1.10'
   db_username 'yourls_owner'
@@ -53,9 +57,27 @@ end
 apache_app 'yourls.example.com' do
   directory yourls_webroot
   allow_override 'All'
+  directory_options %w(FollowSymLinks MultiViews)
   directive_http [
     '<FilesMatch "\.(php|phar)$">',
     '  SetHandler "proxy:unix:/var/run/yourls-fpm.sock|fcgi://localhost/"',
     '</FilesMatch>',
   ]
+end
+
+file "/var/www/yourls.example.com/yourls/.htaccess" do
+  content <<-EOF
+  # BEGIN YOURLS
+  <IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^.*$ /yourls-loader.php [L]
+  </IfModule>
+  # END YOURLS
+  EOF
+  owner "apache"
+  group "apache"
+  mode "0644"
 end
