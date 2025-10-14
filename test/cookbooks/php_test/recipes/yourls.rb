@@ -9,19 +9,18 @@ node.default['osl-selinux']['enforcing'] = false
 include_recipe 'osl-selinux'
 include_recipe 'osl-apache'
 
-# package 'php-mysqlnd'
+package 'php-mysqlnd'
 
-osl_php_install 'osl_php_yourls' do
+osl_php_install 'yourls' do
   version '8.4'
   notifies :reload, 'service[php-fpm]'
 end
 
 %w(proxy proxy_fcgi).each do |m|
-    apache2_module m do
-      notifies :reload, 'apache2_service[osuosl]'
-    end
+  apache2_module m do
+    notifies :reload, 'apache2_service[osuosl]'
   end
-
+end
 
 fpm_settings = osl_php_fpm_settings(52)
 
@@ -37,7 +36,6 @@ service 'php-fpm' do
   action :nothing
 end
 
-
 yourls_webroot = '/var/www/yourls.example.com/yourls'
 
 osl_php_yourls 'yourls.example.com' do
@@ -46,13 +44,12 @@ osl_php_yourls 'yourls.example.com' do
   db_password 'yourls_password'
   db_name 'yourls'
   db_host 'localhost'
-  domain 'https://yourls.example.com'
+  domain 'http://yourls.example.com'
   user_passwords [
-    'admin' => 'adminpassword'
+    'admin' => 'adminpassword',
   ]
   cookiekey '0h4U_DP&fGgxUFOD-044UZma_W8n)DVTs1B)gbx-'
 end
-
 
 apache_app 'yourls.example.com' do
   directory yourls_webroot
@@ -63,21 +60,4 @@ apache_app 'yourls.example.com' do
     '  SetHandler "proxy:unix:/var/run/yourls-fpm.sock|fcgi://localhost/"',
     '</FilesMatch>',
   ]
-end
-
-file "/var/www/yourls.example.com/yourls/.htaccess" do
-  content <<-EOF
-  # BEGIN YOURLS
-  <IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^.*$ /yourls-loader.php [L]
-  </IfModule>
-  # END YOURLS
-  EOF
-  owner "apache"
-  group "apache"
-  mode "0644"
 end

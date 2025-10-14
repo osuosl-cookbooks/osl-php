@@ -59,4 +59,21 @@ action :install do
         user_passwords: new_resource.user_passwords
       )
   end
+
+  file "/var/www/#{new_resource.name}/yourls/.htaccess" do
+    content <<-EOF
+    # BEGIN YOURLS
+    <IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^.*$ /yourls-loader.php [L]
+    </IfModule>
+    # END YOURLS
+    EOF
+    owner 'apache'
+    group 'apache'
+    mode '0644'
+  end
 end

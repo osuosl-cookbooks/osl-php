@@ -258,4 +258,4 @@ suites:
         version: '8.4'
   - name: yourls
     run_list:
-      - recipe[php_test::osl_php_yourls]
+      - recipe[php_test::yourls]
