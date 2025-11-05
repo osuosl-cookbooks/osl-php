@@ -7,6 +7,7 @@ property :directives, Hash, default: {}
 property :opcache_conf, Hash, default: {}
 property :packages, Array, default: []
 property :php_packages, Array, default: []
+property :remi_packages, [true, false], default: false
 property :use_composer, [true, false], default: false
 property :use_opcache, [true, false], default: false
 property :version, String
@@ -42,6 +43,10 @@ action :install do
   # install default packages if no packages were specified, but wait to select the mod_php and pear packages
   if all_packages.empty? && all_php_packages.empty?
     all_php_packages = osl_php_default_installation_packages_without_prefixes
+  end
+
+  if new_resource.remi_packages
+    prefix = "php#{shortver}-php"
   end
 
   all_packages += all_php_packages.map { |p| "#{prefix}-#{p}" }
