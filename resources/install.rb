@@ -34,7 +34,7 @@ action :install do
   unless system_php
     # enable powertools repo for libedit-devel
     include_recipe 'osl-repos::alma'
-    
+
     if new_resource.remi_packages
       declare_resource(:yum_remi_safe, 'default')
     else

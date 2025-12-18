@@ -13,4 +13,3 @@ osl_php_install "remi safe packages #{node['php_test']['version2']}" do
   version node['php_test']['version2']
   php_packages node['php_test']['php_packages2']
 end
-
