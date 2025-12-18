@@ -12,7 +12,7 @@ provisioner:
   name: chef_infra
   product_name: cinc
   product_version: '18'
-  multiple_converge: 2
+  multiple_converge: 3
   enforce_idempotency: true
   # deprecations_as_errors: true # windows / composer cookbooks
   attributes:
@@ -45,6 +45,46 @@ suites:
       - recipe[php_test::composer]
     attributes:
       composer_version: '2.2.18'
+
+  - name: remi-packages-php74
+    run_list:
+      - recipe[php_test::remi_packages]
+      - recipe[php_test::phpinfo_apache]
+    attributes:
+      php_test:
+        php_packages:
+          - 'cli'
+          - 'devel'
+          - 'fpm'
+          - 'gd'
+        version: '7.4'
+    verifier:
+      inspec_tests:
+        - test/integration/remi-packages
+      inputs:
+        version: '7.4'
+    excludes:
+      - almalinux-10
+
+  - name: remi-packages-php84
+    run_list:
+      - recipe[php_test::remi_packages]
+      - recipe[php_test::phpinfo_apache]
+    attributes:
+      php_test:
+        php_packages:
+          - 'cli'
+          - 'devel'
+          - 'fpm'
+          - 'gd'
+        version: '8.4'
+    verifier:
+      inspec_tests:
+        - test/integration/remi-packages
+      inputs:
+        version: '8.4'
+    excludes:
+      - almalinux-10
 
   - name: packages
     run_list:
