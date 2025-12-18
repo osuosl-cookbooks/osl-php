@@ -86,6 +86,32 @@ suites:
     excludes:
       - almalinux-10
 
+  - name: multi-php
+    run_list:
+      - recipe[php_test::multi_php]
+    attributes:
+      php_test:
+        version1: '7.4'
+        version2: '8.1'
+        php_packages1:
+          - 'cli'
+          - 'devel'
+          - 'fpm'
+          - 'gd'
+        php_packages2:
+          - 'cli'
+          - 'devel'
+          - 'fpm'
+          - 'gd'
+    verifier:
+      inspec_tests:
+        - test/integration/multi-php
+      inputs:
+        version1: '7.4'
+        version2: '8.1'
+    excludes:
+      - almalinux-10
+
   - name: packages
     run_list:
       - recipe[php_test::packages]

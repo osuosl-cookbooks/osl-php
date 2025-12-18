@@ -34,11 +34,12 @@ action :install do
   unless system_php
     # enable powertools repo for libedit-devel
     include_recipe 'osl-repos::alma'
-    declare_resource(:"yum_remi_php#{shortver}", 'default')
-  end
-
-  if !system_php && new_resource.remi_packages
-    declare_resource(:yum_remi_safe, 'default')
+    
+    if new_resource.remi_packages
+      declare_resource(:yum_remi_safe, 'default')
+    else
+      declare_resource(:"yum_remi_php#{shortver}", 'default')
+    end
   end
 
   # install default packages if no packages were specified, but wait to select the mod_php and pear packages
