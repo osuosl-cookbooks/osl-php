@@ -1,5 +1,5 @@
 ---
-name: remi-packages
+name: versioned-packages
 depends:
   - name: selinux
     path: test/integration/selinux

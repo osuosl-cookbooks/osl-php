@@ -7,7 +7,7 @@ property :directives, Hash, default: {}
 property :opcache_conf, Hash, default: {}
 property :packages, Array, default: []
 property :php_packages, Array, default: []
-property :remi_packages, [true, false], default: false
+property :versioned_packages, [true, false], default: false
 property :use_composer, [true, false], default: false
 property :use_opcache, [true, false], default: false
 property :version, String
@@ -35,7 +35,7 @@ action :install do
     # enable powertools repo for libedit-devel
     include_recipe 'osl-repos::alma'
 
-    if new_resource.remi_packages
+    if new_resource.versioned_packages
       declare_resource(:yum_remi_safe, 'default')
     else
       declare_resource(:"yum_remi_php#{shortver}", 'default')
@@ -47,7 +47,7 @@ action :install do
     all_php_packages = osl_php_default_installation_packages_without_prefixes
   end
 
-  if new_resource.remi_packages
+  if new_resource.versioned_packages
     prefix = "php#{shortver}-php"
   end
 

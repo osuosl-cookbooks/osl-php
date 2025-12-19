@@ -3,7 +3,7 @@ osl_php_install 'system php packages' do
 end
 
 osl_php_install 'remi safe packages' do
-  remi_packages true
+  versioned_packages true
   version node['php_test']['version']
   php_packages node['php_test']['php_packages']
 end

@@ -46,9 +46,9 @@ suites:
     attributes:
       composer_version: '2.2.18'
 
-  - name: remi-packages-php74
+  - name: versioned-packages-php74
     run_list:
-      - recipe[php_test::remi_packages]
+      - recipe[php_test::versioned_packages]
       - recipe[php_test::phpinfo_apache]
     attributes:
       php_test:
@@ -60,15 +60,15 @@ suites:
         version: '7.4'
     verifier:
       inspec_tests:
-        - test/integration/remi-packages
+        - test/integration/versioned-packages
       inputs:
         version: '7.4'
     excludes:
       - almalinux-10
 
-  - name: remi-packages-php84
+  - name: versioned-packages-php84
     run_list:
-      - recipe[php_test::remi_packages]
+      - recipe[php_test::versioned_packages]
       - recipe[php_test::phpinfo_apache]
     attributes:
       php_test:
@@ -80,7 +80,7 @@ suites:
         version: '8.4'
     verifier:
       inspec_tests:
-        - test/integration/remi-packages
+        - test/integration/versioned-packages
       inputs:
         version: '8.4'
     excludes:
