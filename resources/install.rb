@@ -13,8 +13,8 @@ property :use_opcache, [true, false], default: false
 property :version, String
 
 action :install do
-  raise "versioned_packages requires a version to be specified" if new_resource.versioned_packages && new_resource.version.nil?
-  
+  raise 'versioned_packages requires a version to be specified' if new_resource.versioned_packages && new_resource.version.nil?
+
   system_php = new_resource.version.nil?
   version = new_resource.version || php_version
   shortver = version.delete('.') # version X.X -> XX
@@ -43,10 +43,10 @@ action :install do
   end
 
   prefix = if new_resource.versioned_packages
-    "php#{shortver}-php"
-  else
-    'php'
-  end
+             "php#{shortver}-php"
+           else
+             'php'
+           end
 
   # install default packages if no packages were specified, but wait to select the mod_php and pear packages
   if all_packages.empty? && all_php_packages.empty?
