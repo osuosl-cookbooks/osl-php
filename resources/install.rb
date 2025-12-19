@@ -13,6 +13,8 @@ property :use_opcache, [true, false], default: false
 property :version, String
 
 action :install do
+  raise "versioned_packages requires a version to be specified" if new_resource.versioned_packages && new_resource.version.nil?
+  
   system_php = new_resource.version.nil?
   version = new_resource.version || php_version
   shortver = version.delete('.') # version X.X -> XX
