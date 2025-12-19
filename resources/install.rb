@@ -24,8 +24,6 @@ action :install do
   include_recipe 'osl-selinux'
   include_recipe 'osl-repos::epel'
 
-  prefix = 'php'
-
   # opcache
   if new_resource.use_opcache
     osl_php_ini '10-opcache' do
@@ -44,13 +42,15 @@ action :install do
     end
   end
 
+  prefix = if new_resource.versioned_packages
+    "php#{shortver}-php"
+  else
+    'php'
+  end
+
   # install default packages if no packages were specified, but wait to select the mod_php and pear packages
   if all_packages.empty? && all_php_packages.empty?
     all_php_packages = osl_php_default_installation_packages_without_prefixes
-  end
-
-  if new_resource.versioned_packages
-    prefix = "php#{shortver}-php"
   end
 
   all_packages += all_php_packages.map { |p| "#{prefix}-#{p}" }
