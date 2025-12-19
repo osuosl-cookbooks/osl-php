@@ -84,7 +84,7 @@ suites:
       inputs:
         version: '8.4'
     excludes:
-      - almalinux-10
+      - almalinux-8
 
   - name: multi-php
     run_list:
