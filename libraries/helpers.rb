@@ -17,7 +17,7 @@ module OslPhp
       end
 
       def osl_php_default_composer_version
-        '2.2.18'
+        osl_github_latest_version('composer/composer', '2')
       end
 
       # defaults from php72u-opcache package on CentOS 7

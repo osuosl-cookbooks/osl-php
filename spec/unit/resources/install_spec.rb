@@ -125,6 +125,9 @@ describe 'osl_php_install' do
   end
 
   context 'Composer' do
+    before do
+      allow_any_instance_of(Chef::Resource).to receive(:osl_github_latest_version).with('composer/composer', '2').and_return('2.9.5')
+    end
     cached(:chef_run) do
       chef_runner.converge('php_test::blank') do
         recipe = Chef::Recipe.new('test', '_test', chef_runner.run_context)
@@ -138,7 +141,7 @@ describe 'osl_php_install' do
     end
     it do
       is_expected.to create_if_missing_remote_file('/usr/local/bin/composer').with(
-        source: 'https://getcomposer.org/download/2.2.18/composer.phar',
+        source: 'https://getcomposer.org/download/2.9.5/composer.phar',
         mode: '755'
       )
     end
@@ -151,14 +154,14 @@ describe 'osl_php_install' do
           recipe.instance_exec do
             osl_php_install 'defaults with composer version' do
               use_composer true
-              composer_version '2.2.17'
+              composer_version '2.9.5'
             end
           end
         end
       end
       it do
         is_expected.to create_if_missing_remote_file('/usr/local/bin/composer').with(
-          source: 'https://getcomposer.org/download/2.2.17/composer.phar'
+          source: 'https://getcomposer.org/download/2.9.5/composer.phar'
         )
       end
     end
