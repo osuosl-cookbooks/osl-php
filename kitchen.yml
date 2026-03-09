@@ -12,7 +12,7 @@ provisioner:
   name: chef_infra
   product_name: cinc
   product_version: '18'
-  multiple_converge: 2
+  multiple_converge: 3
   enforce_idempotency: true
   # deprecations_as_errors: true # windows / composer cookbooks
   attributes:
@@ -45,6 +45,72 @@ suites:
       - recipe[php_test::composer]
     attributes:
       composer_version: '2.2.18'
+
+  - name: versioned-packages-php74
+    run_list:
+      - recipe[php_test::versioned_packages]
+      - recipe[php_test::phpinfo_apache]
+    attributes:
+      php_test:
+        php_packages:
+          - 'cli'
+          - 'devel'
+          - 'fpm'
+          - 'gd'
+        version: '7.4'
+    verifier:
+      inspec_tests:
+        - test/integration/versioned-packages
+      inputs:
+        version: '7.4'
+    excludes:
+      - almalinux-10
+
+  - name: versioned-packages-php84
+    run_list:
+      - recipe[php_test::versioned_packages]
+      - recipe[php_test::phpinfo_apache]
+    attributes:
+      php_test:
+        php_packages:
+          - 'cli'
+          - 'devel'
+          - 'fpm'
+          - 'gd'
+        version: '8.4'
+    verifier:
+      inspec_tests:
+        - test/integration/versioned-packages
+      inputs:
+        version: '8.4'
+    excludes:
+      - almalinux-8
+
+  - name: multi-php
+    run_list:
+      - recipe[php_test::multi_php]
+    attributes:
+      php_test:
+        version1: '7.4'
+        version2: '8.1'
+        php_packages1:
+          - 'cli'
+          - 'devel'
+          - 'fpm'
+          - 'gd'
+        php_packages2:
+          - 'cli'
+          - 'devel'
+          - 'fpm'
+          - 'gd'
+    verifier:
+      inspec_tests:
+        - test/integration/multi-php
+      inputs:
+        version1: '7.4'
+        version2: '8.1'
+    excludes:
+      - almalinux-10
 
   - name: packages
     run_list:

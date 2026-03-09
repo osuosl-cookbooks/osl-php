@@ -7,11 +7,14 @@ property :directives, Hash, default: {}
 property :opcache_conf, Hash, default: {}
 property :packages, Array, default: []
 property :php_packages, Array, default: []
+property :versioned_packages, [true, false], default: false
 property :use_composer, [true, false], default: false
 property :use_opcache, [true, false], default: false
 property :version, String
 
 action :install do
+  raise 'versioned_packages requires a version to be specified' if new_resource.versioned_packages && new_resource.version.nil?
+
   system_php = new_resource.version.nil?
   version = new_resource.version || php_version
   shortver = version.delete('.') # version X.X -> XX
@@ -20,8 +23,6 @@ action :install do
 
   include_recipe 'osl-selinux'
   include_recipe 'osl-repos::epel'
-
-  prefix = 'php'
 
   # opcache
   if new_resource.use_opcache
@@ -34,10 +35,18 @@ action :install do
     # enable powertools repo for libedit-devel
     include_recipe 'osl-repos::alma'
 
-    # use Remi PHP module to override stock php
-    # programatically define resource as to not have a bit long case/when
-    declare_resource(:"yum_remi_php#{shortver}", 'default')
+    if new_resource.versioned_packages
+      declare_resource(:yum_remi_safe, 'default')
+    else
+      declare_resource(:"yum_remi_php#{shortver}", 'default')
+    end
   end
+
+  prefix = if new_resource.versioned_packages
+             "php#{shortver}-php"
+           else
+             'php'
+           end
 
   # install default packages if no packages were specified, but wait to select the mod_php and pear packages
   if all_packages.empty? && all_php_packages.empty?
