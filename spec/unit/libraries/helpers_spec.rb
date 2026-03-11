@@ -20,6 +20,13 @@ RSpec.describe OslPhp::Cookbook::Helpers do
     end
   end
 
+  describe '#osl_php_default_composer_version' do
+    it 'returns latest Composer 2.X version from GitHub' do
+      allow(subject).to receive(:osl_github_latest_version).with('composer/composer', '2').and_return('2.9.5')
+      expect(subject.osl_php_default_composer_version).to eq('2.9.5')
+    end
+  end
+
   describe '#osl_php_fpm_settings' do
     it '1G ram' do
       allow(subject).to receive(:[]).with('memory').and_return({ 'total' => '1048576kB' })
