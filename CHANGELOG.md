@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+7.5.1 (2026-03-11)
+------------------
+- Dynamic Composer Default
+
 7.5.0 (2026-03-09)
 ------------------
 - Multi Version PHP Support
