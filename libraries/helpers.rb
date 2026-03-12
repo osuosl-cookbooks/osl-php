@@ -59,6 +59,15 @@ module OslPhp
       def osl_php_default_installation_packages_without_prefixes
         (php_installation_packages.map { |p| p[/^php[0-9u]*-(.*)/, 1] } - ['pear'] - [nil])
       end
+
+      def osl_php_ini_config_dir(version = nil)
+        if version
+          shortver = version.delete('.')
+          "/etc/opt/remi/php#{shortver}/php.d"
+        else
+          '/etc/php.d'
+        end
+      end
     end
   end
 end

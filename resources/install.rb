@@ -28,6 +28,7 @@ action :install do
   if new_resource.use_opcache
     osl_php_ini '10-opcache' do
       options osl_php_opcache_conf.merge!(new_resource.opcache_conf)
+      php_version version if new_resource.versioned_packages
     end
   end
 
@@ -75,6 +76,7 @@ action :install do
 
   osl_php_ini 'timezone' do
     options('date.timezone' => 'UTC')
+    php_version version if new_resource.versioned_packages
   end
 
   %w(phpcheck phpshow).each do |file|

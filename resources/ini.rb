@@ -6,13 +6,17 @@ default_action :add
 
 property :mode, String, default: '0644'
 property :options, Hash, required: [:add]
+property :php_version, String
 
 action :add do
-  directory "/etc/php.d #{new_resource.name}" do
-    path '/etc/php.d'
+  config_dir = osl_php_ini_config_dir(new_resource.php_version)
+
+  directory "#{config_dir} #{new_resource.name}" do
+    path config_dir
+    recursive true
   end
 
-  template "/etc/php.d/#{new_resource.name}.ini" do
+  template "#{config_dir}/#{new_resource.name}.ini" do
     source 'php_ini.erb'
     cookbook 'osl-php'
     variables data: new_resource.options
@@ -21,7 +25,9 @@ action :add do
 end
 
 action :remove do
-  file "/etc/php.d/#{new_resource.name}.ini" do
+  config_dir = osl_php_ini_config_dir(new_resource.php_version)
+
+  file "#{config_dir}/#{new_resource.name}.ini" do
     action :delete
   end
 end

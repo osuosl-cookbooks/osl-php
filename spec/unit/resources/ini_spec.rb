@@ -60,4 +60,39 @@ describe 'osl_php_ini' do
 
     it { is_expected.to delete_file('/etc/php.d/remove.ini') }
   end
+
+  context 'versioned php' do
+    cached(:subject) { chef_run }
+
+    recipe do
+      osl_php_ini 'default' do
+        options('date.timezone' => 'UTC')
+        php_version '8.4'
+      end
+    end
+
+    it { is_expected.to add_osl_php_ini('default').with(options: { 'date.timezone' => 'UTC' }, php_version: '8.4') }
+    it { is_expected.to create_directory('/etc/opt/remi/php84/php.d default').with(path: '/etc/opt/remi/php84/php.d') }
+
+    it do
+      is_expected.to create_template('/etc/opt/remi/php84/php.d/default.ini').with(
+        source: 'php_ini.erb',
+        cookbook: 'osl-php',
+        mode: '0644'
+      )
+    end
+  end
+
+  context 'versioned php remove' do
+    cached(:subject) { chef_run }
+
+    recipe do
+      osl_php_ini 'remove' do
+        php_version '8.4'
+        action :remove
+      end
+    end
+
+    it { is_expected.to delete_file('/etc/opt/remi/php84/php.d/remove.ini') }
+  end
 end

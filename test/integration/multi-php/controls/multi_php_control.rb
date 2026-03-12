@@ -79,3 +79,17 @@ control 'remi php version 2 binary' do
     its('stdout') { should match version2 }
   end
 end
+
+control 'versioned php ini files' do
+  title 'Verify ini files are placed in versioned config directories'
+
+  describe file("/etc/opt/remi/php#{short_version1}/php.d/timezone.ini") do
+    it { should exist }
+    its('content') { should match 'date.timezone=UTC' }
+  end
+
+  describe file("/etc/opt/remi/php#{short_version2}/php.d/timezone.ini") do
+    it { should exist }
+    its('content') { should match 'date.timezone=UTC' }
+  end
+end
