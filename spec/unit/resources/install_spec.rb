@@ -219,4 +219,46 @@ describe 'osl_php_install' do
       it { is_expected.to install_package('php-pear') }
     end
   end
+
+  context 'versioned_packages' do
+    platform 'almalinux', '9'
+    step_into :osl_php_install
+
+    cached(:chef_run) do
+      chef_runner.converge('php_test::blank') do
+        recipe = Chef::Recipe.new('test', '_test', chef_runner.run_context)
+
+        recipe.instance_exec do
+          osl_php_install 'versioned' do
+            versioned_packages true
+            version '8.4'
+            php_packages %w(devel fpm gd)
+          end
+        end
+      end
+    end
+
+    it { is_expected.to add_osl_php_ini('timezone').with(options: { 'date.timezone' => 'UTC' }, php_version: '8.4') }
+    it { is_expected.to create_yum_remi_safe('default') }
+    it { is_expected.to install_php_install('versioned all packages').with(packages: %w(php84-php-devel php84-php-fpm php84-php-gd php84-php)) }
+
+    context 'with opcache' do
+      cached(:chef_run) do
+        chef_runner.converge('php_test::blank') do
+          recipe = Chef::Recipe.new('test', '_test', chef_runner.run_context)
+
+          recipe.instance_exec do
+            osl_php_install 'versioned with opcache' do
+              versioned_packages true
+              version '8.4'
+              php_packages %w(devel)
+              use_opcache true
+            end
+          end
+        end
+      end
+
+      it { is_expected.to add_osl_php_ini('10-opcache').with(php_version: '8.4') }
+    end
+  end
 end

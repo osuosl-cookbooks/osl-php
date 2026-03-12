@@ -46,3 +46,12 @@ control 'multiple php versions available' do
     its('exit_status') { should eq 0 }
   end
 end
+
+control 'versioned php ini' do
+  title 'Verify ini files are placed in the versioned config directory'
+
+  describe file("/etc/opt/remi/php#{short_version}/php.d/timezone.ini") do
+    it { should exist }
+    its('content') { should match 'date.timezone=UTC' }
+  end
+end

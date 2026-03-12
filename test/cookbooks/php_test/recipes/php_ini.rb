@@ -102,19 +102,25 @@ no_sections = {
   'session.cache_expire' => '180',
 }
 
+version = node['php_test']['version']
+
 osl_php_ini 'with_sections_rendered' do
   options with_sections
+  php_version version if version
 end
 
 osl_php_ini 'no_sections_rendered' do
   options no_sections
+  php_version version if version
 end
 
 osl_php_ini 'no_sections_rendered_added' do
   options no_sections
+  php_version version if version
 end
 
 osl_php_ini 'no_sections_rendered_removed' do
+  php_version version if version
   action :remove
 end
 

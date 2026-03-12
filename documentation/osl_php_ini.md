@@ -10,8 +10,9 @@ This resource is used to create ini files for PHP configuration.
 
 ## Properties
 
-|  Name   |  Type  |  Default  |  Description                 |  Required?  |
-| :------ | :----: | :-------: | :----------------------------| :---------- |
-| mode    | String | '0644'    | Unix file mode of ini file.  | false       |
-| options | Hash   | `{}`      | A hash for configuring the ini file. A basic hash with keys and values of type String will be rendered as `'key'='value'` in the file. Nesting a basic hash so the key is type String and the value is another hash will create a section with the key as the name and the value as the section contents, still in the `'subkey'='subvalue'` format. | true        |
-| path    | String | Name      | Path to place ini file.      | true        |
+|  Name        |  Type  |  Default  |  Description                 |  Required?  |
+| :----------- | :----: | :-------: | :----------------------------| :---------- |
+| mode         | String | '0644'    | Unix file mode of ini file.  | false       |
+| options      | Hash   | `{}`      | A hash for configuring the ini file. A basic hash with keys and values of type String will be rendered as `'key'='value'` in the file. Nesting a basic hash so the key is type String and the value is another hash will create a section with the key as the name and the value as the section contents, still in the `'subkey'='subvalue'` format. | true        |
+| path         | String | Name      | Path to place ini file.      | true        |
+| php\_version | String |           | When set, places the ini file in the versioned Remi PHP config directory (`/etc/opt/remi/php{version}/php.d/`) instead of the default `/etc/php.d/`. Value should be a version string like `'8.4'`. | false       |

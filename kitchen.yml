@@ -230,6 +230,23 @@ suites:
       inspec_tests:
         - test/integration/php-ini
 
+  - name: osl_php_ini_versioned
+    run_list:
+      - recipe[php_test::php_ini]
+    provisioner:
+      enforce_idempotency: false
+      multiple_converge: 1
+    attributes:
+      php_test:
+        version: '8.4'
+    verifier:
+      inspec_tests:
+        - test/integration/php-ini
+      inputs:
+        version: '8.4'
+    excludes:
+      - almalinux-8
+
   - name: opcache-php72
     run_list:
       - recipe[php_test::packages]
