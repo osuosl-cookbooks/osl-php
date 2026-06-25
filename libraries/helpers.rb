@@ -2,18 +2,14 @@ module OslPhp
   module Cookbook
     module Helpers
       def osl_php_available_ram
-        total_ram = (node['memory']['total'].split('kB')[0].to_i / 1024) # in MB
+        total_ram = (node['memory']['total'].split('kB').first.to_i / 1024) # in MB
         reserved_ram = 1024
         buffer = total_ram * 0.1
 
         # [Total Available RAM] - [Reserved RAM] - [10% buffer] = [Available RAM for PHP]
         php_ram = (total_ram - reserved_ram - buffer).floor
         # If we get a negative number, just make it zero
-        if php_ram < 0
-          0
-        else
-          php_ram
-        end
+        [php_ram, 0].max
       end
 
       def osl_php_default_composer_version

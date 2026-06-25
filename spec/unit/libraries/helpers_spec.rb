@@ -31,21 +31,21 @@ RSpec.describe OslPhp::Cookbook::Helpers do
     it '1G ram' do
       allow(subject).to receive(:[]).with('memory').and_return({ 'total' => '1048576kB' })
       expect(subject.osl_php_fpm_settings(52)).to eq({
-        'max_children' => 4,
-        'max_spare_servers' => 3,
-        'min_spare_servers' => 1,
-        'start_servers' => 1,
-      })
+                                                       'max_children' => 4,
+                                                       'max_spare_servers' => 3,
+                                                       'min_spare_servers' => 1,
+                                                       'start_servers' => 1,
+                                                     })
     end
 
     it '4G ram' do
       allow(subject).to receive(:[]).with('memory').and_return({ 'total' => '4194304kB' })
       expect(subject.osl_php_fpm_settings(52)).to eq({
-        'max_children' => 51,
-        'max_spare_servers' => 38,
-        'min_spare_servers' => 12,
-        'start_servers' => 12,
-      })
+                                                       'max_children' => 51,
+                                                       'max_spare_servers' => 38,
+                                                       'min_spare_servers' => 12,
+                                                       'start_servers' => 12,
+                                                     })
     end
   end
 end
