@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+7.6.1 (2026-06-29)
+------------------
+- cinc: updated kitchen and dokken files, fixed linting failures
+
 7.6.0 (2026-03-12)
 ------------------
 - Add php_version support to osl_php_ini for Remi versioned installs
