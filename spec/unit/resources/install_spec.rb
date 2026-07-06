@@ -140,7 +140,7 @@ describe 'osl_php_install' do
       end
     end
     it do
-      is_expected.to create_if_missing_remote_file('/usr/local/bin/composer').with(
+      is_expected.to create_remote_file('/usr/local/bin/composer').with(
         source: 'https://getcomposer.org/download/2.9.5/composer.phar',
         mode: '755'
       )
@@ -160,7 +160,7 @@ describe 'osl_php_install' do
         end
       end
       it do
-        is_expected.to create_if_missing_remote_file('/usr/local/bin/composer').with(
+        is_expected.to create_remote_file('/usr/local/bin/composer').with(
           source: 'https://getcomposer.org/download/2.9.5/composer.phar'
         )
       end
