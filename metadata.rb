@@ -14,6 +14,6 @@ supports         'almalinux', '~> 10.0'
 
 depends          'osl-repos'
 depends          'osl-selinux'
-depends          'php', '~> 10.0.0'
+depends          'php', '~> 10.2.5'
 depends          'yum-osuosl'
-depends          'yum-remi-chef', '>= 8.1.0'
+depends          'yum-remi-chef', '>= 9.1.0'
