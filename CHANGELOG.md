@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+7.7.0 (2026-09-10)
+------------------
+- Cookbook Update
+
 7.6.2 (2026-07-06)
 ------------------
 - Allow composer to upgrade when a new release is available
