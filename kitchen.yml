@@ -10,7 +10,7 @@ transport:
 
 provisioner:
   name: cinc_infra
-  product_version: '18'
+  product_version: '19'
   multiple_converge: 3
   enforce_idempotency: true
   # deprecations_as_errors: true # windows / composer cookbooks
