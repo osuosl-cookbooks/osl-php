@@ -49,6 +49,22 @@ describe 'osl_php_ini' do
     it { is_expected.to create_template('/etc/php.d/with_sections.ini').with(variables: { data: with_sections }) }
   end
 
+  context 'config_dir' do
+    cached(:subject) { chef_run }
+
+    recipe do
+      osl_php_ini 'web' do
+        options('key' => 'value')
+        config_dir '/etc/php-web.d'
+        php_version '8.4'
+      end
+    end
+
+    it { is_expected.to create_directory('/etc/php-web.d web').with(path: '/etc/php-web.d') }
+    it { is_expected.to create_template('/etc/php-web.d/web.ini') }
+    it { is_expected.to_not create_template('/etc/opt/remi/php84/php.d/web.ini') }
+  end
+
   context 'Remove ini' do
     cached(:subject) { chef_run }
 

@@ -54,4 +54,12 @@ control 'versioned php ini' do
     it { should exist }
     its('content') { should match 'date.timezone=UTC' }
   end
+
+  describe file("/etc/opt/remi/php#{short_version}/php.d/mysqlnd-timeout.ini") do
+    it { should_not exist }
+  end
+
+  describe file('/etc/php-web.d/mysqlnd-timeout.ini') do
+    its('content') { should match /^mysqlnd.net_read_timeout=300$/ }
+  end
 end

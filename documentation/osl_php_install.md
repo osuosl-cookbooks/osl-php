@@ -1,5 +1,7 @@
 # osl\_php\_install
-This resource is installs PHP packages. It also adds an ini file to set the timezone to UTC and installs phpcheck and phpshow by default.
+This resource installs PHP packages. It also adds an ini file to set the timezone to UTC and installs phpcheck and phpshow by default.
+
+It also writes `/etc/php-web.d/mysqlnd-timeout.ini`, which sets `mysqlnd.net_read_timeout` to 300 seconds, the same as Apache's `Timeout`. mysqlnd's own default of 86400s leaves a web worker blocked on a dead connection after a MySQL failover. Only web SAPIs read that directory: `osl_apache_php` (osl-apache) adds `PHP_INI_SCAN_DIR=:/etc/php-web.d` to the php-fpm or httpd unit, so the CLI, cron jobs and maintenance scripts keep the default. The environment only applies when the service starts, so php-fpm or httpd needs a restart, not a reload, to pick it up, and `php -i` from a shell does not show it. An application can still set its own read timeout per connection.
 
 ## Actions
 * `:install` - Default action. Installs the given packages using the given properties.

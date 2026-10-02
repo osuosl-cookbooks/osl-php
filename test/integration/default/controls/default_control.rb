@@ -13,6 +13,18 @@ control 'php_packages' do
     end
   end
 
+  describe file('/etc/php-web.d/mysqlnd-timeout.ini') do
+    its('content') { should match /^mysqlnd.net_read_timeout=300$/ }
+  end
+
+  describe command('php --ini') do
+    its('stdout') { should_not match %r{/etc/php-web.d} }
+  end
+
+  describe command('PHP_INI_SCAN_DIR=:/etc/php-web.d php --ini') do
+    its('stdout') { should match %r{/etc/php-web.d/mysqlnd-timeout.ini} }
+  end
+
   describe command 'php -i' do
     its('stdout') { should match '/etc/php.d/timezone.ini' }
     its('stdout') { should match 'date.timezone => UTC => UTC' }

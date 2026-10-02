@@ -56,6 +56,16 @@ module OslPhp
         (php_installation_packages.map { |p| p[/^php[0-9u]*-(.*)/, 1] } - ['pear'] - [nil])
       end
 
+      # Only web SAPIs read this directory: osl-apache points php-fpm and httpd at it through
+      # PHP_INI_SCAN_DIR, whose leading ':' keeps the compiled-in php.d first.
+      def osl_php_web_ini_dir
+        '/etc/php-web.d'
+      end
+
+      def osl_php_web_ini_environment
+        "PHP_INI_SCAN_DIR=:#{osl_php_web_ini_dir}"
+      end
+
       def osl_php_ini_config_dir(version = nil)
         if version
           shortver = version.delete('.')
