@@ -7,9 +7,10 @@ default_action :add
 property :mode, String, default: '0644'
 property :options, Hash, required: [:add]
 property :php_version, String
+property :config_dir, String
 
 action :add do
-  config_dir = osl_php_ini_config_dir(new_resource.php_version)
+  config_dir = new_resource.config_dir || osl_php_ini_config_dir(new_resource.php_version)
 
   directory "#{config_dir} #{new_resource.name}" do
     path config_dir
@@ -25,7 +26,7 @@ action :add do
 end
 
 action :remove do
-  config_dir = osl_php_ini_config_dir(new_resource.php_version)
+  config_dir = new_resource.config_dir || osl_php_ini_config_dir(new_resource.php_version)
 
   file "#{config_dir}/#{new_resource.name}.ini" do
     action :delete

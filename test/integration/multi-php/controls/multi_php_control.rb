@@ -83,6 +83,10 @@ end
 control 'versioned php ini files' do
   title 'Verify ini files are placed in versioned config directories'
 
+  describe file('/etc/php-web.d/mysqlnd-timeout.ini') do
+    its('content') { should match /^mysqlnd.net_read_timeout=300$/ }
+  end
+
   describe file("/etc/opt/remi/php#{short_version1}/php.d/timezone.ini") do
     it { should exist }
     its('content') { should match 'date.timezone=UTC' }

@@ -79,6 +79,13 @@ action :install do
     php_version version if new_resource.versioned_packages
   end
 
+  # The 86400s default leaves web workers blocked on a dead socket after a MySQL failover; 300s
+  # matches Apache's Timeout. CLI never reads this directory, so long maintenance scripts keep 86400.
+  osl_php_ini 'mysqlnd-timeout' do
+    options('mysqlnd.net_read_timeout' => '300')
+    config_dir osl_php_web_ini_dir
+  end
+
   %w(phpcheck phpshow).each do |file|
     cookbook_file "/usr/local/bin/#{file}" do
       source file

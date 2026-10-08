@@ -19,6 +19,13 @@ describe 'osl_php_install' do
   it { is_expected.to include_recipe 'osl-selinux' }
   it { is_expected.to include_recipe 'osl-repos::epel' }
   it { is_expected.to add_osl_php_ini('timezone').with(options: { 'date.timezone' => 'UTC' }) }
+  it do
+    is_expected.to add_osl_php_ini('mysqlnd-timeout').with(
+      options: { 'mysqlnd.net_read_timeout' => '300' },
+      config_dir: '/etc/php-web.d',
+      php_version: nil
+    )
+  end
   it { is_expected.to_not add_osl_php_ini '10-opcache' }
   it { is_expected.to install_php_install('default packages all packages').with(packages: %w(php-devel php-cli php)) }
   it { is_expected.to install_package('php-pear') }
@@ -239,6 +246,13 @@ describe 'osl_php_install' do
     end
 
     it { is_expected.to add_osl_php_ini('timezone').with(options: { 'date.timezone' => 'UTC' }, php_version: '8.4') }
+    it do
+      is_expected.to add_osl_php_ini('mysqlnd-timeout').with(
+        options: { 'mysqlnd.net_read_timeout' => '300' },
+        config_dir: '/etc/php-web.d',
+        php_version: nil
+      )
+    end
     it { is_expected.to create_yum_remi_safe('default') }
     it { is_expected.to install_php_install('versioned all packages').with(packages: %w(php84-php-devel php84-php-fpm php84-php-gd php84-php)) }
 
