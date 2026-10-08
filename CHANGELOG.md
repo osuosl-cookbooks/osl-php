@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+7.8.0 (2026-10-08)
+------------------
+- Add a web-only mysqlnd read timeout ini
+
 7.7.0 (2026-09-10)
 ------------------
 - Cookbook Update
