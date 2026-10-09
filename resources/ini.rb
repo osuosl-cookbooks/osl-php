@@ -11,6 +11,7 @@ property :config_dir, String
 
 action :add do
   config_dir = new_resource.config_dir || osl_php_ini_config_dir(new_resource.php_version)
+  restart_group = osl_php_restart_group
 
   directory "#{config_dir} #{new_resource.name}" do
     path config_dir
@@ -22,13 +23,16 @@ action :add do
     cookbook 'osl-php'
     variables data: new_resource.options
     mode new_resource.mode
+    notifies :run, restart_group, :delayed
   end
 end
 
 action :remove do
   config_dir = new_resource.config_dir || osl_php_ini_config_dir(new_resource.php_version)
+  restart_group = osl_php_restart_group
 
   file "#{config_dir}/#{new_resource.name}.ini" do
     action :delete
+    notifies :run, restart_group, :delayed
   end
 end

@@ -66,6 +66,16 @@ module OslPhp
         "PHP_INI_SCAN_DIR=:#{osl_php_web_ini_dir}"
       end
 
+      # One top-level group that every PHP config change fires; whatever runs PHP (osl_apache_php)
+      # adds its service to it. Notify the returned object: a string target stays in the child context.
+      def osl_php_restart_group
+        with_run_context(:root) do
+          find_resource(:notify_group, 'osl-php restart') do
+            action :nothing
+          end
+        end
+      end
+
       def osl_php_ini_config_dir(version = nil)
         if version
           shortver = version.delete('.')

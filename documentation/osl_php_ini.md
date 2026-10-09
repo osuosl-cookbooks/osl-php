@@ -2,6 +2,8 @@
 
 This resource is used to create ini files for PHP configuration.
 
+Adding, changing or removing an ini file runs `notify_group[osl-php restart]` at the end of the Chef run. osl-php does not know what runs PHP on the node, so the group starts with no notifications; the resource that does (`osl_apache_php` in osl-apache) adds a `:restart` of its php-fpm or httpd service to it. A caller that runs PHP some other way can do the same with `osl_php_restart_group.notifies(:restart, <service resource>, :delayed)`.
+
 ## Actions
 
 * `:add` - Default action. Creates an ini file at the location specified by the name property with the configuration

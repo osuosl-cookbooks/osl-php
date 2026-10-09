@@ -21,6 +21,8 @@ describe 'osl_php_ini' do
       mode: '0644'
     )
   end
+  it { is_expected.to nothing_notify_group('osl-php restart') }
+  it { expect(subject.template('/etc/php.d/default.ini')).to notify('notify_group[osl-php restart]').to(:run).delayed }
 
   context 'options' do
     cached(:subject) { chef_run }
@@ -75,6 +77,7 @@ describe 'osl_php_ini' do
     end
 
     it { is_expected.to delete_file('/etc/php.d/remove.ini') }
+    it { expect(subject.file('/etc/php.d/remove.ini')).to notify('notify_group[osl-php restart]').to(:run).delayed }
   end
 
   context 'versioned php' do
