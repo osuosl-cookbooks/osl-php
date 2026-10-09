@@ -28,6 +28,10 @@ describe 'osl_php_install' do
   end
   it { is_expected.to_not add_osl_php_ini '10-opcache' }
   it { is_expected.to install_php_install('default packages all packages').with(packages: %w(php-devel php-cli php)) }
+  it do
+    expect(chef_run.php_install('default packages all packages')).to \
+      notify('notify_group[osl-php restart]').to(:run).delayed
+  end
   it { is_expected.to install_package('php-pear') }
 
   it do

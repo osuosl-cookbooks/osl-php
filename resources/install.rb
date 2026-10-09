@@ -63,9 +63,12 @@ action :install do
     all_packages <<= "#{prefix}-opcache"
   end
 
+  restart_group = osl_php_restart_group
+
   php_install "#{new_resource.name} all packages" do
     packages all_packages
     directives new_resource.directives
+    notifies :run, restart_group, :delayed
   end
 
   pear_pkg = "#{prefix}-pear"

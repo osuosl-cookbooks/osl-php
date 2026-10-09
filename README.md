@@ -13,6 +13,7 @@ The following platforms and versions are tested and supported using [test-kitche
 
 - [osl_php_ini](documentation/osl_php_ini.md)
 - [osl_php_install](documentation/osl_php_install.md)
+- [osl_php_web_service](documentation/osl_php_web_service.md)
 
 ## License and Authors
 
