@@ -48,4 +48,32 @@ RSpec.describe OslPhp::Cookbook::Helpers do
                                                      })
     end
   end
+
+  # Real run contexts: ChefSpec's step_into runs nested actions in the root context, so it cannot
+  # tell a root-context service from a child-context one.
+  describe '#osl_php_web_service_register' do
+    let(:root) do
+      Chef::RunContext.new(Chef::Node.new, Chef::CookbookCollection.new({}), Chef::EventDispatch::Dispatcher.new)
+    end
+    let(:child) { root.create_child }
+    let(:caller_resource) { Chef::Resource::File.new('/tmp/caller', child) }
+
+    it 'declares the service and the group in the root context and reloads the service from the group' do
+      php_service = caller_resource.osl_php_web_service_register('php-fpm')
+      group = root.resource_collection.find('notify_group[osl-php restart]')
+
+      expect(php_service.run_context).to equal(root)
+      expect(group.run_context).to equal(root)
+      expect(child.resource_collection.all_resources).to be_empty
+      expect(root.delayed_notifications(group).map { |n| [n.resource, n.action] }).to eq([[php_service, :reload]])
+    end
+
+    it 'reuses the root service on a second registration' do
+      first = caller_resource.osl_php_web_service_register('php-fpm')
+      second = caller_resource.osl_php_web_service_register('php-fpm')
+
+      expect(second).to equal(first)
+      expect(root.resource_collection.select { |r| r.to_s == 'service[php-fpm]' }.size).to eq(1)
+    end
+  end
 end
