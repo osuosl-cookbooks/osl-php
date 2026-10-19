@@ -11,6 +11,12 @@ control 'remi-safe repo' do
     it { should exist }
     it { should be_enabled }
   end
+
+  # Only osl-repos writes epel.repo, so it keeps the OSL mirror
+  describe file('/etc/yum.repos.d/epel.repo') do
+    its('content') { should match %r{^baseurl=https://epel\.osuosl\.org/} }
+    its('content') { should_not match /^mirrorlist=/ }
+  end
 end
 
 control 'remi-safe packages' do

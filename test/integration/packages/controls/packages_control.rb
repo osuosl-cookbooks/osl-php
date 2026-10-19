@@ -57,6 +57,12 @@ control 'packages RHEL 8+' do
     end
   end
 
+  # Only osl-repos writes epel.repo, so it keeps the OSL mirror
+  describe file('/etc/yum.repos.d/epel.repo') do
+    its('content') { should match %r{^baseurl=https://epel\.osuosl\.org/} }
+    its('content') { should_not match /^mirrorlist=/ }
+  end
+
   php_packages = %w(
     php
     php-pear
