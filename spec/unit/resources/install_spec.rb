@@ -199,9 +199,9 @@ describe 'osl_php_install' do
       it do
         case version
         when '7.2'
-          is_expected.to create_yum_remi_php72('default')
+          is_expected.to create_yum_remi_php72('default').with(manage_epel: false)
         when '7.4'
-          is_expected.to create_yum_remi_php74('default')
+          is_expected.to create_yum_remi_php74('default').with(manage_epel: false)
         end
       end
 
@@ -257,7 +257,7 @@ describe 'osl_php_install' do
         php_version: nil
       )
     end
-    it { is_expected.to create_yum_remi_safe('default') }
+    it { is_expected.to create_yum_remi_safe('default').with(manage_epel: false) }
     it { is_expected.to install_php_install('versioned all packages').with(packages: %w(php84-php-devel php84-php-fpm php84-php-gd php84-php)) }
 
     context 'with opcache' do
