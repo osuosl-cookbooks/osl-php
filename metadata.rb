@@ -12,7 +12,7 @@ supports 'almalinux', '~> 8.0'
 supports 'almalinux', '~> 9.0'
 supports 'almalinux', '~> 10.0'
 
-depends 'osl-repos'
+depends 'osl-repos', '>= 5.17.0'
 depends 'osl-resources'
 depends 'osl-selinux'
 depends 'php', '~> 10.2.5'
