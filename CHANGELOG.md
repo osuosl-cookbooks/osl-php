@@ -3,6 +3,10 @@ osl-php CHANGELOG
 This file is used to list changes made in each version of the
 osl-php cookbook.
 
+7.10.0 (2026-10-21)
+-------------------
+- Turn off PCRE JIT and session upload progress
+
 7.9.1 (2026-10-20)
 ------------------
 - Leave EPEL to osl-repos on the Remi path
