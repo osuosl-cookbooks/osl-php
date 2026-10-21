@@ -20,8 +20,21 @@ describe 'osl_php_install' do
   it { is_expected.to include_recipe 'osl-repos::epel' }
   it { is_expected.to add_osl_php_ini('timezone').with(options: { 'date.timezone' => 'UTC' }) }
   it do
+    is_expected.to add_osl_php_ini('session-upload-progress').with(
+      options: { 'session.upload_progress.enabled' => '0' },
+      php_version: nil
+    )
+  end
+  it do
     is_expected.to add_osl_php_ini('mysqlnd-timeout').with(
       options: { 'mysqlnd.net_read_timeout' => '300' },
+      config_dir: '/etc/php-web.d',
+      php_version: nil
+    )
+  end
+  it do
+    is_expected.to add_osl_php_ini('pcre-jit').with(
+      options: { 'pcre.jit' => '0' },
       config_dir: '/etc/php-web.d',
       php_version: nil
     )
@@ -251,8 +264,21 @@ describe 'osl_php_install' do
 
     it { is_expected.to add_osl_php_ini('timezone').with(options: { 'date.timezone' => 'UTC' }, php_version: '8.4') }
     it do
+      is_expected.to add_osl_php_ini('session-upload-progress').with(
+        options: { 'session.upload_progress.enabled' => '0' },
+        php_version: '8.4'
+      )
+    end
+    it do
       is_expected.to add_osl_php_ini('mysqlnd-timeout').with(
         options: { 'mysqlnd.net_read_timeout' => '300' },
+        config_dir: '/etc/php-web.d',
+        php_version: nil
+      )
+    end
+    it do
+      is_expected.to add_osl_php_ini('pcre-jit').with(
+        options: { 'pcre.jit' => '0' },
         config_dir: '/etc/php-web.d',
         php_version: nil
       )

@@ -61,11 +61,23 @@ control 'versioned php ini' do
     its('content') { should match 'date.timezone=UTC' }
   end
 
+  describe file("/etc/opt/remi/php#{short_version}/php.d/session-upload-progress.ini") do
+    its('content') { should match /^session.upload_progress.enabled=0$/ }
+  end
+
   describe file("/etc/opt/remi/php#{short_version}/php.d/mysqlnd-timeout.ini") do
     it { should_not exist }
   end
 
   describe file('/etc/php-web.d/mysqlnd-timeout.ini') do
     its('content') { should match /^mysqlnd.net_read_timeout=300$/ }
+  end
+
+  describe file('/etc/php-web.d/pcre-jit.ini') do
+    its('content') { should match /^pcre.jit=0$/ }
+  end
+
+  describe command(%q(PHP_INI_SCAN_DIR=:/etc/php-web.d php -r 'echo ini_get("pcre.jit");')) do
+    its('stdout') { should eq '0' }
   end
 end

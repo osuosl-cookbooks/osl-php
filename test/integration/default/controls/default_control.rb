@@ -17,6 +17,22 @@ control 'php_packages' do
     its('content') { should match /^mysqlnd.net_read_timeout=300$/ }
   end
 
+  describe file('/etc/php-web.d/pcre-jit.ini') do
+    its('content') { should match /^pcre.jit=0$/ }
+  end
+
+  describe command(%q(PHP_INI_SCAN_DIR=:/etc/php-web.d php -r 'echo ini_get("pcre.jit");')) do
+    its('stdout') { should eq '0' }
+  end
+
+  describe file('/etc/php.d/session-upload-progress.ini') do
+    its('content') { should match /^session.upload_progress.enabled=0$/ }
+  end
+
+  describe command(%q(php -r 'echo ini_get("session.upload_progress.enabled");')) do
+    its('stdout') { should eq '0' }
+  end
+
   describe command('php --ini') do
     its('stdout') { should_not match %r{/etc/php-web.d} }
   end
