@@ -26,6 +26,13 @@ describe 'osl_php_install' do
       php_version: nil
     )
   end
+  it do
+    is_expected.to add_osl_php_ini('pcre-jit').with(
+      options: { 'pcre.jit' => '0' },
+      config_dir: '/etc/php-web.d',
+      php_version: nil
+    )
+  end
   it { is_expected.to_not add_osl_php_ini '10-opcache' }
   it { is_expected.to install_php_install('default packages all packages').with(packages: %w(php-devel php-cli php)) }
   it do
@@ -253,6 +260,13 @@ describe 'osl_php_install' do
     it do
       is_expected.to add_osl_php_ini('mysqlnd-timeout').with(
         options: { 'mysqlnd.net_read_timeout' => '300' },
+        config_dir: '/etc/php-web.d',
+        php_version: nil
+      )
+    end
+    it do
+      is_expected.to add_osl_php_ini('pcre-jit').with(
+        options: { 'pcre.jit' => '0' },
         config_dir: '/etc/php-web.d',
         php_version: nil
       )

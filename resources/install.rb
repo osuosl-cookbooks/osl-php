@@ -95,6 +95,13 @@ action :install do
     config_dir osl_php_web_ini_dir
   end
 
+  # PCRE JIT needs execmem, which SELinux denies httpd_t; EL ships pcre.jit=0 but the php
+  # cookbook's php.ini template drops it. Web SAPIs only, like mysqlnd-timeout above.
+  osl_php_ini 'pcre-jit' do
+    options('pcre.jit' => '0')
+    config_dir osl_php_web_ini_dir
+  end
+
   %w(phpcheck phpshow).each do |file|
     cookbook_file "/usr/local/bin/#{file}" do
       source file
