@@ -104,4 +104,10 @@ control 'versioned php ini files' do
     it { should exist }
     its('content') { should match 'date.timezone=UTC' }
   end
+
+  [short_version1, short_version2].each do |v|
+    describe file("/etc/opt/remi/php#{v}/php.d/session-upload-progress.ini") do
+      its('content') { should match /^session.upload_progress.enabled=0$/ }
+    end
+  end
 end

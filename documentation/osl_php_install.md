@@ -5,6 +5,8 @@ It also writes `/etc/php-web.d/mysqlnd-timeout.ini`, which sets `mysqlnd.net_rea
 
 It also writes `/etc/php-web.d/pcre-jit.ini` with `pcre.jit=0`, for web SAPIs only. PCRE's JIT needs executable memory, which SELinux denies the web server; AlmaLinux and Remi ship it off, but the php cookbook's `php.ini` template turns it back on.
 
+It also writes `session-upload-progress.ini` with `session.upload_progress.enabled=0` to the main `php.d` (the Remi SCL `php.d` for versioned packages), for every SAPI. Session upload progress is the demonstrated remote code execution path in [CVE-2026-109619](https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp), and nothing at OSL uses it.
+
 With a `version` set, PHP comes from Remi. The Remi repository resources are declared with `manage_epel false`, so `epel.repo` stays as `osl-repos::epel` writes it, pointing at the OSL mirror.
 
 A change to any of its ini files, its PHP packages or the `php.ini` directives runs `notify_group[osl-php restart]` at the end of the Chef run, which reloads the PHP services registered with [osl_php_web_service](osl_php_web_service.md). The `pear` package and Composer do not.

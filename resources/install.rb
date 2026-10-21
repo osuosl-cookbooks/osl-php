@@ -88,6 +88,13 @@ action :install do
     php_version version if new_resource.versioned_packages
   end
 
+  # CVE-2026-109619 (GHSA-6wmf-4rv5-p3rp) has an RCE path through session upload progress, which
+  # nothing at OSL uses. Main php.d, so units that don't read /etc/php-web.d are covered too.
+  osl_php_ini 'session-upload-progress' do
+    options('session.upload_progress.enabled' => '0')
+    php_version version if new_resource.versioned_packages
+  end
+
   # The 86400s default leaves web workers blocked on a dead socket after a MySQL failover; 300s
   # matches Apache's Timeout. CLI never reads this directory, so long maintenance scripts keep 86400.
   osl_php_ini 'mysqlnd-timeout' do

@@ -61,6 +61,10 @@ control 'versioned php ini' do
     its('content') { should match 'date.timezone=UTC' }
   end
 
+  describe file("/etc/opt/remi/php#{short_version}/php.d/session-upload-progress.ini") do
+    its('content') { should match /^session.upload_progress.enabled=0$/ }
+  end
+
   describe file("/etc/opt/remi/php#{short_version}/php.d/mysqlnd-timeout.ini") do
     it { should_not exist }
   end
