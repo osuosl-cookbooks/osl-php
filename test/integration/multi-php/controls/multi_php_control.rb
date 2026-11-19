@@ -13,6 +13,14 @@ control 'remi-safe repo' do
     it { should exist }
     it { should be_enabled }
   end
+
+  # Both installs declare remi-safe; they must agree on OSL's mirror first, then usi
+  describe file('/etc/yum.repos.d/remi-safe.repo') do
+    its('content') { should match %r{^baseurl=https://ftp2\.osuosl\.org/pub/remi/enterprise/#{os.release.to_i}/safe/\$basearch/$} }
+    its('content') { should match %r{^ +https://mirror\.usi\.edu/pub/remi/enterprise/#{os.release.to_i}/safe/\$basearch/$} }
+    its('content') { should_not match /^mirrorlist=/ }
+    its('content') { should match /^metadata_expire=6h$/ }
+  end
 end
 
 control 'system php installed' do

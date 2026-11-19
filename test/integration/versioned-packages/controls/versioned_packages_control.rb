@@ -12,6 +12,14 @@ control 'remi-safe repo' do
     it { should be_enabled }
   end
 
+  # OSL's Remi mirror first, then usi, and no upstream mirrorlist
+  describe file('/etc/yum.repos.d/remi-safe.repo') do
+    its('content') { should match %r{^baseurl=https://ftp2\.osuosl\.org/pub/remi/enterprise/#{os.release.to_i}/safe/\$basearch/$} }
+    its('content') { should match %r{^ +https://mirror\.usi\.edu/pub/remi/enterprise/#{os.release.to_i}/safe/\$basearch/$} }
+    its('content') { should_not match /^mirrorlist=/ }
+    its('content') { should match /^metadata_expire=6h$/ }
+  end
+
   # Only osl-repos writes epel.repo, so it keeps the OSL mirror
   describe file('/etc/yum.repos.d/epel.repo') do
     its('content') { should match %r{^baseurl=https://epel\.osuosl\.org/} }

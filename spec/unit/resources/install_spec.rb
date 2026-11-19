@@ -210,12 +210,11 @@ describe 'osl_php_install' do
       it { is_expected.to add_osl_repos_alma('default') }
 
       it do
-        case version
-        when '7.2'
-          is_expected.to create_yum_remi_php72('default').with(manage_epel: false)
-        when '7.4'
-          is_expected.to create_yum_remi_php74('default').with(manage_epel: false)
-        end
+        is_expected.to send(:"create_yum_remi_php#{version.delete('.')}", 'default').with(
+          manage_epel: false,
+          mirror_url: %w(https://ftp2.osuosl.org/pub/remi https://mirror.usi.edu/pub/remi),
+          metadata_expire: '6h'
+        )
       end
 
       it { is_expected.to install_php_install('packages all packages').with(packages: %w(php-devel php)) }
@@ -283,7 +282,13 @@ describe 'osl_php_install' do
         php_version: nil
       )
     end
-    it { is_expected.to create_yum_remi_safe('default').with(manage_epel: false) }
+    it do
+      is_expected.to create_yum_remi_safe('default').with(
+        manage_epel: false,
+        mirror_url: %w(https://ftp2.osuosl.org/pub/remi https://mirror.usi.edu/pub/remi),
+        metadata_expire: '6h'
+      )
+    end
     it { is_expected.to install_php_install('versioned all packages').with(packages: %w(php84-php-devel php84-php-fpm php84-php-gd php84-php)) }
 
     context 'with opcache' do

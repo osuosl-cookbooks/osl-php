@@ -55,6 +55,16 @@ control 'packages RHEL 8+' do
       it { should exist }
       it { should be_enabled }
     end
+
+    # OSL's Remi mirror first, then usi, and no upstream mirrorlist
+    { 'remi' => 'remi', 'remi-modular' => 'modular', 'remi-safe' => 'safe' }.each do |repo, slug|
+      describe file("/etc/yum.repos.d/#{repo}.repo") do
+        its('content') { should match %r{^baseurl=https://ftp2\.osuosl\.org/pub/remi/enterprise/#{os.release.to_i}/#{slug}/\$basearch/$} }
+        its('content') { should match %r{^ +https://mirror\.usi\.edu/pub/remi/enterprise/#{os.release.to_i}/#{slug}/\$basearch/$} }
+        its('content') { should_not match /^mirrorlist=/ }
+        its('content') { should match /^metadata_expire=6h$/ }
+      end
+    end
   end
 
   # Only osl-repos writes epel.repo, so it keeps the OSL mirror
