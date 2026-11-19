@@ -36,15 +36,21 @@ action :install do
     # enable powertools repo for libedit-devel
     include_recipe 'osl-repos::alma'
 
-    # osl-repos::epel above owns EPEL; Remi's own yum_epel would rewrite epel.repo
-    # with the upstream mirrorlist every run
+    # osl-repos::epel owns EPEL, so Remi's yum_epel stays off. Every declaration passes the same
+    # Remi mirrors, or the repo files would flip between them each run.
     if new_resource.versioned_packages
       declare_resource(:yum_remi_safe, 'default') do
         manage_epel false
+        mirror_url osl_php_remi_mirrors
+        gpgkey osl_php_remi_gpgkey
+        metadata_expire '6h'
       end
     else
       declare_resource(:"yum_remi_php#{shortver}", 'default') do
         manage_epel false
+        mirror_url osl_php_remi_mirrors
+        gpgkey osl_php_remi_gpgkey
+        metadata_expire '6h'
       end
     end
   end

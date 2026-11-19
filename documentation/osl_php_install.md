@@ -9,6 +9,8 @@ It also writes `session-upload-progress.ini` with `session.upload_progress.enabl
 
 With a `version` set, PHP comes from Remi. The Remi repository resources are declared with `manage_epel false`, so `epel.repo` stays as `osl-repos::epel` writes it, pointing at the OSL mirror.
 
+The Remi repositories (`remi`, `remi-modular` and `remi-safe`) point at OSL's Remi mirror on ftp2 (`https://ftp2.osuosl.org/pub/remi`) first and `https://mirror.usi.edu/pub/remi` second, with no upstream mirrorlist. dnf tries the second only when ftp2 returns an error, not when it is merely behind; osl-prometheus's `MirrorBehindUpstream` alert covers that case. `metadata_expire` is `6h`, so dnf-automatic's daily 10:10 Pacific run picks up a Remi build that reached ftp2 at least six hours earlier: within about a day, instead of up to two with dnf's 48-hour default. `gpgkey` is Remi's key for the release (2018 on EL8, 2021 on EL9, 2024 on EL10) as served by ftp2, which only replaces its copy with a download whose fingerprint matches the one OSL pinned; a host fetches it only when it imports the key for the first time.
+
 A change to any of its ini files, its PHP packages or the `php.ini` directives runs `notify_group[osl-php restart]` at the end of the Chef run, which reloads the PHP services registered with [osl_php_web_service](osl_php_web_service.md). The `pear` package and Composer do not.
 
 ## Actions

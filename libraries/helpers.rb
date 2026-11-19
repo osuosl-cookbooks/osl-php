@@ -52,6 +52,17 @@ module OslPhp
         }
       end
 
+      # OSL's Remi mirror first; dnf falls over to the next root when one errors
+      def osl_php_remi_mirrors
+        %w(https://ftp2.osuosl.org/pub/remi https://mirror.usi.edu/pub/remi)
+      end
+
+      # One URL, not a list: dnf imports every listed key, and any download failure aborts the install
+      def osl_php_remi_gpgkey
+        year = { 8 => 2018, 9 => 2021, 10 => 2024 }[node['platform_version'].to_i]
+        "https://ftp2.osuosl.org/pub/remi/RPM-GPG-KEY-remi#{year}"
+      end
+
       def osl_php_default_installation_packages_without_prefixes
         (php_installation_packages.map { |p| p[/^php[0-9u]*-(.*)/, 1] } - ['pear'] - [nil])
       end
