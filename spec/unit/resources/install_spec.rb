@@ -213,6 +213,7 @@ describe 'osl_php_install' do
         is_expected.to send(:"create_yum_remi_php#{version.delete('.')}", 'default').with(
           manage_epel: false,
           mirror_url: %w(https://ftp2.osuosl.org/pub/remi https://mirror.usi.edu/pub/remi),
+          gpgkey: 'https://ftp2.osuosl.org/pub/remi/RPM-GPG-KEY-remi2021',
           metadata_expire: '6h'
         )
       end
@@ -240,6 +241,30 @@ describe 'osl_php_install' do
 
       it { is_expected.to install_php_install('packages all packages').with(packages: %w(php-devel php)) }
       it { is_expected.to install_package('php-pear') }
+    end
+  end
+
+  { '8' => '2018', '10' => '2024' }.each do |el, year|
+    context "Remi GPG key on AlmaLinux #{el}" do
+      platform 'almalinux', el
+      step_into :osl_php_install
+
+      cached(:chef_run) do
+        chef_runner.converge('php_test::blank') do
+          recipe = Chef::Recipe.new('test', '_test', chef_runner.run_context)
+
+          recipe.instance_exec do
+            osl_php_install 'versioned' do
+              versioned_packages true
+              version '8.4'
+            end
+          end
+        end
+      end
+
+      it do
+        is_expected.to create_yum_remi_safe('default').with(gpgkey: "https://ftp2.osuosl.org/pub/remi/RPM-GPG-KEY-remi#{year}")
+      end
     end
   end
 
@@ -286,6 +311,7 @@ describe 'osl_php_install' do
       is_expected.to create_yum_remi_safe('default').with(
         manage_epel: false,
         mirror_url: %w(https://ftp2.osuosl.org/pub/remi https://mirror.usi.edu/pub/remi),
+        gpgkey: 'https://ftp2.osuosl.org/pub/remi/RPM-GPG-KEY-remi2021',
         metadata_expire: '6h'
       )
     end

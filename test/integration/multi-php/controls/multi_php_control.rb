@@ -20,6 +20,7 @@ control 'remi-safe repo' do
     its('content') { should match %r{^ +https://mirror\.usi\.edu/pub/remi/enterprise/#{os.release.to_i}/safe/\$basearch/$} }
     its('content') { should_not match /^mirrorlist=/ }
     its('content') { should match /^metadata_expire=6h$/ }
+    its('content') { should match %r{^gpgkey=https://ftp2\.osuosl\.org/pub/remi/RPM-GPG-KEY-remi#{{ 8 => '2018', 9 => '2021', 10 => '2024' }[os.release.to_i]}$} }
   end
 end
 

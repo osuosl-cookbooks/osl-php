@@ -42,12 +42,14 @@ action :install do
       declare_resource(:yum_remi_safe, 'default') do
         manage_epel false
         mirror_url osl_php_remi_mirrors
+        gpgkey osl_php_remi_gpgkey
         metadata_expire '6h'
       end
     else
       declare_resource(:"yum_remi_php#{shortver}", 'default') do
         manage_epel false
         mirror_url osl_php_remi_mirrors
+        gpgkey osl_php_remi_gpgkey
         metadata_expire '6h'
       end
     end
